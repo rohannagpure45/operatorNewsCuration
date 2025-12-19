@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "news-curation-agent"
+version = "0.1.0"
+description = "Autonomous agent for extracting, fact-checking, and summarizing news content"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your@email.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "trafilatura>=2.0.0",
+    "waybackpy>=3.0.0",
+    "httpx>=0.27.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    "instructor>=1.7.0",
+    "google-generativeai>=0.8.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "python-dotenv>=1.0.0",
+    "typer>=0.12.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+firebase = ["firebase-admin>=6.0.0"]
+supabase = ["supabase>=2.0.0"]
+pdf = ["weasyprint>=62.0"]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-httpx>=0.30.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+news-agent = "src.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/your-org/operatorNewsCuration"
+Documentation = "https://github.com/your-org/operatorNewsCuration#readme"
+Repository = "https://github.com/your-org/operatorNewsCuration"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]

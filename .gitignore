@@ -23,6 +23,9 @@ wheels/
 .installed.cfg
 *.egg
 
+gen-lang-client-0240708176-firebase-adminsdk-fbsvc-6747446a5e.json
+
+
 # Virtual environments
 .venv
 venv/

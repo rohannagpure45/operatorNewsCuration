@@ -1,0 +1,358 @@
+# Autonomous News Curation Agent
+
+An intelligent web browsing agent that automatically extracts, fact-checks, and summarizes content from diverse sources including news articles, Twitter/X posts, and SEC filings.
+
+## Features
+
+- **Multi-Source Extraction**: Handles news articles, blog posts, Twitter/X threads, and SEC 13F filings
+- **Universal Fact-Checking**: All content is verified against multiple fact-checking databases before summarization
+- **Structured Summaries**: Outputs consistent, schema-validated summaries with executive summary, key points, sentiment, entities, and implications
+- **Paywall Handling**: Falls back to Wayback Machine for soft-paywalled content
+- **Cost-Efficient**: Designed for internal use at ~$0-50/month for 200 links
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      URL Input (API/CLI)                         │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        URL Router                                │
+│  Detects: Twitter/X | News Article | Blog | SEC Filing          │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+│ Twitter Extractor│ │ Article Extractor│ │   SEC Extractor  │
+│ (Syndication API)│ │  (Trafilatura)   │ │  (HTML Parser)   │
+└──────────────────┘ └──────────────────┘ └──────────────────┘
+              │               │               │
+              │        ┌──────┴──────┐        │
+              │        ▼             │        │
+              │  ┌──────────────┐    │        │
+              │  │Wayback Machine│   │        │
+              │  │  (Paywalls)   │   │        │
+              │  └──────────────┘    │        │
+              │        │             │        │
+              └────────┼─────────────┼────────┘
+                       ▼             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     Fact-Checking Layer                          │
+│  Google Fact Check API | ClaimBuster (optional) | NewsGuard     │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   LLM Summarizer (Gemini/Grok)                   │
+│  Structured Output: Summary, Key Points, Entities, Sentiment    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+┌──────────────────────────┐    ┌──────────────────────────┐
+│   Database (Firestore/   │    │   PDF Export (optional)  │
+│       Supabase)          │    │      (WeasyPrint)        │
+└──────────────────────────┘    └──────────────────────────┘
+```
+
+## Supported Sources
+
+| Source Type | Examples | Extraction Method |
+|-------------|----------|-------------------|
+| News Articles | Bloomberg, WSJ, Economist, Wccftech | Trafilatura (F1: 0.937) |
+| Tech Blogs | blog.google, openai.com/index | Trafilatura |
+| Twitter/X | x.com/username/status/... | Syndication API (free) |
+| SEC Filings | 13f.info, sec.gov | Custom HTML parser |
+| Paywalled Content | Soft paywalls only | Wayback Machine fallback |
+
+## Output Schema
+
+Every processed URL returns a structured summary:
+
+```json
+{
+  "url": "https://example.com/article",
+  "source_type": "news_article",
+  "extracted_at": "2025-12-19T12:00:00Z",
+  "content": {
+    "title": "Article Title",
+    "author": "Author Name",
+    "published_date": "2025-12-18",
+    "word_count": 1500
+  },
+  "summary": {
+    "executive_summary": "One paragraph overview...",
+    "key_points": [
+      "First major point",
+      "Second major point",
+      "Third major point"
+    ],
+    "sentiment": "neutral",
+    "entities": [
+      {"text": "OpenAI", "type": "ORG"},
+      {"text": "Sam Altman", "type": "PERSON"}
+    ],
+    "implications": [
+      "Market impact assessment",
+      "Industry trend indication"
+    ],
+    "footnotes": [
+      {"id": 1, "source_text": "Quote from article", "context": "Supporting detail"}
+    ]
+  },
+  "fact_check": {
+    "claims_analyzed": 3,
+    "verified_claims": [
+      {
+        "claim": "Company X raised $100M",
+        "rating": "verified",
+        "source": "PolitiFact",
+        "url": "https://..."
+      }
+    ],
+    "unverified_claims": [],
+    "publisher_credibility": {
+      "score": 85,
+      "source": "NewsGuard"
+    }
+  }
+}
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.11+
+- Google Cloud account (for Gemini API)
+- Firebase or Supabase account (for storage)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/operatorNewsCuration.git
+cd operatorNewsCuration
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment template
+cp .env.example .env
+```
+
+### Configuration
+
+Edit `.env` with your API keys:
+
+```bash
+# Required
+GEMINI_API_KEY=your_gemini_api_key          # From https://makersuite.google.com/app/apikey
+GOOGLE_FACT_CHECK_API_KEY=your_api_key      # From Google Cloud Console
+
+# Storage (choose one)
+FIREBASE_CREDENTIALS_PATH=./firebase-creds.json
+# OR
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your_supabase_anon_key
+
+# Optional - Paid fact-checking services
+CLAIMBUSTER_API_KEY=your_key                # $50/month - Enhanced claim detection
+NEWSGUARD_API_KEY=your_key                  # $200+/month - Publisher credibility
+```
+
+### Usage
+
+#### CLI Mode
+
+```bash
+# Process a single URL
+python -m src.cli process "https://blog.google/products/gemini/gemini-3-flash/"
+
+# Process multiple URLs from file
+python -m src.cli batch urls.txt --output results.json
+
+# Process with PDF export
+python -m src.cli process "https://example.com/article" --pdf output.pdf
+```
+
+#### API Mode
+
+```bash
+# Start the API server
+uvicorn src.api.main:app --reload
+
+# Submit URLs via API
+curl -X POST http://localhost:8000/api/submit \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["https://example.com/article1", "https://x.com/user/status/123"]}'
+
+# Get results
+curl http://localhost:8000/api/results/{job_id}
+```
+
+#### Python SDK
+
+```python
+from src.agent import NewsAgent
+
+agent = NewsAgent()
+
+# Process single URL
+result = await agent.process("https://blog.google/products/gemini/gemini-3-flash/")
+print(result.summary.executive_summary)
+
+# Process batch
+results = await agent.process_batch([
+    "https://x.com/arcprize/status/2001330153902023157",
+    "https://openai.com/index/frontierscience/",
+    "https://www.bloomberg.com/news/..."
+])
+```
+
+## Cost Analysis
+
+### Estimated Monthly Cost (200 links/month)
+
+| Component | Free Tier | With Paid Options |
+|-----------|-----------|-------------------|
+| **LLM (Gemini 1.5 Flash)** | $1-2 | $1-2 |
+| **Google Fact Check API** | $0 | $0 |
+| **ClaimBuster API** | - | +$50 |
+| **NewsGuard API** | - | +$200 |
+| **Firebase/Supabase** | $0 | $0 |
+| **GCP Cloud Run** | $0 | $0 |
+| **Total** | **$1-2/month** | **$50-250/month** |
+
+### LLM Provider Options
+
+| Provider | Model | Input Cost | Output Cost | Notes |
+|----------|-------|------------|-------------|-------|
+| **Gemini 1.5 Flash** | gemini-1.5-flash | $0.075/1M | $0.30/1M | Recommended |
+| Gemini 2.0 Flash | gemini-2.0-flash-exp | FREE | FREE | Preview only |
+| Grok | grok-beta | $5/1M | $15/1M | Higher cost |
+
+### Fact-Checking Services
+
+| Service | Cost | Coverage | Best For |
+|---------|------|----------|----------|
+| **Google Fact Check API** | FREE | Global aggregator | Default choice |
+| ClaimBuster | $50/mo | AI claim detection | Claim-worthiness scoring |
+| NewsGuard | $200+/mo | Publisher ratings | Source credibility |
+| Full Fact | Custom | UK-focused | UK political content |
+| Factmata | Enterprise | Real-time | High-volume needs |
+
+## Project Structure
+
+```
+operatorNewsCuration/
+├── src/
+│   ├── extractors/
+│   │   ├── __init__.py
+│   │   ├── base.py           # Abstract extractor interface
+│   │   ├── twitter.py        # Twitter/X extraction
+│   │   ├── article.py        # News article extraction
+│   │   └── sec_filings.py    # SEC 13F extraction
+│   ├── enrichment/
+│   │   ├── __init__.py
+│   │   ├── fact_check.py     # Fact-checking orchestrator
+│   │   ├── google_fc.py      # Google Fact Check API
+│   │   ├── claimbuster.py    # ClaimBuster integration
+│   │   ├── newsguard.py      # NewsGuard integration
+│   │   └── wayback.py        # Wayback Machine fallback
+│   ├── summarizer/
+│   │   ├── __init__.py
+│   │   ├── llm.py            # LLM abstraction layer
+│   │   └── prompts.py        # Summarization prompts
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── schemas.py        # Pydantic models
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── main.py           # FastAPI application
+│   ├── agent.py              # Main agent orchestrator
+│   ├── cli.py                # CLI interface
+│   └── config.py             # Configuration management
+├── tests/
+│   ├── test_extractors.py
+│   ├── test_fact_check.py
+│   └── test_summarizer.py
+├── .env.example
+├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
+```
+
+## Deployment
+
+### Local Development
+
+```bash
+# Run with hot reload
+uvicorn src.api.main:app --reload --port 8000
+```
+
+### Docker
+
+```bash
+# Build image
+docker build -t news-agent .
+
+# Run container
+docker run -p 8000:8000 --env-file .env news-agent
+```
+
+### Google Cloud Run
+
+```bash
+# Deploy to Cloud Run
+gcloud run deploy news-agent \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars "GEMINI_API_KEY=$GEMINI_API_KEY"
+```
+
+## Limitations
+
+- **Hard Paywalls**: Cannot bypass paywalls requiring login (WSJ, Bloomberg premium)
+- **Twitter Rate Limits**: Syndication API has undocumented rate limits
+- **Fact-Check Coverage**: Limited for non-English content and recent claims
+- **SEC Filings**: Only supports 13F format from 13f.info currently
+
+## Roadmap
+
+- [ ] PDF export with charts and footnotes
+- [ ] React frontend dashboard
+- [ ] Slack/Discord integration
+- [ ] Scheduled URL monitoring
+- [ ] Browser automation for JavaScript-heavy sites (Browser-Use)
+- [ ] Multi-language support
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+## Acknowledgments
+
+- [Trafilatura](https://github.com/adbar/trafilatura) - Content extraction
+- [Instructor](https://github.com/jxnl/instructor) - Structured LLM outputs
+- [Google Fact Check Tools](https://toolbox.google.com/factcheck/explorer) - Fact verification
+- [Wayback Machine](https://archive.org/web/) - Archived content access

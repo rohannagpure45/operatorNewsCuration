@@ -10,6 +10,7 @@ from src.enrichment.fact_check import FactChecker
 from src.enrichment.wayback import WaybackFetcher
 from src.extractors.article import ArticleExtractor
 from src.extractors.base import ExtractionError
+from src.extractors.browser import BrowserExtractor
 from src.extractors.router import URLRouter
 from src.extractors.sec_filings import SECExtractor
 from src.extractors.twitter import TwitterExtractor
@@ -48,6 +49,7 @@ class NewsAgent:
         self.twitter_extractor = TwitterExtractor(timeout=settings.extraction_timeout)
         self.article_extractor = ArticleExtractor(timeout=settings.extraction_timeout)
         self.sec_extractor = SECExtractor(timeout=settings.extraction_timeout)
+        self.browser_extractor = BrowserExtractor(timeout=settings.extraction_timeout)
 
         # Initialize enrichment components
         self.wayback = WaybackFetcher(timeout=settings.extraction_timeout)
@@ -68,6 +70,7 @@ class NewsAgent:
             self.twitter_extractor.close(),
             self.article_extractor.close(),
             self.sec_extractor.close(),
+            self.browser_extractor.close(),
             self.wayback.close(),
             self.fact_checker.close(),
             self.summarizer.close(),
@@ -198,7 +201,7 @@ class NewsAgent:
         url: str,
         url_type: URLType,
     ) -> ExtractedContent:
-        """Extract content using the appropriate extractor."""
+        """Extract content using the appropriate extractor with fallback chain."""
         # Select extractor based on URL type
         if url_type == URLType.TWITTER:
             extractor = self.twitter_extractor
@@ -211,9 +214,20 @@ class NewsAgent:
             content = await extractor.extract(url)
             return content
 
-        except ExtractionError:
-            # Try Wayback Machine fallback for articles
+        except ExtractionError as primary_error:
+            # For articles, try browser fallback first (may bypass bot detection or render JS content)
             if url_type not in (URLType.TWITTER, URLType.SEC_FILING):
+                logger.info(f"Trying Playwright browser fallback for: {url}")
+                try:
+                    content = await self.browser_extractor.extract(url)
+                    content.extraction_method = "playwright_browser"
+                    return content
+                except ExtractionError as browser_error:
+                    logger.warning(
+                        f"Browser fallback failed for {url}: {browser_error}"
+                    )
+
+                # Try Wayback Machine as last resort
                 logger.info(f"Trying Wayback Machine fallback for: {url}")
                 archived_html = await self.wayback.fetch_archived_content(url)
 
@@ -231,7 +245,7 @@ class NewsAgent:
                         content.extraction_method = "trafilatura_wayback"
                         return content
 
-            # Re-raise if fallback didn't work
+            # Re-raise if all fallbacks failed
             raise
 
     async def _fact_check_content(

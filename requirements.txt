@@ -4,6 +4,7 @@ waybackpy>=3.0.0
 httpx>=0.27.0
 beautifulsoup4>=4.12.0
 lxml>=5.0.0
+playwright>=1.40.0
 
 # LLM and structured output
 instructor>=1.7.0

@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     supabase_url: Optional[str] = Field(default=None, description="Supabase project URL")
     supabase_key: Optional[str] = Field(default=None, description="Supabase anon key")
 
+    # Browser automation (optional - uses local Playwright if not set)
+    browserless_api_key: Optional[str] = Field(
+        default=None, description="Browserless.io API key for cloud browser"
+    )
+
     # API Settings
     api_host: str = Field(default="0.0.0.0", description="API server host")
     api_port: int = Field(default=8000, description="API server port")
@@ -85,3 +90,5 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Get cached application settings."""
     return Settings()
+
+

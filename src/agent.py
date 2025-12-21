@@ -319,3 +319,4 @@ async def process_urls(urls: List[str], **kwargs) -> List[ProcessedResult]:
         return await agent.process_batch(urls, **kwargs)
     finally:
         await agent.close()
+

@@ -246,3 +246,4 @@ class JobStatus(BaseModel):
     completed_at: Optional[datetime] = Field(
         default=None, description="Job completion time"
     )
+

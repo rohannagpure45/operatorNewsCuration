@@ -8,6 +8,8 @@ An intelligent web browsing agent that automatically extracts, fact-checks, and 
 - **Universal Fact-Checking**: All content is verified against multiple fact-checking databases before summarization
 - **Structured Summaries**: Outputs consistent, schema-validated summaries with executive summary, key points, sentiment, entities, and implications
 - **Paywall Handling**: Falls back to Wayback Machine for soft-paywalled content
+- **Cloud Browser Support**: Optional Browserless.io integration for better anti-detection
+- **Streamlit Dashboard**: Interactive web UI for processing and viewing results
 - **Cost-Efficient**: Designed for internal use at ~$0-50/month for 200 links
 
 ## Architecture
@@ -157,6 +159,9 @@ Edit `.env` with your API keys:
 GEMINI_API_KEY=your_gemini_api_key          # From https://makersuite.google.com/app/apikey
 GOOGLE_FACT_CHECK_API_KEY=your_api_key      # From Google Cloud Console
 
+# Optional - Cloud browser (better anti-detection)
+BROWSERLESS_API_KEY=your_key                # Free trial at https://browserless.io
+
 # Storage (choose one)
 FIREBASE_CREDENTIALS_PATH=./firebase-creds.json
 # OR
@@ -168,7 +173,36 @@ CLAIMBUSTER_API_KEY=your_key                # $50/month - Enhanced claim detecti
 NEWSGUARD_API_KEY=your_key                  # $200+/month - Publisher credibility
 ```
 
+#### Browserless.io (Optional)
+
+For better success with sites that block scrapers, you can use [Browserless.io](https://browserless.io) as a cloud browser backend:
+
+1. Sign up for a free trial at https://browserless.io
+2. Copy your API key from the dashboard
+3. Add `BROWSERLESS_API_KEY=your_key` to your `.env` file
+
+When the API key is set, the agent will automatically use Browserless instead of local Playwright. This provides:
+- Better anti-detection with rotating proxies
+- No need to install Chromium locally
+- More reliable extraction from protected sites
+
 ### Usage
+
+#### Streamlit Dashboard (Recommended)
+
+The easiest way to use the agent is through the Streamlit web interface:
+
+```bash
+# Start the Streamlit dashboard
+streamlit run src/streamlit_app.py
+```
+
+This opens a browser at `http://localhost:8501` with:
+- Single URL processing with live progress
+- Batch processing via text input or file upload
+- Interactive results display with sentiment, entities, and fact-check data
+- JSON export for all results
+- Processing history in the sidebar
 
 #### CLI Mode
 
@@ -279,7 +313,8 @@ operatorNewsCuration/
 │   │   └── main.py           # FastAPI application
 │   ├── agent.py              # Main agent orchestrator
 │   ├── cli.py                # CLI interface
-│   └── config.py             # Configuration management
+│   ├── config.py             # Configuration management
+│   └── streamlit_app.py      # Streamlit web dashboard
 ├── tests/
 │   ├── test_extractors.py
 │   ├── test_fact_check.py
@@ -297,7 +332,10 @@ operatorNewsCuration/
 ### Local Development
 
 ```bash
-# Run with hot reload
+# Run Streamlit dashboard (recommended for single-user)
+streamlit run src/streamlit_app.py
+
+# Or run FastAPI server (for programmatic access)
 uvicorn src.api.main:app --reload --port 8000
 ```
 
@@ -332,10 +370,11 @@ gcloud run deploy news-agent \
 ## Roadmap
 
 - [ ] PDF export with charts and footnotes
-- [ ] React frontend dashboard
+- [x] Streamlit frontend dashboard
+- [ ] React frontend dashboard (for multi-user deployment)
 - [ ] Slack/Discord integration
 - [ ] Scheduled URL monitoring
-- [ ] Browser automation for JavaScript-heavy sites (Browser-Use)
+- [x] Cloud browser support (Browserless.io)
 - [ ] Multi-language support
 
 ## Contributing
@@ -356,3 +395,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 - [Instructor](https://github.com/jxnl/instructor) - Structured LLM outputs
 - [Google Fact Check Tools](https://toolbox.google.com/factcheck/explorer) - Fact verification
 - [Wayback Machine](https://archive.org/web/) - Archived content access
+- [Browserless.io](https://browserless.io) - Cloud browser infrastructure
+- [Streamlit](https://streamlit.io) - Web dashboard framework
+

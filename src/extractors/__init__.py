@@ -5,3 +5,4 @@ from .browser import BrowserExtractor
 from .router import URLRouter, URLType
 
 __all__ = ["BaseExtractor", "BrowserExtractor", "ExtractedContent", "URLRouter", "URLType"]
+

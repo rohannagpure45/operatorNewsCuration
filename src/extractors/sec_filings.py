@@ -207,3 +207,4 @@ class SECExtractor(BaseExtractor):
             title=title,
             site_name=urlparse(url).netloc,
         )
+

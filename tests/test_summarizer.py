@@ -104,3 +104,4 @@ class TestSummarizer:
         except Exception:
             # Skip if we can't create the summarizer
             pytest.skip("Could not create Summarizer instance")
+

@@ -219,3 +219,4 @@ class WaybackFetcher:
         """
         archived_url = await self.get_archived_url(url)
         return archived_url is not None
+

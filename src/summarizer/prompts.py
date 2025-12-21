@@ -65,3 +65,4 @@ Extract up to {max_claims} specific, verifiable claims from this content. Each c
 - Checkable (could be verified against external sources)
 
 Return the claims as a JSON array of strings."""
+

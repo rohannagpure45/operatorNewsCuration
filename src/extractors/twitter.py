@@ -168,3 +168,4 @@ class TwitterExtractor(BaseExtractor):
             )
 
         return "\n".join(parts)
+

@@ -10,11 +10,11 @@ from src.models.schemas import URLType
 class URLRouter:
     """Routes URLs to appropriate extractors based on URL patterns."""
 
-    # Twitter/X URL patterns
+    # Twitter/X URL patterns (handles any subdomain: www, mobile, m, etc.)
     TWITTER_PATTERNS = [
-        r"^https?://(www\.)?(twitter|x)\.com/\w+/status/\d+",
-        r"^https?://(www\.)?twitter\.com/\w+",
-        r"^https?://(www\.)?x\.com/\w+",
+        r"^https?://([^/]*\.)?(twitter|x)\.com/\w+/status/\d+",
+        r"^https?://([^/]*\.)?twitter\.com/\w+",
+        r"^https?://([^/]*\.)?x\.com/\w+",
     ]
 
     # SEC filing patterns
@@ -172,3 +172,5 @@ class URLRouter:
             normalized += f"?{parsed.query}"
 
         return normalized
+
+

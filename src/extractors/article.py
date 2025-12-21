@@ -186,3 +186,4 @@ class ArticleExtractor(BaseExtractor):
                 return URLType.BLOG
 
         return URLType.NEWS_ARTICLE
+

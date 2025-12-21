@@ -64,28 +64,54 @@ class BrowserExtractor(BaseExtractor):
         self.headless = headless
         self._playwright = None
         self._browser = None
+        self._using_browserless = False
 
     async def _ensure_browser(self):
         """Ensure the browser is launched and ready."""
         if self._browser is None or not self._browser.is_connected():
+            # Clean up disconnected browser before creating new one
+            if self._browser is not None:
+                try:
+                    await self._browser.close()
+                except Exception:
+                    pass  # Ignore errors closing already-disconnected browser
+                self._browser = None
+
             from playwright.async_api import async_playwright
+
+            from src.config import get_settings
+
+            settings = get_settings()
 
             if self._playwright is None:
                 self._playwright = await async_playwright().start()
 
-            # Launch with stealth settings
-            self._browser = await self._playwright.chromium.launch(
-                headless=self.headless,
-                args=[
-                    "--disable-blink-features=AutomationControlled",
-                    "--disable-dev-shm-usage",
-                    "--no-sandbox",
-                    "--disable-setuid-sandbox",
-                    "--disable-gpu",
-                    "--disable-web-security",
-                    "--disable-features=IsolateOrigins,site-per-process",
-                ],
-            )
+            if settings.browserless_api_key:
+                # Use Browserless.io cloud browser for better anti-detection
+                ws_endpoint = f"wss://chrome.browserless.io?token={settings.browserless_api_key}"
+                try:
+                    self._browser = await self._playwright.chromium.connect_over_cdp(ws_endpoint)
+                    self._using_browserless = True
+                except Exception:
+                    # Sanitize error to avoid leaking API key in logs/exceptions
+                    raise ExtractionError(
+                        "Failed to connect to Browserless remote browser"
+                    ) from None
+            else:
+                # Fall back to local Playwright with stealth settings
+                self._browser = await self._playwright.chromium.launch(
+                    headless=self.headless,
+                    args=[
+                        "--disable-blink-features=AutomationControlled",
+                        "--disable-dev-shm-usage",
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
+                        "--disable-gpu",
+                        "--disable-web-security",
+                        "--disable-features=IsolateOrigins,site-per-process",
+                    ],
+                )
+                self._using_browserless = False
 
         return self._browser
 
@@ -290,3 +316,4 @@ class BrowserExtractor(BaseExtractor):
             site_name=site_name,
             fallback_used=True,  # Browser is always a fallback method
         )
+

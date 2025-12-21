@@ -144,3 +144,4 @@ class TestSECExtractor:
 
         # Should not handle other URLs
         assert not extractor.can_handle("https://example.com")
+

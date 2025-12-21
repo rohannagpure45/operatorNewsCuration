@@ -333,3 +333,4 @@ class ClaimBusterChecker:
             claim_text for c in worthy_claims[:max_claims]
             if (claim_text := c.get("text", ""))
         ]
+

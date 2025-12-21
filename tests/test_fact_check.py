@@ -79,3 +79,4 @@ class TestFactCheckReport:
         assert report.claims_analyzed == 1
         assert len(report.verified_claims) == 1
         assert report.verified_claims[0].rating == ClaimRating.TRUE
+

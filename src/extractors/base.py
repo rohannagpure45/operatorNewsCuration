@@ -112,3 +112,4 @@ class BaseExtractor(ABC):
             extraction_method=self.extraction_method,
             fallback_used=fallback_used,
         )
+

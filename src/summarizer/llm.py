@@ -289,3 +289,4 @@ class AsyncSummarizer(Summarizer):
 
         except Exception:
             return []
+

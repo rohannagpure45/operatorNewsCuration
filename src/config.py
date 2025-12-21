@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     browserless_api_key: Optional[str] = Field(
         default=None, description="Browserless.io API key for cloud browser"
     )
+    browserless_use_unblock: bool = Field(
+        default=True, description="Enable /unblock API fallback for bot detection bypass"
+    )
+    browserless_use_residential_proxy: bool = Field(
+        default=False, description="Use residential proxy with /unblock API (paid feature)"
+    )
 
     # API Settings
     api_host: str = Field(default="0.0.0.0", description="API server host")

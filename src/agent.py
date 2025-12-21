@@ -14,6 +14,7 @@ from src.extractors.browser import BrowserExtractor
 from src.extractors.router import URLRouter
 from src.extractors.sec_filings import SECExtractor
 from src.extractors.twitter import TwitterExtractor
+from src.extractors.unblock import UnblockExtractor
 from src.models.schemas import (
     ExtractedContent,
     FactCheckReport,
@@ -50,6 +51,10 @@ class NewsAgent:
         self.article_extractor = ArticleExtractor(timeout=settings.extraction_timeout)
         self.sec_extractor = SECExtractor(timeout=settings.extraction_timeout)
         self.browser_extractor = BrowserExtractor(timeout=settings.extraction_timeout)
+        self.unblock_extractor = UnblockExtractor(timeout=settings.extraction_timeout)
+        
+        # Check if unblock fallback is enabled
+        self._use_unblock = getattr(settings, 'browserless_use_unblock', True)
 
         # Initialize enrichment components
         self.wayback = WaybackFetcher(timeout=settings.extraction_timeout)
@@ -71,6 +76,7 @@ class NewsAgent:
             self.article_extractor.close(),
             self.sec_extractor.close(),
             self.browser_extractor.close(),
+            self.unblock_extractor.close(),
             self.wayback.close(),
             self.fact_checker.close(),
             self.summarizer.close(),
@@ -227,6 +233,17 @@ class NewsAgent:
                         f"Browser fallback failed for {url}: {browser_error}"
                     )
 
+                # Try /unblock API fallback (better bot detection bypass)
+                if self._use_unblock:
+                    logger.info(f"Trying Browserless /unblock API fallback for: {url}")
+                    try:
+                        content = await self.unblock_extractor.extract(url)
+                        return content
+                    except ExtractionError as unblock_error:
+                        logger.warning(
+                            f"Unblock API fallback failed for {url}: {unblock_error}"
+                        )
+
                 # Try Wayback Machine as last resort
                 logger.info(f"Trying Wayback Machine fallback for: {url}")
                 archived_html = await self.wayback.fetch_archived_content(url)
@@ -319,4 +336,5 @@ async def process_urls(urls: List[str], **kwargs) -> List[ProcessedResult]:
         return await agent.process_batch(urls, **kwargs)
     finally:
         await agent.close()
+
 

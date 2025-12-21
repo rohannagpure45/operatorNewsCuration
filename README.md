@@ -161,6 +161,8 @@ GOOGLE_FACT_CHECK_API_KEY=your_api_key      # From Google Cloud Console
 
 # Optional - Cloud browser (better anti-detection)
 BROWSERLESS_API_KEY=your_key                # Free trial at https://browserless.io
+BROWSERLESS_USE_UNBLOCK=true                # Enable /unblock API fallback (default: true)
+BROWSERLESS_USE_RESIDENTIAL_PROXY=false     # Paid feature for better bypass
 
 # Storage (choose one)
 FIREBASE_CREDENTIALS_PATH=./firebase-creds.json
@@ -185,6 +187,21 @@ When the API key is set, the agent will automatically use Browserless instead of
 - Better anti-detection with rotating proxies
 - No need to install Chromium locally
 - More reliable extraction from protected sites
+
+**Additional Browserless Options:**
+
+```bash
+# Enable /unblock API fallback for aggressive bot detection bypass (default: true)
+BROWSERLESS_USE_UNBLOCK=true
+
+# Use residential proxy with /unblock API (paid feature, default: false)
+BROWSERLESS_USE_RESIDENTIAL_PROXY=false
+```
+
+The `/unblock` API is automatically used as a fallback when standard browser extraction fails. It provides enhanced bot detection bypass capabilities including:
+- Built-in stealth and anti-detection
+- Automatic retry with exponential backoff on transient failures
+- Support for `waitForTimeout` and `waitForSelector` options
 
 ### Usage
 

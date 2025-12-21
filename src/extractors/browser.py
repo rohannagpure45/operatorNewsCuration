@@ -257,7 +257,7 @@ class BrowserExtractor(BaseExtractor):
                     )
 
                 # Extract metadata
-                metadata = trafilatura.extract_metadata(html, url=url)
+                metadata = trafilatura.extract_metadata(html, default_url=url)
 
                 return self._create_content_from_browser(url, text, metadata)
 

@@ -98,7 +98,7 @@ class ArticleExtractor(BaseExtractor):
                 )
 
             # Extract metadata
-            metadata = trafilatura.extract_metadata(html, url=url)
+            metadata = trafilatura.extract_metadata(html, default_url=url)
 
             return self._create_content_from_trafilatura(url, result, metadata)
 
@@ -186,4 +186,5 @@ class ArticleExtractor(BaseExtractor):
                 return URLType.BLOG
 
         return URLType.NEWS_ARTICLE
+
 

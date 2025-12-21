@@ -11,6 +11,7 @@ import streamlit as st
 logger = logging.getLogger(__name__)
 
 from src.agent import NewsAgent
+from src.export.pdf_report import PDFReportGenerator
 from src.models.schemas import ProcessingStatus, Sentiment
 
 
@@ -318,15 +319,35 @@ def main():
                         st.markdown("---")
                         display_result(result)
 
-                        # Export option
+                        # Export options
                         st.markdown("---")
-                        result_json = result.model_dump_json(indent=2)
-                        st.download_button(
-                            "📥 Download JSON",
-                            data=result_json,
-                            file_name=f"result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
-                            mime="application/json",
-                        )
+                        st.markdown("#### Export Results")
+                        export_cols = st.columns(2)
+                        
+                        with export_cols[0]:
+                            result_json = result.model_dump_json(indent=2)
+                            st.download_button(
+                                "📥 Download JSON",
+                                data=result_json,
+                                file_name=f"result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                                mime="application/json",
+                            )
+                        
+                        with export_cols[1]:
+                            # Generate PDF
+                            try:
+                                pdf_generator = PDFReportGenerator()
+                                pdf_bytes = pdf_generator.generate(result)
+                                pdf_filename = pdf_generator.get_filename(result)
+                                st.download_button(
+                                    "📄 Download PDF",
+                                    data=pdf_bytes,
+                                    file_name=pdf_filename,
+                                    mime="application/pdf",
+                                )
+                            except Exception as pdf_error:
+                                logger.exception("Error generating PDF")
+                                st.warning("PDF generation unavailable")
 
                     except Exception as e:
                         logger.exception("Error processing URL: %s", url)
@@ -380,17 +401,36 @@ def main():
 
                     # Export all results
                     st.markdown("---")
-                    all_results_json = json.dumps(
-                        [r.model_dump() for r in results],
-                        indent=2,
-                        default=str,
-                    )
-                    st.download_button(
-                        "📥 Download All Results (JSON)",
-                        data=all_results_json,
-                        file_name=f"batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
-                        mime="application/json",
-                    )
+                    st.markdown("#### Export All Results")
+                    export_cols = st.columns(2)
+                    
+                    with export_cols[0]:
+                        all_results_json = json.dumps(
+                            [r.model_dump() for r in results],
+                            indent=2,
+                            default=str,
+                        )
+                        st.download_button(
+                            "📥 Download All (JSON)",
+                            data=all_results_json,
+                            file_name=f"batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                            mime="application/json",
+                        )
+                    
+                    with export_cols[1]:
+                        # Generate batch PDF
+                        try:
+                            pdf_generator = PDFReportGenerator()
+                            pdf_bytes = pdf_generator.generate_batch(results)
+                            st.download_button(
+                                "📄 Download All (PDF)",
+                                data=pdf_bytes,
+                                file_name=f"batch_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                                mime="application/pdf",
+                            )
+                        except Exception as pdf_error:
+                            logger.exception("Error generating batch PDF")
+                            st.warning("PDF generation unavailable")
 
                 except Exception as e:
                     logger.exception("Error processing batch URLs")

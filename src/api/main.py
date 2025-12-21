@@ -9,9 +9,10 @@ from typing import Dict, Optional
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 from src.agent import NewsAgent
+from src.export.pdf_report import PDFReportGenerator
 from src.config import get_settings
 from src.models.schemas import (
     JobStatus,
@@ -225,6 +226,96 @@ async def list_jobs(limit: int = 100, status: Optional[str] = None):
     return job_list[:limit]
 
 
+# ============================================================================
+# PDF Export Endpoints
+# ============================================================================
+
+
+@app.get("/api/jobs/{job_id}/export/pdf")
+async def export_job_pdf(job_id: str):
+    """
+    Export job results as a PDF report.
+
+    Returns a professionally formatted PDF containing all processed results
+    from the specified job.
+    """
+    async with jobs_lock:
+        if job_id not in jobs:
+            raise HTTPException(status_code=404, detail="Job not found")
+        job = jobs[job_id]
+        # Copy results inside lock to avoid race condition with background processing
+        results_snapshot = list(job.results)
+
+    if not results_snapshot:
+        raise HTTPException(
+            status_code=400,
+            detail="No results available for this job yet"
+        )
+
+    try:
+        generator = PDFReportGenerator()
+
+        if len(results_snapshot) == 1:
+            pdf_bytes = generator.generate(results_snapshot[0])
+            filename = generator.get_filename(results_snapshot[0])
+        else:
+            pdf_bytes = generator.generate_batch(results_snapshot)
+            filename = f"news_curation_report_{job_id[:8]}.pdf"
+
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"'
+            }
+        )
+
+    except Exception as e:
+        logger.exception(f"Error generating PDF for job {job_id}")
+        raise HTTPException(status_code=500, detail="Failed to generate PDF report")
+
+
+@app.get("/api/jobs/{job_id}/results/{result_index}/export/pdf")
+async def export_single_result_pdf(job_id: str, result_index: int):
+    """
+    Export a single result from a job as a PDF report.
+
+    Args:
+        job_id: The job ID
+        result_index: Index of the result to export (0-based)
+    """
+    async with jobs_lock:
+        if job_id not in jobs:
+            raise HTTPException(status_code=404, detail="Job not found")
+        job = jobs[job_id]
+        # Copy results inside lock to avoid race condition with background processing
+        results_snapshot = list(job.results)
+
+    if result_index < 0 or result_index >= len(results_snapshot):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Result index {result_index} not found. Job has {len(results_snapshot)} results."
+        )
+
+    try:
+        generator = PDFReportGenerator()
+        result = results_snapshot[result_index]
+        pdf_bytes = generator.generate(result)
+        filename = generator.get_filename(result)
+
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"'
+            }
+        )
+
+    except Exception as e:
+        logger.exception(f"Error generating PDF for job {job_id}, result {result_index}")
+        raise HTTPException(status_code=500, detail="Failed to generate PDF report")
+
+
 # Error handlers
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
@@ -249,4 +340,5 @@ if __name__ == "__main__":
         port=settings.api_port,
         reload=True,
     )
+
 

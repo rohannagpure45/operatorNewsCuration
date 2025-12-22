@@ -8,11 +8,20 @@ from typing import List, Optional
 from src.config import get_settings
 from src.enrichment.fact_check import FactChecker
 from src.enrichment.wayback import WaybackFetcher
+from src.extractors.archives import ArchiveExtractor
 from src.extractors.article import ArticleExtractor
 from src.extractors.base import ExtractionError
 from src.extractors.browser import BrowserExtractor
 from src.extractors.router import URLRouter
+from src.extractors.rss import RSSExtractor
 from src.extractors.sec_filings import SECExtractor
+from src.extractors.site_hints import (
+    get_error_message,
+    get_rss_feed,
+    get_site_hint,
+    should_try_archive_today,
+    should_try_google_cache,
+)
 from src.extractors.twitter import TwitterExtractor
 from src.extractors.unblock import UnblockExtractor
 from src.models.schemas import (
@@ -52,6 +61,8 @@ class NewsAgent:
         self.sec_extractor = SECExtractor(timeout=settings.extraction_timeout)
         self.browser_extractor = BrowserExtractor(timeout=settings.extraction_timeout)
         self.unblock_extractor = UnblockExtractor(timeout=settings.extraction_timeout)
+        self.rss_extractor = RSSExtractor(timeout=settings.extraction_timeout)
+        self.archive_extractor = ArchiveExtractor(timeout=settings.extraction_timeout)
         
         # Check if unblock fallback is enabled
         self._use_unblock = getattr(settings, 'browserless_use_unblock', True)
@@ -77,6 +88,8 @@ class NewsAgent:
             self.sec_extractor.close(),
             self.browser_extractor.close(),
             self.unblock_extractor.close(),
+            self.rss_extractor.close(),
+            self.archive_extractor.close(),
             self.wayback.close(),
             self.fact_checker.close(),
             self.summarizer.close(),
@@ -120,6 +133,13 @@ class NewsAgent:
         )
 
         try:
+            # Check for known problematic sites and log a warning
+            site_hint = get_site_hint(url)
+            if site_hint:
+                logger.warning(
+                    f"Known problematic site detected: {site_hint.name} - {site_hint.issue}"
+                )
+
             # Step 1: Extract content
             logger.info(f"Extracting content from: {url}")
             content = await self._extract_content(url, url_type)
@@ -154,7 +174,9 @@ class NewsAgent:
         except ExtractionError as e:
             logger.error(f"Extraction failed for {url}: {e}")
             result.status = ProcessingStatus.FAILED
-            result.error = f"Extraction failed: {e}"
+            # Use enhanced error message with site-specific hints
+            error_msg = get_error_message(url, str(e))
+            result.error = f"Extraction failed: {error_msg}"
 
         except SummarizationError as e:
             logger.error(f"Summarization failed for {url}: {e}")
@@ -173,19 +195,33 @@ class NewsAgent:
         urls: List[str],
         skip_fact_check: bool = False,
         include_raw_text: bool = False,
+        sequential: bool = True,
     ) -> List[ProcessedResult]:
         """
-        Process multiple URLs concurrently.
+        Process multiple URLs.
 
         Args:
             urls: List of URLs to process.
             skip_fact_check: Skip fact-checking for all URLs.
             include_raw_text: Include raw text in results.
+            sequential: Process URLs one at a time (default True to respect rate limits).
 
         Returns:
             List of ProcessedResult objects.
         """
-        # Create semaphore for concurrency control
+        if sequential:
+            # Process URLs one at a time to respect rate limits
+            results = []
+            for url in urls:
+                result = await self.process(
+                    url,
+                    skip_fact_check=skip_fact_check,
+                    include_raw_text=include_raw_text,
+                )
+                results.append(result)
+            return results
+
+        # Concurrent processing (use with caution on rate-limited APIs)
         semaphore = asyncio.Semaphore(self.max_concurrent)
 
         async def process_with_semaphore(url: str) -> ProcessedResult:
@@ -196,7 +232,6 @@ class NewsAgent:
                     include_raw_text=include_raw_text,
                 )
 
-        # Process all URLs concurrently (with limit)
         tasks = [process_with_semaphore(url) for url in urls]
         results = await asyncio.gather(*tasks, return_exceptions=False)
 
@@ -207,7 +242,18 @@ class NewsAgent:
         url: str,
         url_type: URLType,
     ) -> ExtractedContent:
-        """Extract content using the appropriate extractor with fallback chain."""
+        """
+        Extract content using the appropriate extractor with enhanced fallback chain.
+        
+        Fallback order:
+        1. Primary extraction (httpx + trafilatura)
+        2. RSS feed extraction (if available for site)
+        3. Browser fallback (Playwright)
+        4. Unblock API fallback (Browserless /unblock)
+        5. archive.today (for paywalled sites)
+        6. Google Cache (for paywalled sites)
+        7. Wayback Machine (last resort)
+        """
         # Select extractor based on URL type
         if url_type == URLType.TWITTER:
             extractor = self.twitter_extractor
@@ -221,8 +267,24 @@ class NewsAgent:
             return content
 
         except ExtractionError as primary_error:
-            # For articles, try browser fallback first (may bypass bot detection or render JS content)
+            # For articles, try fallback chain
             if url_type not in (URLType.TWITTER, URLType.SEC_FILING):
+                
+                # Fallback 1: Try RSS feed if available
+                rss_feed = get_rss_feed(url)
+                if rss_feed:
+                    logger.info(f"Trying RSS feed fallback for: {url}")
+                    try:
+                        content = await self.rss_extractor.extract_from_feed(
+                            article_url=url,
+                            feed_url=rss_feed,
+                        )
+                        logger.info(f"Successfully extracted from RSS feed: {rss_feed}")
+                        return content
+                    except ExtractionError as rss_error:
+                        logger.warning(f"RSS fallback failed for {url}: {rss_error}")
+
+                # Fallback 2: Try browser (may bypass bot detection or render JS)
                 logger.info(f"Trying Playwright browser fallback for: {url}")
                 try:
                     content = await self.browser_extractor.extract(url)
@@ -233,7 +295,7 @@ class NewsAgent:
                         f"Browser fallback failed for {url}: {browser_error}"
                     )
 
-                # Try /unblock API fallback (better bot detection bypass)
+                # Fallback 3: Try /unblock API (better bot detection bypass)
                 if self._use_unblock:
                     logger.info(f"Trying Browserless /unblock API fallback for: {url}")
                     try:
@@ -244,7 +306,31 @@ class NewsAgent:
                             f"Unblock API fallback failed for {url}: {unblock_error}"
                         )
 
-                # Try Wayback Machine as last resort
+                # Fallback 4: Try archive.today (good for paywalled content)
+                if should_try_archive_today(url):
+                    logger.info(f"Trying archive.today fallback for: {url}")
+                    try:
+                        content = await self.archive_extractor.extract_from_archive_today(url)
+                        logger.info(f"Successfully extracted from archive.today")
+                        return content
+                    except ExtractionError as archive_error:
+                        logger.warning(
+                            f"archive.today fallback failed for {url}: {archive_error}"
+                        )
+
+                # Fallback 5: Try Google Cache
+                if should_try_google_cache(url):
+                    logger.info(f"Trying Google Cache fallback for: {url}")
+                    try:
+                        content = await self.archive_extractor.extract_from_google_cache(url)
+                        logger.info(f"Successfully extracted from Google Cache")
+                        return content
+                    except ExtractionError as cache_error:
+                        logger.warning(
+                            f"Google Cache fallback failed for {url}: {cache_error}"
+                        )
+
+                # Fallback 6: Try Wayback Machine as last resort
                 logger.info(f"Trying Wayback Machine fallback for: {url}")
                 archived_html = await self.wayback.fetch_archived_content(url)
 

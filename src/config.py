@@ -29,6 +29,11 @@ class Settings(BaseSettings):
         default=None, description="NewsGuard API key (optional)"
     )
 
+    # NewsAPI (optional - for article summary fallback)
+    newsapi_key: Optional[str] = Field(
+        default=None, description="NewsAPI.org API key for article summary fallback"
+    )
+
     # Storage - Firebase
     firebase_credentials_path: Optional[str] = Field(
         default=None, description="Path to Firebase service account JSON"

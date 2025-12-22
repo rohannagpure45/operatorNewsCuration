@@ -1,6 +1,8 @@
 """LLM-based summarization using Gemini with Instructor."""
 
+import asyncio
 import json
+import time
 from typing import List, Optional
 
 import google.generativeai as genai
@@ -16,6 +18,48 @@ from src.summarizer.prompts import (
     SUMMARIZATION_SYSTEM_PROMPT,
     SUMMARIZATION_USER_PROMPT,
 )
+
+
+class RateLimiter:
+    """Token bucket rate limiter for API calls."""
+
+    def __init__(self, requests_per_minute: int = 5):
+        """Initialize rate limiter with requests per minute limit."""
+        self.rpm = requests_per_minute
+        self.interval = 60.0 / requests_per_minute  # seconds between requests
+        self._last_request: float = 0.0
+        self._lock = asyncio.Lock()
+
+    async def acquire(self) -> None:
+        """Wait until we can make another request."""
+        async with self._lock:
+            now = time.time()
+            elapsed = now - self._last_request
+            if elapsed < self.interval:
+                wait_time = self.interval - elapsed
+                await asyncio.sleep(wait_time)
+            self._last_request = time.time()
+
+    def acquire_sync(self) -> None:
+        """Synchronous version of acquire."""
+        now = time.time()
+        elapsed = now - self._last_request
+        if elapsed < self.interval:
+            wait_time = self.interval - elapsed
+            time.sleep(wait_time)
+        self._last_request = time.time()
+
+
+# Global rate limiter for Gemini API (free tier: 5 RPM)
+_gemini_rate_limiter: Optional[RateLimiter] = None
+
+
+def get_rate_limiter(rpm: int = 4) -> RateLimiter:
+    """Get or create global rate limiter."""
+    global _gemini_rate_limiter
+    if _gemini_rate_limiter is None:
+        _gemini_rate_limiter = RateLimiter(requests_per_minute=rpm)
+    return _gemini_rate_limiter
 
 
 class SummarizationError(Exception):
@@ -188,6 +232,11 @@ class AsyncSummarizer(Summarizer):
     for true async behavior in production.
     """
 
+    def __init__(self, *args, rate_limit_rpm: int = 4, **kwargs):
+        """Initialize with rate limiting."""
+        super().__init__(*args, **kwargs)
+        self.rate_limiter = get_rate_limiter(rate_limit_rpm)
+
     async def close(self) -> None:
         """Close any resources (no-op for Summarizer, but needed for API compatibility)."""
         pass
@@ -196,8 +245,9 @@ class AsyncSummarizer(Summarizer):
         self,
         content: ExtractedContent,
     ) -> ContentSummary:
-        """Async version of summarize."""
-        import asyncio
+        """Async version of summarize with rate limiting."""
+        # Wait for rate limit
+        await self.rate_limiter.acquire()
 
         # Run sync method in thread pool
         return await asyncio.to_thread(
@@ -242,8 +292,9 @@ class AsyncSummarizer(Summarizer):
         content: str,
         max_claims: int = 5,
     ) -> List[str]:
-        """Async version of extract_claims."""
-        import asyncio
+        """Async version of extract_claims with rate limiting."""
+        # Wait for rate limit
+        await self.rate_limiter.acquire()
 
         return await asyncio.to_thread(
             self._extract_claims_sync,
@@ -289,4 +340,5 @@ class AsyncSummarizer(Summarizer):
 
         except Exception:
             return []
+
 

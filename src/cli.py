@@ -2,18 +2,29 @@
 
 import asyncio
 import json
+import logging
 import sys
 from pathlib import Path
 from typing import Optional
 
 import typer
 from rich.console import Console
+from rich.logging import RichHandler
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from src.agent import NewsAgent, process_url, process_urls
 from src.models.schemas import ProcessingStatus
+
+# Configure logging with Rich handler for better formatting
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(message)s",
+    datefmt="[%X]",
+    handlers=[RichHandler(rich_tracebacks=True, show_path=False)],
+)
+logger = logging.getLogger(__name__)
 
 app = typer.Typer(
     name="news-agent",
@@ -37,8 +48,15 @@ def process(
     json_output: bool = typer.Option(
         False, "--json", "-j", help="Output as JSON only"
     ),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Enable verbose logging (DEBUG level)"
+    ),
 ):
     """Process a single URL and display the summary."""
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logger.debug("Verbose logging enabled")
+
     if json_output:
         # Quiet mode for JSON output
         result = asyncio.run(
@@ -100,8 +118,15 @@ def batch(
     include_raw: bool = typer.Option(
         False, "--include-raw", "-r", help="Include raw extracted text"
     ),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Enable verbose logging (DEBUG level)"
+    ),
 ):
     """Process multiple URLs from a file."""
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logger.debug("Verbose logging enabled")
+
     if not input_file.exists():
         console.print(f"[red]Error:[/red] File not found: {input_file}")
         raise typer.Exit(1)
@@ -158,6 +183,23 @@ def batch(
         )
 
     console.print(table)
+
+    # Show detailed error information for failed URLs
+    failed_results = [r for r in results if r.status == ProcessingStatus.FAILED]
+    if failed_results:
+        console.print("\n[bold red]Failed URL Details:[/bold red]")
+        for result in failed_results:
+            console.print(f"\n  [cyan]{result.url}[/cyan]")
+            error_msg = result.error or "Unknown error"
+            # Provide helpful hints for common errors
+            if "403" in error_msg:
+                console.print(f"    [red]Error:[/red] {error_msg}")
+                console.print("    [dim]Hint: Site has bot protection or paywall. Try --verbose for details.[/dim]")
+            elif "timeout" in error_msg.lower():
+                console.print(f"    [red]Error:[/red] {error_msg}")
+                console.print("    [dim]Hint: Site took too long to respond (Cloudflare challenge?).[/dim]")
+            else:
+                console.print(f"    [red]Error:[/red] {error_msg}")
 
     if output:
         output_data = [r.model_dump() for r in results]
@@ -307,4 +349,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

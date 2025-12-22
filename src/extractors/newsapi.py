@@ -191,9 +191,9 @@ class NewsAPIExtractor(BaseExtractor):
         parsed1 = urlparse(url1)
         parsed2 = urlparse(url2)
 
-        # Compare domains (normalize by removing www.)
-        domain1 = parsed1.netloc.lower().replace("www.", "")
-        domain2 = parsed2.netloc.lower().replace("www.", "")
+        # Compare domains (normalize by removing leading www. only)
+        domain1 = parsed1.netloc.lower().removeprefix("www.")
+        domain2 = parsed2.netloc.lower().removeprefix("www.")
         if domain1 != domain2:
             return False
 

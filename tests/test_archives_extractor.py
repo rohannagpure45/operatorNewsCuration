@@ -174,7 +174,8 @@ class TestArchiveExtractor:
             )
 
             assert result is not None
-            assert "Meta" in result.raw_text or "Mango" in result.raw_text
+            assert "Meta" in result.raw_text
+            assert "Mango" in result.raw_text
             assert result.extraction_method == "google_cache"
 
     @pytest.mark.asyncio
@@ -229,7 +230,8 @@ class TestArchiveExtractor:
                 "https://www.wsj.com/article"
             )
 
-            # Should have tried archive.today first, then Google Cache
+            # Should have tried archive.today domains first (up to 4), then Google Cache
+            # At minimum: 1 archive.today + 1 Google Cache = 2 calls
             assert call_count >= 2
             assert result is not None
 

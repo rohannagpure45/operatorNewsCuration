@@ -167,11 +167,13 @@ class RSSExtractor(BaseExtractor):
                     best_score = slug_similarity
 
             # Strategy 4: Check if article URL is contained in entry URL or vice versa
-            if article_slug in entry_path or entry_slug in article_path:
-                score = 0.7
-                if score > best_score:
-                    best_match = entry
-                    best_score = score
+            # Only apply for slugs >= 4 chars to avoid false positives (e.g., "ai" matching "/training-ai/")
+            if len(article_slug) >= 4 and len(entry_slug) >= 4:
+                if article_slug in entry_path or entry_slug in article_path:
+                    score = 0.7
+                    if score > best_score:
+                        best_match = entry
+                        best_score = score
 
         # If we found a good match, return it
         if best_score >= 0.7:
@@ -201,7 +203,8 @@ class RSSExtractor(BaseExtractor):
         content = ""
         
         # Try content:encoded first (often has full HTML)
-        if "content" in entry and entry.content:
+        # Defensive check: ensure content exists and has at least one element
+        if "content" in entry and entry.content and len(entry.content) > 0:
             content = entry.content[0].get("value", "")
         
         # Fall back to summary/description

@@ -128,9 +128,9 @@ KNOWN_SITES = [
     ),
     SiteHint(
         name="Medium (paywalled)",
-        pattern=r"^https?://(www\.)?medium\.com/.*/.*\?source=friends_link",
+        pattern=r"^https?://(www\.)?medium\.com/(?!.*\?source=friends_link)",
         issue="Member-only content",
-        hint="This Medium article is behind their paywall. Try finding a friend link.",
+        hint="This Medium article may be behind their paywall. Try finding a friend link.",
         rss_feed=None,
         try_archive_today=True,
         try_google_cache=True,
@@ -276,7 +276,6 @@ def get_newsapi_domain(url: str) -> Optional[str]:
         return hint.newsapi_domain
     # Fall back to extracting domain from URL
     try:
-        from urllib.parse import urlparse
         parsed = urlparse(url)
         return parsed.netloc.replace("www.", "")
     except Exception:

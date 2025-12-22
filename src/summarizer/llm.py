@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import threading
 import time
 from typing import List, Optional
 
@@ -29,6 +30,7 @@ class RateLimiter:
         self.interval = 60.0 / requests_per_minute  # seconds between requests
         self._last_request: float = 0.0
         self._lock = asyncio.Lock()
+        self._sync_lock = threading.Lock()
 
     async def acquire(self) -> None:
         """Wait until we can make another request."""
@@ -41,13 +43,14 @@ class RateLimiter:
             self._last_request = time.time()
 
     def acquire_sync(self) -> None:
-        """Synchronous version of acquire."""
-        now = time.time()
-        elapsed = now - self._last_request
-        if elapsed < self.interval:
-            wait_time = self.interval - elapsed
-            time.sleep(wait_time)
-        self._last_request = time.time()
+        """Synchronous version of acquire (thread-safe)."""
+        with self._sync_lock:
+            now = time.time()
+            elapsed = now - self._last_request
+            if elapsed < self.interval:
+                wait_time = self.interval - elapsed
+                time.sleep(wait_time)
+            self._last_request = time.time()
 
 
 # Global rate limiter for Gemini API (free tier: 5 RPM)

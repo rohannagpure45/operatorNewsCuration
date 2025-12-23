@@ -28,6 +28,8 @@ class SiteHint:
     has_paywall: bool = False
     # Domain for NewsAPI search (if different from URL domain)
     newsapi_domain: Optional[str] = None
+    # Whether to prefer browser extraction (for Cloudflare-protected sites)
+    prefer_browser: bool = False
 
 
 # Known problematic sites with their specific issues and fallback strategies
@@ -37,12 +39,13 @@ KNOWN_SITES = [
         pattern=r"^https?://(www\.)?openai\.com/",
         issue="Cloudflare Turnstile JS challenge",
         hint="OpenAI uses aggressive bot protection. Try their RSS feed or official API.",
-        rss_feed="https://openai.com/blog/rss.xml",
-        alternative="https://openai.com/blog/rss.xml",
+        rss_feed="https://openai.com/news/rss",
+        alternative="https://openai.com/news/rss",
         try_archive_today=True,
         try_google_cache=True,
         requires_auth=False,
         has_paywall=False,
+        prefer_browser=True,  # Cloudflare sites work better with browser
     ),
     SiteHint(
         name="Bloomberg",
@@ -103,6 +106,7 @@ KNOWN_SITES = [
         try_google_cache=True,
         requires_auth=False,
         has_paywall=False,
+        prefer_browser=True,  # Cloudflare sites work better with browser
     ),
     SiteHint(
         name="Google Blog",
@@ -280,4 +284,24 @@ def get_newsapi_domain(url: str) -> Optional[str]:
         return parsed.netloc.replace("www.", "")
     except Exception:
         return None
+
+
+def should_prefer_browser(url: str) -> bool:
+    """
+    Check if browser extraction should be prioritized for this URL.
+    
+    This is typically true for Cloudflare-protected sites where:
+    1. Primary httpx extraction fails with 403
+    2. RSS feeds are also blocked by Cloudflare
+    3. Archive services may not have the page
+    4. But a real browser can successfully load the page
+    
+    Args:
+        url: The URL to check.
+        
+    Returns:
+        True if browser should be tried before other fallbacks.
+    """
+    hint = get_site_hint(url)
+    return hint.prefer_browser if hint else False
 

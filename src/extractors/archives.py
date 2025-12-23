@@ -1,6 +1,8 @@
 """Alternative archive services for bypassing paywalls."""
 
+import asyncio
 import logging
+import random
 import re
 from datetime import datetime
 from typing import Optional
@@ -27,13 +29,17 @@ class ArchiveExtractor(BaseExtractor):
     url_type = URLType.NEWS_ARTICLE
     extraction_method = "archive_service"
 
-    # Archive.today domains (they rotate)
+    # Archive.today domains (reduced to avoid rate limiting)
+    # Previously had 4 domains, now limited to 2 primary ones
     ARCHIVE_TODAY_DOMAINS = [
         "archive.today",
         "archive.is",
-        "archive.ph",
-        "archive.md",
     ]
+    
+    # Backoff configuration
+    BACKOFF_BASE_DELAY = 1.0  # seconds
+    BACKOFF_MAX_DELAY = 30.0  # seconds
+    BACKOFF_JITTER = 0.5  # seconds
 
     def __init__(self, timeout: int = 30):
         """Initialize the archive extractor."""
@@ -138,6 +144,130 @@ class ArchiveExtractor(BaseExtractor):
 
         raise ExtractionError(f"No archive.today snapshot found for: {url}")
 
+    def _calculate_backoff_delay(self, attempt: int) -> float:
+        """
+        Calculate exponential backoff delay with jitter.
+        
+        Args:
+            attempt: The attempt number (0-indexed).
+            
+        Returns:
+            Delay in seconds before the next attempt.
+        """
+        # Exponential backoff: base * 2^attempt
+        delay = self.BACKOFF_BASE_DELAY * (2 ** attempt)
+        
+        # Add random jitter to prevent thundering herd
+        jitter = random.uniform(0, self.BACKOFF_JITTER)
+        delay += jitter
+        
+        # Cap at maximum delay
+        return min(delay, self.BACKOFF_MAX_DELAY)
+
+    async def extract_from_archive_today_with_backoff(
+        self,
+        url: str,
+        max_retries: int = 3,
+    ) -> ExtractedContent:
+        """
+        Extract from archive.today with exponential backoff on rate limiting.
+        
+        Tries all mirror domains before backing off. Only applies backoff
+        when ALL domains have been tried and at least one returned 429.
+        
+        Args:
+            url: The URL to find in archives.
+            max_retries: Maximum number of retry attempts on 429 errors.
+            
+        Returns:
+            ExtractedContent from the archive.
+            
+        Raises:
+            ExtractionError: If all attempts fail.
+        """
+        logger.info(f"Trying archive.today with backoff for: {url}")
+        
+        client = await self.get_client()
+        encoded_url = quote(url, safe="")
+        
+        for attempt in range(max_retries + 1):
+            rate_limited_this_round = False
+            
+            # Try each domain
+            for domain in self.ARCHIVE_TODAY_DOMAINS:
+                try:
+                    search_url = f"https://{domain}/newest/{encoded_url}"
+                    
+                    response = await client.get(
+                        search_url,
+                        follow_redirects=True,
+                        timeout=self.timeout,
+                    )
+                    
+                    # Handle rate limiting - continue to next domain instead of breaking
+                    if response.status_code == 429:
+                        logger.warning(f"Rate limited by {domain}, trying next mirror...")
+                        rate_limited_this_round = True
+                        continue  # Try next domain instead of breaking
+                    
+                    if response.status_code == 200:
+                        final_url = str(response.url)
+                        
+                        if self._is_valid_archive_page(response.text, domain):
+                            html = response.text
+                            html = self._clean_archive_today_html(html)
+                            
+                            text = trafilatura.extract(
+                                html,
+                                url=url,
+                                include_comments=False,
+                                include_tables=True,
+                            )
+                            
+                            if text and len(text.strip()) >= 100:
+                                metadata = trafilatura.extract_metadata(html, default_url=url)
+                                
+                                content = self._create_content(
+                                    url=url,
+                                    raw_text=text,
+                                    title=metadata.title if metadata else None,
+                                    author=metadata.author if metadata else None,
+                                    published_date=self._parse_metadata_date(metadata),
+                                    site_name=metadata.sitename if metadata else None,
+                                    fallback_used=True,
+                                )
+                                content.extraction_method = "archive_today"
+                                return content
+                    
+                except httpx.TimeoutException:
+                    logger.debug(f"Timeout accessing {domain}")
+                    continue
+                except ExtractionError:
+                    raise
+                except Exception as e:
+                    logger.debug(f"Error accessing {domain}: {e}")
+                    continue
+            
+            # After trying all domains, check if we should retry with backoff
+            if rate_limited_this_round:
+                if attempt < max_retries:
+                    delay = self._calculate_backoff_delay(attempt)
+                    logger.warning(
+                        f"All domains rate limited, backing off for {delay:.1f}s "
+                        f"(attempt {attempt + 1}/{max_retries + 1})"
+                    )
+                    await asyncio.sleep(delay)
+                    continue  # Retry all domains
+                else:
+                    raise ExtractionError(
+                        f"Rate limited by archive.today after {max_retries + 1} attempts: {url}"
+                    )
+            else:
+                # No rate limiting encountered, no point retrying
+                break
+        
+        raise ExtractionError(f"No archive.today snapshot found for: {url}")
+
     async def extract_from_google_cache(self, url: str) -> ExtractedContent:
         """
         Extract content from Google's cache.
@@ -182,6 +312,12 @@ class ArchiveExtractor(BaseExtractor):
             if "cache:" not in str(response.url) and "webcache" not in str(response.url):
                 raise ExtractionError("Google Cache redirected away from cache")
 
+            # Check for redirect/error page indicators before extraction
+            if not self._is_valid_google_cache_response(html, url):
+                raise ExtractionError(
+                    f"Google Cache returned redirect page, not cached content: {url}"
+                )
+
             # Clean Google Cache specific elements
             html = self._clean_google_cache_html(html)
 
@@ -199,6 +335,16 @@ class ArchiveExtractor(BaseExtractor):
                 )
 
             metadata = trafilatura.extract_metadata(html, default_url=url)
+
+            # Post-extraction validation: check if title indicates error page
+            if metadata and metadata.title:
+                title_lower = metadata.title.lower()
+                if "google search" in title_lower or (
+                    "redirected" in title_lower and "google" in title_lower
+                ):
+                    raise ExtractionError(
+                        f"Extracted content appears to be Google error page, not cached content: {url}"
+                    )
 
             content = self._create_content(
                 url=url,
@@ -227,6 +373,34 @@ class ArchiveExtractor(BaseExtractor):
         if f'action="https://{domain}/submit/"' in html:
             # This is the submission form, not an archived page
             if 'id="CONTENT"' not in html:
+                return False
+        return True
+
+    def _is_valid_google_cache_response(self, html: str, original_url: str) -> bool:
+        """
+        Check if Google Cache response contains actual cached content.
+        
+        When Google Cache doesn't have a cached version of a page, it returns
+        a redirect/error page instead of cached content. This method detects
+        those invalid responses.
+        
+        Args:
+            html: The HTML content from Google Cache response.
+            original_url: The original URL we're trying to get from cache.
+            
+        Returns:
+            True if the response appears to be valid cached content,
+            False if it appears to be a redirect/error page.
+        """
+        # Reject redirect/error page indicators
+        error_indicators = [
+            "Please click here if you are not redirected",
+            "you are not redirected within a few seconds",
+            "having trouble accessing Google Search",
+        ]
+        for indicator in error_indicators:
+            if indicator in html:
+                logger.debug(f"Google Cache redirect indicator found: {indicator[:50]}...")
                 return False
         return True
 

@@ -192,3 +192,74 @@ class TestBrowserExtractorCanHandle:
         """Test that invalid URLs return False."""
         extractor = BrowserExtractor()
         assert extractor.can_handle("not-a-url") is False
+
+
+# =============================================================================
+# Browser Priority Tests for Cloudflare-Protected Sites
+# =============================================================================
+
+
+class TestBrowserPrioritySiteHints:
+    """Tests for browser priority configuration in site hints."""
+
+    def test_openai_has_prefer_browser_flag(self):
+        """Test that OpenAI site hint has prefer_browser=True."""
+        from src.extractors.site_hints import get_site_hint
+        
+        hint = get_site_hint("https://openai.com/index/frontierscience")
+        assert hint is not None
+        assert hint.prefer_browser is True
+
+    def test_anthropic_has_prefer_browser_flag(self):
+        """Test that Anthropic site hint has prefer_browser=True."""
+        from src.extractors.site_hints import get_site_hint
+        
+        hint = get_site_hint("https://www.anthropic.com/news/article")
+        assert hint is not None
+        assert hint.prefer_browser is True
+
+    def test_bloomberg_does_not_prefer_browser(self):
+        """Test that paywalled sites without Cloudflare don't prefer browser."""
+        from src.extractors.site_hints import get_site_hint
+        
+        hint = get_site_hint("https://www.bloomberg.com/news/article")
+        assert hint is not None
+        # Bloomberg has paywall, not Cloudflare - should not prefer browser
+        assert hint.prefer_browser is False
+
+    def test_should_prefer_browser_helper_function(self):
+        """Test the should_prefer_browser() helper function."""
+        from src.extractors.site_hints import should_prefer_browser
+        
+        # Cloudflare-protected sites
+        assert should_prefer_browser("https://openai.com/index/test") is True
+        assert should_prefer_browser("https://www.anthropic.com/news") is True
+        
+        # Non-Cloudflare sites
+        assert should_prefer_browser("https://www.bloomberg.com/article") is False
+        assert should_prefer_browser("https://example.com/article") is False
+
+
+class TestAgentBrowserPriority:
+    """Tests for agent fallback chain with browser priority."""
+
+    def test_openai_should_prefer_browser(self):
+        """Test that OpenAI URLs are flagged to prefer browser extraction."""
+        from src.extractors.site_hints import should_prefer_browser
+        
+        assert should_prefer_browser("https://openai.com/index/frontierscience") is True
+
+    def test_cloudflare_sites_have_rss_but_prefer_browser(self):
+        """Test that Cloudflare sites have RSS available but prefer browser extraction."""
+        from src.extractors.site_hints import should_prefer_browser, get_site_hint
+        
+        # For Cloudflare sites, we should prefer browser
+        openai_url = "https://openai.com/index/frontierscience"
+        
+        hint = get_site_hint(openai_url)
+        assert hint is not None
+        assert hint.prefer_browser is True
+        
+        # The RSS feed exists but browser should be tried first
+        assert hint.rss_feed is not None  # RSS is available
+        assert should_prefer_browser(openai_url) is True  # But browser is preferred

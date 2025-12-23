@@ -19,6 +19,7 @@ from src.extractors.site_hints import (
     get_error_message,
     get_rss_feed,
     get_site_hint,
+    should_prefer_browser,
     should_try_archive_today,
     should_try_google_cache,
 )
@@ -270,41 +271,73 @@ class NewsAgent:
             # For articles, try fallback chain
             if url_type not in (URLType.TWITTER, URLType.SEC_FILING):
                 
-                # Fallback 1: Try RSS feed if available
-                rss_feed = get_rss_feed(url)
-                if rss_feed:
-                    logger.info(f"Trying RSS feed fallback for: {url}")
+                # Check if this is a Cloudflare-protected site that prefers browser
+                prefer_browser = should_prefer_browser(url)
+                
+                if prefer_browser:
+                    # For Cloudflare sites, try browser FIRST (before RSS/archives)
+                    logger.info(f"Site prefers browser extraction, trying Playwright first for: {url}")
                     try:
-                        content = await self.rss_extractor.extract_from_feed(
-                            article_url=url,
-                            feed_url=rss_feed,
-                        )
-                        logger.info(f"Successfully extracted from RSS feed: {rss_feed}")
+                        content = await self.browser_extractor.extract(url)
+                        content.extraction_method = "playwright_browser"
                         return content
-                    except ExtractionError as rss_error:
-                        logger.warning(f"RSS fallback failed for {url}: {rss_error}")
-
-                # Fallback 2: Try browser (may bypass bot detection or render JS)
-                logger.info(f"Trying Playwright browser fallback for: {url}")
-                try:
-                    content = await self.browser_extractor.extract(url)
-                    content.extraction_method = "playwright_browser"
-                    return content
-                except ExtractionError as browser_error:
-                    logger.warning(
-                        f"Browser fallback failed for {url}: {browser_error}"
-                    )
-
-                # Fallback 3: Try /unblock API (better bot detection bypass)
-                if self._use_unblock:
-                    logger.info(f"Trying Browserless /unblock API fallback for: {url}")
-                    try:
-                        content = await self.unblock_extractor.extract(url)
-                        return content
-                    except ExtractionError as unblock_error:
+                    except ExtractionError as browser_error:
                         logger.warning(
-                            f"Unblock API fallback failed for {url}: {unblock_error}"
+                            f"Browser extraction failed for {url}: {browser_error}"
                         )
+                    
+                    # Try unblock API as backup for Cloudflare sites
+                    if self._use_unblock:
+                        logger.info(f"Trying Browserless /unblock API for Cloudflare site: {url}")
+                        try:
+                            content = await self.unblock_extractor.extract(url)
+                            return content
+                        except ExtractionError as unblock_error:
+                            logger.warning(
+                                f"Unblock API failed for {url}: {unblock_error}"
+                            )
+                    
+                    # For Cloudflare sites, skip RSS (it's also blocked) and go to archives
+                    logger.info(f"Cloudflare site, skipping RSS fallback for: {url}")
+                else:
+                    # Standard fallback order for non-Cloudflare sites
+                    # Fallback 1: Try RSS feed if available
+                    rss_feed = get_rss_feed(url)
+                    if rss_feed:
+                        logger.info(f"Trying RSS feed fallback for: {url}")
+                        try:
+                            content = await self.rss_extractor.extract_from_feed(
+                                article_url=url,
+                                feed_url=rss_feed,
+                            )
+                            logger.info(f"Successfully extracted from RSS feed: {rss_feed}")
+                            return content
+                        except ExtractionError as rss_error:
+                            logger.warning(f"RSS fallback failed for {url}: {rss_error}")
+
+                    # Fallback 2: Try browser (may bypass bot detection or render JS)
+                    logger.info(f"Trying Playwright browser fallback for: {url}")
+                    try:
+                        content = await self.browser_extractor.extract(url)
+                        content.extraction_method = "playwright_browser"
+                        return content
+                    except ExtractionError as browser_error:
+                        logger.warning(
+                            f"Browser fallback failed for {url}: {browser_error}"
+                        )
+
+                    # Fallback 3: Try /unblock API (better bot detection bypass)
+                    # Note: For Cloudflare sites (prefer_browser=True), unblock is already
+                    # tried in the if-branch above, so we only try it here for non-Cloudflare sites
+                    if self._use_unblock:
+                        logger.info(f"Trying Browserless /unblock API fallback for: {url}")
+                        try:
+                            content = await self.unblock_extractor.extract(url)
+                            return content
+                        except ExtractionError as unblock_error:
+                            logger.warning(
+                                f"Unblock API fallback failed for {url}: {unblock_error}"
+                            )
 
                 # Fallback 4: Try archive.today (good for paywalled content)
                 if should_try_archive_today(url):

@@ -1,0 +1,26 @@
+[
+  {
+    "url": "https://openai.com/index/frontierscience",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": null,
+    "content": null,
+    "raw_text": null,
+    "summary": null,
+    "fact_check": null,
+    "error": "Extraction failed: Failed to fetch article (status 403): https://openai.com/index/frontierscience\n\n[Site: OpenAI]\nKnown issue: Cloudflare Turnstile JS challenge\nSuggestion: OpenAI uses aggressive bot protection. Try their RSS feed or official API.\nAlternative source: https://openai.com/news/rss",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": null,
+    "content": null,
+    "raw_text": null,
+    "summary": null,
+    "fact_check": null,
+    "error": "Extraction failed: Failed to fetch article (status 403): https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work\n\n[Site: Bloomberg]\nKnown issue: Paywall + advanced bot detection\nSuggestion: Bloomberg requires a subscription. Trying archive services.\nNote: This site has a paywall.",
+    "processing_time_ms": null
+  }
+]

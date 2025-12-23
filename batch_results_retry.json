@@ -1,0 +1,145 @@
+[
+  {
+    "url": "https://openai.com/index/frontierscience",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-23 04:33:56.001392+00:00",
+    "content": {
+      "title": "Google Search",
+      "author": null,
+      "published_date": null,
+      "word_count": 27,
+      "language": "en",
+      "site_name": "openai.com"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "The provided content is a technical redirect and error notification page for Google Search. It serves as a placeholder to guide users who are not automatically redirected to the search interface, offering manual links and a feedback mechanism for those experiencing accessibility issues.",
+      "key_points": [
+        "The page is designed to facilitate an automatic redirection to Google Search.",
+        "Users are provided with a manual link to click if the redirection does not occur within a few seconds.",
+        "A troubleshooting link is available for users having difficulty accessing the search service.",
+        "A feedback option is included to allow users to report technical problems."
+      ],
+      "sentiment": "neutral",
+      "entities": [
+        {
+          "text": "Google Search",
+          "type": "ORG",
+          "relevance": 1.0
+        }
+      ],
+      "implications": [
+        "Users may experience a delay in accessing the search engine if the automatic redirect fails.",
+        "The presence of a feedback link suggests the service provider monitors redirection failures for quality assurance."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Please click here if you are not redirected within a few seconds.",
+          "context": "Instructional text for manual intervention during a failed automatic redirect."
+        },
+        {
+          "id": 2,
+          "source_text": "If you're having trouble accessing Google Search, please click here, or send feedback.",
+          "context": "Support options provided to users encountering technical barriers."
+        }
+      ],
+      "topics": [
+        "Web Redirection",
+        "Technical Support",
+        "User Experience"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 60148
+  },
+  {
+    "url": "https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-23 04:34:28.996587+00:00",
+    "content": {
+      "title": "AI Boom Threatens to Suck Resources Away From Road, Bridge Work",
+      "author": "Brooke Sutherland",
+      "published_date": "2025-12-12 00:00:00",
+      "word_count": 79,
+      "language": "en",
+      "site_name": "Bloomberg"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "The rapid expansion of AI data center construction is creating a resource vacuum within the construction industry, potentially jeopardizing public infrastructure projects. As labor and materials are diverted toward high-priority data center developments, state and local initiatives\u2014including road repairs, bridge reconstructions, and sewer overhauls\u2014face significant risks of delay and increased competition for essential resources.",
+      "key_points": [
+        "The construction of AI data centers is experiencing a massive boom that is consuming a disproportionate share of market resources.",
+        "State and local infrastructure projects are facing direct competition for labor and materials from private data center developers.",
+        "Critical public works such as road repairs and bridge reconstructions are at risk of significant delays.",
+        "The resource drain extends to essential utility maintenance, including sewer system overhauls.",
+        "The industrial construction market is shifting focus toward AI-related infrastructure at the expense of traditional public projects."
+      ],
+      "sentiment": "negative",
+      "entities": [
+        {
+          "text": "Brooke Sutherland",
+          "type": "PERSON",
+          "relevance": 0.9
+        },
+        {
+          "text": "Bloomberg",
+          "type": "ORG",
+          "relevance": 0.7
+        },
+        {
+          "text": "Industrial Strength",
+          "type": "PRODUCT",
+          "relevance": 0.5
+        }
+      ],
+      "implications": [
+        "Potential degradation of public infrastructure due to deferred maintenance and delayed repairs.",
+        "Increased costs for state and local governments as they compete with high-budget tech firms for construction labor.",
+        "A shift in the labor market where specialized construction workers prioritize data center projects over public works."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "The data center construction boom is sucking up resources from other parts of the market.",
+          "context": "The author explains the primary cause of the resource shortage in other construction sectors."
+        },
+        {
+          "id": 2,
+          "source_text": "Road repairs, bridge reconstructions and sewer overhauls are at risk of getting delayed",
+          "context": "Identifies the specific types of public infrastructure most likely to be negatively impacted by the AI boom."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Infrastructure",
+        "Construction Industry",
+        "Labor Market",
+        "Data Centers",
+        "Public Works"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "The data center construction boom is diverting resources away from other sectors of the construction market.",
+        "State and local infrastructure projects are facing increased competition for labor due to the rise in data center construction.",
+        "Road repair projects are at risk of being delayed due to the resource demands of the data center construction boom.",
+        "Bridge reconstruction projects are at risk of being delayed due to the resource demands of the data center construction boom.",
+        "Sewer overhaul projects are at risk of being delayed due to the resource demands of the data center construction boom."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 34571
+  }
+]

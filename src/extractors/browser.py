@@ -325,19 +325,14 @@ class BrowserExtractor(BaseExtractor):
                 except Exception:
                     logger.debug("networkidle timeout, continuing with domcontentloaded state")
 
-                # Check status after potential challenge resolution
-                if response.status == 403:
-                    # Double-check if we're still on a challenge page
-                    if await self._is_cloudflare_challenge(page):
-                        raise ExtractionError(
-                            f"Access denied (403) - Cloudflare challenge active: {url}"
-                        )
-                    # 403 might have been the initial response, but page loaded after challenge
-                    logger.info("Initial 403 response, but page content now available")
-
+                # Check for non-recoverable HTTP errors (excluding 403 which may be Cloudflare-related)
                 if response.status >= 400 and response.status != 403:
                     raise ExtractionError(
                         f"HTTP error {response.status} for URL: {url}"
+                    )
+                elif response.status == 403 and await self._is_cloudflare_challenge(page):
+                    raise ExtractionError(
+                        f"Access denied (403) - Cloudflare challenge active: {url}"
                     )
 
                 # Wait a bit for any dynamic content and JS execution

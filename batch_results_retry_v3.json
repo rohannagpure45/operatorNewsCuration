@@ -1,0 +1,89 @@
+[
+  {
+    "url": "https://openai.com/index/frontierscience",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": null,
+    "content": null,
+    "raw_text": null,
+    "summary": null,
+    "fact_check": null,
+    "error": "Extraction failed: Failed to fetch article (status 403): https://openai.com/index/frontierscience\n\n[Site: OpenAI]\nKnown issue: Cloudflare Turnstile JS challenge\nSuggestion: OpenAI uses aggressive bot protection. Try their RSS feed or official API.\nAlternative source: https://openai.com/news/rss",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-24 07:45:13.392127+00:00",
+    "content": {
+      "title": "AI Boom Threatens to Suck Resources Away From Road, Bridge Work",
+      "author": "Brooke Sutherland",
+      "published_date": "2025-12-12 00:00:00",
+      "word_count": 79,
+      "language": "en",
+      "site_name": "Bloomberg"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "The rapid expansion of AI data center construction is diverting critical resources, including labor and materials, away from public infrastructure projects. This surge in demand for tech-related facilities is creating intense competition that threatens to delay essential state and local works such as road repairs, bridge reconstructions, and sewer system overhauls.",
+      "key_points": [
+        "The AI data center boom is consuming a disproportionate share of resources within the construction market.",
+        "Public infrastructure projects like roads and bridges are at high risk of significant delays.",
+        "State and local governments face increased competition for skilled construction labor.",
+        "The resource drain extends to essential utility maintenance, including sewer overhauls.",
+        "The construction market is shifting focus toward private tech infrastructure at the expense of public works."
+      ],
+      "sentiment": "negative",
+      "entities": [
+        {
+          "text": "Brooke Sutherland",
+          "type": "PERSON",
+          "relevance": 1.0
+        },
+        {
+          "text": "Bloomberg",
+          "type": "ORG",
+          "relevance": 0.9
+        },
+        {
+          "text": "Industrial Strength",
+          "type": "PRODUCT",
+          "relevance": 0.7
+        }
+      ],
+      "implications": [
+        "Potential degradation of public safety due to delayed bridge and road maintenance.",
+        "Increased costs for public infrastructure projects as labor prices rise due to competition.",
+        "A widening gap between the growth of private tech infrastructure and the maintenance of public utilities."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "The data center construction boom is sucking up resources from other parts of the market.",
+          "context": "Explains the primary driver behind the resource shortage in other construction sectors."
+        },
+        {
+          "id": 2,
+          "source_text": "Road repairs, bridge reconstructions and sewer overhauls are at risk of getting delayed",
+          "context": "Identifies the specific types of public infrastructure most vulnerable to the AI boom."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Construction Industry",
+        "Public Infrastructure",
+        "Data Centers",
+        "Labor Market"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 33368
+  }
+]

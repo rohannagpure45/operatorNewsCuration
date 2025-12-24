@@ -1,0 +1,182 @@
+[
+  {
+    "url": "https://openai.com/index/frontierscience",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-24 07:54:13.975126+00:00",
+    "content": {
+      "title": "Evaluating AI\u2019s ability to perform scientific research tasks",
+      "author": null,
+      "published_date": "2025-12-16 00:00:00",
+      "word_count": 1400,
+      "language": "en",
+      "site_name": "OpenAI"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "OpenAI has introduced FrontierScience, a new benchmark designed to evaluate expert-level scientific reasoning in AI models across the fields of physics, chemistry, and biology. Developed in collaboration with PhD scientists and International Olympiad medalists, the benchmark features two distinct tracks: an 'Olympiad' set for constrained, high-level reasoning and a 'Research' set for multi-step, open-ended scientific tasks. Initial testing shows that while frontier models like GPT-5.2 are beginning to master structured scientific problems, significant challenges remain in performing open-ended research, highlighting both the progress and the current limitations of AI in accelerating scientific discovery.",
+      "key_points": [
+        "FrontierScience provides a more rigorous evaluation than previous benchmarks like GPQA, which have become saturated as models improve.",
+        "The benchmark includes over 700 questions, with a 'gold set' of 160 questions being open-sourced to the community.",
+        "The 'Olympiad' track focuses on theoretical, short-answer questions, while the 'Research' track uses a 10-point rubric to grade complex, multi-step subtasks.",
+        "GPT-5.2 currently leads performance on the benchmark, scoring 77% on Olympiad tasks and 25% on Research tasks.",
+        "Evaluation results indicate that while AI can significantly shorten scientific workflows, human judgment remains essential for problem framing and validation.",
+        "The benchmark aims to serve as a 'north star' for developing AI models that can eventually contribute to novel scientific discoveries."
+      ],
+      "sentiment": "positive",
+      "entities": [
+        {
+          "text": "OpenAI",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "FrontierScience",
+          "type": "PRODUCT",
+          "relevance": 1.0
+        },
+        {
+          "text": "GPT-5.2",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "GPQA",
+          "type": "PRODUCT",
+          "relevance": 0.7
+        },
+        {
+          "text": "Claude Opus 4.5",
+          "type": "PRODUCT",
+          "relevance": 0.6
+        },
+        {
+          "text": "Gemini 3 Pro",
+          "type": "PRODUCT",
+          "relevance": 0.6
+        },
+        {
+          "text": "International Math Olympiad",
+          "type": "EVENT",
+          "relevance": 0.5
+        }
+      ],
+      "implications": [
+        "AI models are transitioning from simple fact recall to complex, multi-step scientific reasoning.",
+        "The development of rubric-based model graders allows for scalable evaluation of open-ended scientific tasks.",
+        "Future scientific progress may be accelerated by AI 'partners' that handle literature searches and mathematical proofs.",
+        "There is a growing need for benchmarks that assess non-textual scientific work, such as experimental interaction and hypothesis generation."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "The most important benchmark for the scientific capabilities of AI is the novel discoveries it helps generate; those are what ultimately matter to science and society.",
+          "context": "The author emphasizes that while benchmarks are useful tools, the ultimate goal of AI in science is real-world discovery."
+        },
+        {
+          "id": 2,
+          "source_text": "FrontierScience-Research consists of 60 original research subtasks designed by PhD scientists... graded using a 10-point rubric.",
+          "context": "Description of the methodology used to evaluate open-ended research capabilities that a PhD scientist might encounter."
+        },
+        {
+          "id": 3,
+          "source_text": "In our initial evaluations, GPT\u20115.2 is our top performing model on FrontierScience-Olympiad (scoring 77%) and Research (scoring 25%)",
+          "context": "Performance data highlighting the current state of the art in scientific reasoning models."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Scientific Research",
+        "Benchmarking",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "Model Evaluation"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 47517
+  },
+  {
+    "url": "https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-24 07:54:52.449061+00:00",
+    "content": {
+      "title": "Bloomberg",
+      "author": null,
+      "published_date": "2025-12-12 00:00:00",
+      "word_count": 79,
+      "language": "en",
+      "site_name": "bloomberg.com"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "The provided content is a subscription and security landing page for a Bloomberg news article titled 'AI Data Center Boom May Suck Resources Away From Road, Bridge Work.' The article's central thesis, as indicated by its title and metadata, explores the potential for the rapid expansion of artificial intelligence infrastructure to divert critical construction resources, labor, and materials away from public works projects such as roads and bridges.",
+      "key_points": [
+        "The title suggests a significant boom in AI data center construction.",
+        "There is a concern that this boom may compete for resources with traditional infrastructure projects like roads and bridges.",
+        "The content requires a Bloomberg.com subscription for full access to global markets news.",
+        "The website utilizes bot-detection measures, requiring JavaScript and cookies to be enabled.",
+        "The article is part of a newsletter series published on December 12, 2025."
+      ],
+      "sentiment": "neutral",
+      "entities": [
+        {
+          "text": "Bloomberg",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "Bloomberg.com",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "Potential labor shortages for public infrastructure projects due to high demand in the private tech sector.",
+        "Increased costs for road and bridge work as materials are diverted to data center construction.",
+        "Possible delays in government-funded infrastructure improvements."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "AI Data Center Boom May Suck Resources Away From Road, Bridge Work",
+          "context": "The primary headline indicating the subject of the resource competition."
+        },
+        {
+          "id": 2,
+          "source_text": "Get the most important global markets news at your fingertips with a Bloomberg.com subscription.",
+          "context": "The call to action for accessing the full analysis of the market impacts."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Infrastructure",
+        "Data Centers",
+        "Resource Allocation",
+        "Construction Industry"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Bloomberg.com offers a subscription service for global markets news.",
+        "Bloomberg maintains a Terms of Service document for its website users.",
+        "Bloomberg maintains a Cookie Policy for its website users.",
+        "The Bloomberg website requires browsers to support JavaScript and cookies to proceed past its bot detection interface.",
+        "Bloomberg provides a support team to handle inquiries related to website access messages and reference IDs."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 35791
+  }
+]

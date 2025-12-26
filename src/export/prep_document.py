@@ -6,10 +6,11 @@ Generates professional PDF prep documents for executive briefings.
 from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 from fpdf import FPDF
 
-from src.models.schemas import ProcessedResult, ProcessingStatus, Sentiment
+from src.models.schemas import EntityType, ProcessedResult, ProcessingStatus, Sentiment
 
 
 def sanitize_text(obj):
@@ -150,7 +151,7 @@ class PrepDocumentGenerator:
         
         # Date
         pdf.ln(20)
-        date = datetime.now().strftime("%B %d, %Y")
+        date = datetime.now(timezone.utc).strftime("%B %d, %Y")
         pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(55, 65, 81)
         pdf.cell(0, 8, date, align="C", new_x="LMARGIN", new_y="NEXT")
@@ -286,7 +287,8 @@ class PrepDocumentGenerator:
         if result.content and result.content.site_name:
             source = result.content.site_name
         else:
-            source = result.url.split("//")[-1].split("/")[0]
+            parsed = urlparse(result.url or "")
+            source = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
         
         pdf.set_font("Helvetica", size=8)
         pdf.set_text_color(107, 114, 128)
@@ -344,41 +346,41 @@ class PrepDocumentGenerator:
 
     def _render_why_it_matters(self, pdf: FPDF, result: ProcessedResult):
         """Render the 'Why It Matters' section."""
-        pdf.set_fill_color(254, 252, 232)  # Light yellow
-        pdf.set_draw_color(250, 204, 21)   # Yellow border
-        
         y_start = pdf.get_y()
         
-        pdf.set_x(22)
+        # Generate implications text first
+        implications_text = self._generate_why_it_matters(result)
+        implications_text = sanitize_text(implications_text)
+        
+        # Calculate dimensions needed for the box
+        header_height = 6
+        # Estimate text height based on string width and available width
+        text_width = pdf.w - 50
+        pdf.set_font("Helvetica", size=9)
+        # Approximate lines needed (each line ~text_width characters)
+        text_lines = max(1, int(len(implications_text) / (text_width * 0.35)) + 1)
+        text_height = text_lines * 5
+        total_height = header_height + text_height + 4
+        
+        # Draw background first
+        pdf.set_fill_color(254, 252, 232)  # Light yellow
+        pdf.set_draw_color(250, 204, 21)   # Yellow border
+        pdf.rect(20, y_start - 2, pdf.w - 40, total_height, style="FD")
+        
+        # Render text on top of background (once)
+        pdf.set_xy(22, y_start)
         pdf.set_font("Helvetica", "B", 9)
         pdf.set_text_color(161, 98, 7)  # Amber text
         pdf.cell(0, 6, "WHY IT MATTERS", new_x="LMARGIN", new_y="NEXT")
-        
-        # Generate implications text
-        implications_text = self._generate_why_it_matters(result)
-        implications_text = sanitize_text(implications_text)
         
         pdf.set_x(25)
         pdf.set_font("Helvetica", size=9)
         pdf.set_text_color(120, 53, 15)  # Darker amber
         pdf.multi_cell(pdf.w - 50, 5, implications_text)
         
-        y_end = pdf.get_y()
-        
-        # Draw background
-        pdf.set_xy(20, y_start - 2)
-        pdf.rect(20, y_start - 2, pdf.w - 40, y_end - y_start + 4, style="FD")
-        
-        # Re-render text on top of background
-        pdf.set_xy(22, y_start)
-        pdf.set_font("Helvetica", "B", 9)
-        pdf.set_text_color(161, 98, 7)
-        pdf.cell(0, 6, "WHY IT MATTERS", new_x="LMARGIN", new_y="NEXT")
-        
-        pdf.set_x(25)
-        pdf.set_font("Helvetica", size=9)
-        pdf.set_text_color(120, 53, 15)
-        pdf.multi_cell(pdf.w - 50, 5, implications_text)
+        # Ensure we're at least past the box
+        if pdf.get_y() < y_start + total_height - 2:
+            pdf.set_y(y_start + total_height - 2)
 
     def _generate_why_it_matters(self, result: ProcessedResult) -> str:
         """Generate 'Why It Matters' text from article implications."""
@@ -392,7 +394,7 @@ class PrepDocumentGenerator:
         if result.summary:
             # Extract key entities for context
             if result.summary.entities:
-                orgs = [e.text for e in result.summary.entities if e.type.value == "ORG"][:2]
+                orgs = [e.text for e in result.summary.entities if e.type == EntityType.ORG][:2]
                 if orgs:
                     parts.append(f"Impacts {', '.join(orgs)}.")
             
@@ -424,7 +426,8 @@ class PrepDocumentGenerator:
         pdf.ln(5)
         
         for result in failed:
-            domain = result.url.split("//")[-1].split("/")[0]
+            parsed = urlparse(result.url or "")
+            domain = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
             error = sanitize_text(result.error[:60]) if result.error else "Unknown error"
             
             pdf.set_font("Helvetica", "B", 9)
@@ -438,6 +441,6 @@ class PrepDocumentGenerator:
 
     def get_filename(self) -> str:
         """Generate filename for the prep document."""
-        timestamp = datetime.now().strftime("%m_%d_%y")
+        timestamp = datetime.now(timezone.utc).strftime("%m_%d_%y")
         return f"prep_document_{timestamp}.pdf"
 

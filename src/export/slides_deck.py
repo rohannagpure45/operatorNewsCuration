@@ -4,9 +4,11 @@ Generates structured markdown that can be imported into Google Slides, PowerPoin
 or rendered with tools like Marp, reveal.js, or Slidev.
 """
 
+import re
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 from src.models.schemas import ProcessedResult, ProcessingStatus
 
@@ -93,16 +95,16 @@ class SlidesDeckGenerator:
         
         combined_text = " ".join(text_parts)
         
-        # Match against theme keywords
+        # Match against theme keywords using word boundaries to avoid false positives
         for theme, keywords in self.theme_keywords.items():
-            if any(kw in combined_text for kw in keywords):
+            if any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in keywords):
                 return theme
         
         return "Other AI News"
 
     def _title_slide(self, success_count: int, fail_count: int) -> str:
         """Generate title slide."""
-        date = datetime.now().strftime("%B %d, %Y")
+        date = datetime.now(timezone.utc).strftime("%B %d, %Y")
         return f"""# AI News Briefing
 
 ## Weekly Intelligence Report
@@ -162,16 +164,17 @@ Speaker Notes:
         if result.summary and result.summary.key_points:
             key_points = result.summary.key_points[:4]
         
-        # Format as bullet points
-        bullets = "\n".join([f"- {point}" for point in key_points])
+        # Format as bullet points with fallback for empty
+        bullets = "\n".join([f"- {point}" for point in key_points]) if key_points else "- No key points available"
         
         # Get source info
         source = ""
         if result.content and result.content.site_name:
             source = result.content.site_name
         else:
-            # Extract domain from URL
-            source = result.url.split("//")[-1].split("/")[0]
+            # Extract domain from URL safely
+            parsed = urlparse(result.url or "")
+            source = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
         
         # Get sentiment
         sentiment = ""
@@ -255,7 +258,8 @@ Speaker Notes:
         """Generate slide listing failed URLs."""
         failed_list = []
         for r in failed:
-            domain = r.url.split("//")[-1].split("/")[0]
+            parsed = urlparse(r.url or "")
+            domain = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
             error = r.error[:50] if r.error else "Unknown error"
             failed_list.append(f"- {domain}: {error}")
         
@@ -275,6 +279,6 @@ Speaker Notes:
 
     def get_filename(self) -> str:
         """Generate filename for the slides deck."""
-        timestamp = datetime.now().strftime("%m_%d_%y")
+        timestamp = datetime.now(timezone.utc).strftime("%m_%d_%y")
         return f"slides_deck_{timestamp}.md"
 

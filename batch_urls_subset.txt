@@ -1,13 +1,3 @@
-https://13f.info/13f/000204572425000008/compare/000204572425000006
-https://blog.google/products/gemini/gemini-3-flash/
-https://x.com/arcprize/status/2001330153902023157
-https://x.com/officiallogank/status/2001322275656835348
-https://openai.com/index/frontierscience/
-https://x.com/arena/status/2001008010399994026
-https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd/
-https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work
-https://www.wsj.com/tech/ai/meta-developing-new-ai-image-and-video-model-code-named-mango-16e785c7
-https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-threat-to-banks
 https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-flash-for-enterprises
 https://developers.googleblog.com/gemini-3-flash-is-now-available-in-gemini-cli/
 https://blog.google/technology/developers/gemini-3-pro-vision/
@@ -28,3 +18,4 @@ https://techfundingnews.com/2b-raised-ranking-the-biggest-uk-ai-deals-in-2025/
 https://www.datacenterknowledge.com/investing/uk-s-nscale-to-boost-us-footprint-with-865m-nc-data-center-deal
 https://www.mobihealthnews.com/news/isomorphic-labs-secures-600m-funding-ai-drug-design
 https://timesofindia.indiatimes.com/technology/tech-news/ai-layoffs-in-2025-crossed-50000-4-biggest-technology-companies-that-called-out-ai-in-their-job-cuts-announcement-and-how/articleshow/126106779.cms
+

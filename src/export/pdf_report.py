@@ -10,11 +10,15 @@ from typing import List, Optional
 
 from fpdf import FPDF
 
+from src.export.utils import (
+    ENTITY_COLORS,
+    RATING_COLORS,
+    SENTIMENT_COLORS,
+    SENTIMENT_LABELS,
+)
 from src.models.schemas import (
-    ClaimRating,
     ProcessedResult,
     ProcessingStatus,
-    Sentiment,
 )
 
 
@@ -24,43 +28,6 @@ class PDFReportGenerator:
     
     Uses fpdf2 for pure-Python PDF generation.
     """
-
-    # Color mappings for sentiment (RGB tuples)
-    SENTIMENT_COLORS = {
-        Sentiment.POSITIVE: (34, 197, 94),    # Green
-        Sentiment.NEGATIVE: (239, 68, 68),    # Red
-        Sentiment.NEUTRAL: (107, 114, 128),   # Gray
-        Sentiment.MIXED: (245, 158, 11),      # Orange/Amber
-    }
-
-    SENTIMENT_LABELS = {
-        Sentiment.POSITIVE: "Positive",
-        Sentiment.NEGATIVE: "Negative",
-        Sentiment.NEUTRAL: "Neutral",
-        Sentiment.MIXED: "Mixed",
-    }
-
-    # Color mappings for fact-check ratings (RGB tuples)
-    RATING_COLORS = {
-        ClaimRating.TRUE: (34, 197, 94),
-        ClaimRating.MOSTLY_TRUE: (132, 204, 22),
-        ClaimRating.MIXED: (245, 158, 11),
-        ClaimRating.MOSTLY_FALSE: (249, 115, 22),
-        ClaimRating.FALSE: (239, 68, 68),
-        ClaimRating.UNVERIFIED: (107, 114, 128),
-        ClaimRating.INSUFFICIENT_DATA: (107, 114, 128),
-    }
-
-    # Entity type colors
-    ENTITY_COLORS = {
-        "PERSON": (219, 234, 254),    # Light blue
-        "ORG": (243, 232, 255),       # Light purple
-        "LOC": (220, 252, 231),       # Light green
-        "DATE": (254, 243, 199),      # Light yellow
-        "MONEY": (209, 250, 229),     # Light teal
-        "PRODUCT": (252, 231, 243),   # Light pink
-        "EVENT": (254, 226, 226),     # Light red
-    }
 
     def __init__(self):
         """Initialize the PDF report generator."""
@@ -262,8 +229,8 @@ class PDFReportGenerator:
 
         # Sentiment badge (top right)
         sentiment = result.summary.sentiment
-        sentiment_color = self.SENTIMENT_COLORS.get(sentiment, (107, 114, 128))
-        sentiment_label = self.SENTIMENT_LABELS.get(sentiment, "Unknown")
+        sentiment_color = SENTIMENT_COLORS.get(sentiment, (107, 114, 128))
+        sentiment_label = SENTIMENT_LABELS.get(sentiment, "Unknown")
 
         # Draw sentiment badge
         badge_width = pdf.get_string_width(sentiment_label) + 10
@@ -340,7 +307,7 @@ class PDFReportGenerator:
             pdf.cell(col_width, 7, entity.text[:40], border=1)
             
             entity_type = entity.type.value if hasattr(entity.type, 'value') else str(entity.type)
-            color = self.ENTITY_COLORS.get(entity_type, (240, 240, 240))
+            color = ENTITY_COLORS.get(entity_type, (240, 240, 240))
             pdf.set_fill_color(*color)
             pdf.cell(col_width, 7, entity_type, border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
 
@@ -495,7 +462,7 @@ class PDFReportGenerator:
         pdf.multi_cell(pdf.w - 55, 5, claim.claim)
         
         # Rating badge
-        rating_color = self.RATING_COLORS.get(claim.rating, (107, 114, 128))
+        rating_color = RATING_COLORS.get(claim.rating, (107, 114, 128))
         rating_label = claim.rating.value.replace("_", " ").title()
         
         pdf.set_fill_color(*rating_color)

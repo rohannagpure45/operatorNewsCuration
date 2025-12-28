@@ -10,27 +10,13 @@ from urllib.parse import urlparse
 
 from fpdf import FPDF
 
+from src.export.utils import (
+    SENTIMENT_COLORS,
+    THEME_KEYWORDS,
+    detect_theme,
+    sanitize_text,
+)
 from src.models.schemas import EntityType, ProcessedResult, ProcessingStatus, Sentiment
-
-
-def sanitize_text(obj):
-    """Recursively replace unicode chars that fpdf can't handle."""
-    if isinstance(obj, str):
-        # Replace em-dash, en-dash, smart quotes, bullets
-        obj = obj.replace('\u2014', '-').replace('\u2013', '-')
-        obj = obj.replace('\u2018', "'").replace('\u2019', "'")
-        obj = obj.replace('\u201c', '"').replace('\u201d', '"')
-        obj = obj.replace('\u2022', '*').replace('\u2026', '...')
-        obj = obj.replace('\u2011', '-')  # Non-breaking hyphen
-        obj = obj.replace('\u00a0', ' ')  # Non-breaking space
-        obj = obj.replace('\u2003', ' ')  # Em space
-        obj = obj.replace('\u2002', ' ')  # En space
-        return obj
-    elif isinstance(obj, dict):
-        return {k: sanitize_text(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [sanitize_text(x) for x in obj]
-    return obj
 
 
 class PrepDocumentGenerator:
@@ -39,23 +25,6 @@ class PrepDocumentGenerator:
     
     Designed for executive briefings with concise summaries and implications.
     """
-
-    # Theme keywords for grouping
-    THEME_KEYWORDS = {
-        "AI Models & Product Launches": ["gpt", "gemini", "llm", "model", "release", "launch", "codex", "claude"],
-        "AI Infrastructure & Hardware": ["data center", "gpu", "nvidia", "ssd", "memory", "hardware", "chip", "hynix"],
-        "AI M&A and Funding": ["acquire", "acquisition", "funding", "investment", "billion", "deal", "raise", "groq"],
-        "AI Research & Competitions": ["research", "benchmark", "arc prize", "competition", "lab", "scientific"],
-        "AI Workforce & Industry": ["layoff", "job", "workforce", "industry", "enterprise", "hiring"],
-    }
-
-    # Sentiment colors
-    SENTIMENT_COLORS = {
-        Sentiment.POSITIVE: (34, 197, 94),
-        Sentiment.NEGATIVE: (239, 68, 68),
-        Sentiment.NEUTRAL: (107, 114, 128),
-        Sentiment.MIXED: (245, 158, 11),
-    }
 
     def __init__(self):
         """Initialize the prep document generator."""
@@ -119,22 +88,7 @@ class PrepDocumentGenerator:
 
     def _detect_theme(self, result: ProcessedResult) -> str:
         """Detect the theme of an article based on content."""
-        text_parts = []
-        if result.content and result.content.title:
-            text_parts.append(result.content.title.lower())
-        if result.summary:
-            if result.summary.topics:
-                text_parts.extend([t.lower() for t in result.summary.topics])
-            if result.summary.executive_summary:
-                text_parts.append(result.summary.executive_summary.lower())
-        
-        combined_text = " ".join(text_parts)
-        
-        for theme, keywords in self.THEME_KEYWORDS.items():
-            if any(kw in combined_text for kw in keywords):
-                return theme
-        
-        return "Other AI Developments"
+        return detect_theme(result, use_word_boundaries=False)
 
     def _render_cover(self, pdf: FPDF, success_count: int, fail_count: int):
         """Render the cover page."""
@@ -239,7 +193,7 @@ class PrepDocumentGenerator:
         
         pdf.set_font("Helvetica", size=10)
         for sentiment, count in sentiments.items():
-            color = self.SENTIMENT_COLORS.get(sentiment, (107, 114, 128))
+            color = SENTIMENT_COLORS.get(sentiment, (107, 114, 128))
             pdf.set_x(25)
             pdf.set_fill_color(*color)
             pdf.set_text_color(255, 255, 255)

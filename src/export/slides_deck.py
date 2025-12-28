@@ -4,12 +4,12 @@ Generates structured markdown that can be imported into Google Slides, PowerPoin
 or rendered with tools like Marp, reveal.js, or Slidev.
 """
 
-import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
+from src.export.utils import detect_theme
 from src.models.schemas import ProcessedResult, ProcessingStatus
 
 
@@ -22,13 +22,7 @@ class SlidesDeckGenerator:
 
     def __init__(self):
         """Initialize the slides deck generator."""
-        self.theme_keywords = {
-            "AI Models & Releases": ["gpt", "gemini", "llm", "model", "release", "launch", "codex"],
-            "AI Infrastructure": ["data center", "gpu", "nvidia", "ssd", "memory", "hardware", "chip"],
-            "AI Acquisitions & Funding": ["acquire", "acquisition", "funding", "investment", "billion", "deal", "raise"],
-            "AI Research & Benchmarks": ["research", "benchmark", "arc prize", "competition", "lab"],
-            "AI Industry Impact": ["layoff", "job", "workforce", "industry", "enterprise"],
-        }
+        pass
 
     def generate(self, results: List[ProcessedResult]) -> str:
         """
@@ -83,24 +77,9 @@ class SlidesDeckGenerator:
 
     def _detect_theme(self, result: ProcessedResult) -> str:
         """Detect the theme of an article based on content."""
-        # Combine title, topics, and summary for keyword matching
-        text_parts = []
-        if result.content and result.content.title:
-            text_parts.append(result.content.title.lower())
-        if result.summary:
-            if result.summary.topics:
-                text_parts.extend([t.lower() for t in result.summary.topics])
-            if result.summary.executive_summary:
-                text_parts.append(result.summary.executive_summary.lower())
-        
-        combined_text = " ".join(text_parts)
-        
-        # Match against theme keywords using word boundaries to avoid false positives
-        for theme, keywords in self.theme_keywords.items():
-            if any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in keywords):
-                return theme
-        
-        return "Other AI News"
+        # Use word boundaries for slides to avoid false positives
+        # Preserve backward compatibility with "Other AI News" default theme
+        return detect_theme(result, use_word_boundaries=True, default_theme="Other AI News")
 
     def _title_slide(self, success_count: int, fail_count: int) -> str:
         """Generate title slide."""

@@ -9,6 +9,7 @@ An intelligent web browsing agent that automatically extracts, fact-checks, and 
 - **Structured Summaries**: Outputs consistent, schema-validated summaries with executive summary, key points, sentiment, entities, and implications
 - **Paywall Handling**: Falls back to Wayback Machine for soft-paywalled content
 - **Cloud Browser Support**: Optional Browserless.io integration for better anti-detection
+- **Multiple Export Formats**: PDF reports, executive prep documents, and Markdown slides
 - **Streamlit Dashboard**: Interactive web UI for processing and viewing results
 - **Cost-Efficient**: Designed for internal use at ~$0-50/month for 200 links
 
@@ -52,12 +53,13 @@ An intelligent web browsing agent that automatically extracts, fact-checks, and 
 │  Structured Output: Summary, Key Points, Entities, Sentiment    │
 └─────────────────────────────────────────────────────────────────┘
                               │
-              ┌───────────────┴───────────────┐
-              ▼                               ▼
-┌──────────────────────────┐    ┌──────────────────────────┐
-│   Database (Firestore/   │    │   PDF Export (optional)  │
-│       Supabase)          │    │      (WeasyPrint)        │
-└──────────────────────────┘    └──────────────────────────┘
+       ┌──────────────────────┼──────────────────────┐
+       ▼                      ▼                      ▼
+┌────────────────┐   ┌─────────────────┐   ┌─────────────────┐
+│   Database     │   │  Export Module  │   │  Slides Deck    │
+│  (Firestore/   │   │   PDF Report    │   │   (Markdown)    │
+│   Supabase)    │   │  Prep Document  │   │  Marp/reveal.js │
+└────────────────┘   └─────────────────┘   └─────────────────┘
 ```
 
 ## Supported Sources
@@ -268,6 +270,55 @@ results = await agent.process_batch([
 ])
 ```
 
+### Export Formats
+
+The agent supports multiple export formats for different use cases:
+
+#### PDF Report (Technical)
+Detailed per-article reports with full extraction data, entities, fact-check results, and footnotes.
+
+```python
+from src.export import PDFReportGenerator
+
+generator = PDFReportGenerator()
+pdf_bytes = generator.generate(result)           # Single result
+pdf_bytes = generator.generate_batch(results)   # Multiple results
+```
+
+#### Prep Document (Executive Briefing)
+Theme-grouped PDF briefings with "Why It Matters" analysis for executive consumption.
+
+```python
+from src.export import PrepDocumentGenerator
+
+generator = PrepDocumentGenerator()
+pdf_bytes = generator.generate(results)  # Batch results with theme grouping
+```
+
+Features:
+- Cover page with statistics
+- Executive summary with sentiment breakdown
+- Theme-based article grouping (AI Models, Infrastructure, M&A, Research, Industry)
+- "Why It Matters" strategic implications section
+- Failed sources appendix
+
+#### Slides Deck (Presentations)
+Marp-compatible Markdown slides for presentations (works with reveal.js, Slidev).
+
+```python
+from src.export import SlidesDeckGenerator
+
+generator = SlidesDeckGenerator()
+markdown = generator.generate(results)  # Returns Markdown string
+```
+
+Features:
+- Title and agenda slides
+- Theme divider slides
+- Article slides with bullet points
+- Speaker notes in HTML comments
+- Summary slide with key takeaways
+
 ## Cost Analysis
 
 ### Estimated Monthly Cost (200 links/month)
@@ -322,6 +373,12 @@ operatorNewsCuration/
 │   │   ├── __init__.py
 │   │   ├── llm.py            # LLM abstraction layer
 │   │   └── prompts.py        # Summarization prompts
+│   ├── export/
+│   │   ├── __init__.py
+│   │   ├── pdf_report.py     # Detailed PDF report generator
+│   │   ├── prep_document.py  # Executive briefing PDF generator
+│   │   ├── slides_deck.py    # Markdown slides generator
+│   │   └── utils.py          # Shared utilities (themes, colors)
 │   ├── models/
 │   │   ├── __init__.py
 │   │   └── schemas.py        # Pydantic models
@@ -335,6 +392,7 @@ operatorNewsCuration/
 ├── tests/
 │   ├── test_extractors.py
 │   ├── test_fact_check.py
+│   ├── test_pdf_export.py
 │   └── test_summarizer.py
 ├── .env.example
 ├── .gitignore
@@ -386,13 +444,16 @@ gcloud run deploy news-agent \
 
 ## Roadmap
 
-- [ ] PDF export with charts and footnotes
+- [x] PDF report export (detailed per-article reports)
+- [x] Executive prep document export (theme-grouped briefings)
+- [x] Slides deck export (Marp/reveal.js Markdown)
 - [x] Streamlit frontend dashboard
 - [ ] React frontend dashboard (for multi-user deployment)
 - [ ] Slack/Discord integration
 - [ ] Scheduled URL monitoring
 - [x] Cloud browser support (Browserless.io)
 - [ ] Multi-language support
+- [ ] PDF export with charts and data visualizations
 
 ## Contributing
 
@@ -414,4 +475,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 - [Wayback Machine](https://archive.org/web/) - Archived content access
 - [Browserless.io](https://browserless.io) - Cloud browser infrastructure
 - [Streamlit](https://streamlit.io) - Web dashboard framework
+- [fpdf2](https://github.com/py-pdf/fpdf2) - PDF generation
+- [Marp](https://marp.app/) - Markdown presentation ecosystem
 

@@ -1,0 +1,1458 @@
+[
+  {
+    "url": "https://13f.info/13f/000204572425000008/compare/000204572425000006",
+    "source_type": "sec_filing",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:37:27.001944+00:00",
+    "content": {
+      "title": "Situational Awareness LP",
+      "author": null,
+      "published_date": null,
+      "word_count": 58,
+      "language": "en",
+      "site_name": "13f.info"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "This document presents a comparison of the 13F holdings for Situational Awareness LP between the second and third quarters of 2025. As a regulatory SEC filing comparison, it is designed to track changes in an institutional investment manager's portfolio, including share counts, market values, and percentage changes across various issuers. However, the provided source material contains the structural headers for this comparison without specific asset data or individual stock entries populated in the table.",
+      "key_points": [
+        "Situational Awareness LP is identified as the reporting institutional investment manager.",
+        "The report focuses on a quarter-over-quarter comparison between Q2 2025 and Q3 2025.",
+        "The filing structure includes data points for Issuer Name, Symbol, CUSIP, Option Type, and Share Principal.",
+        "The document tracks financial metrics including Value in thousands of dollars ($000) and percentage changes in holdings.",
+        "The source is a standardized SEC Form 13F comparison used for public disclosure of equity holdings."
+      ],
+      "sentiment": "neutral",
+      "entities": [
+        {
+          "text": "Situational Awareness LP",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "SEC",
+          "type": "ORG",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "Public disclosure of institutional holdings allows for market analysis of investment trends.",
+        "Regulatory compliance for investment managers with over $100 million in qualifying assets.",
+        "Transparency regarding the shifting investment strategies of Situational Awareness LP."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Situational Awareness LP",
+          "context": "The primary entity and institutional investment manager responsible for the filing."
+        },
+        {
+          "id": 2,
+          "source_text": "Q2 2025 | Q3 2025",
+          "context": "The specific fiscal periods being compared in this financial disclosure."
+        }
+      ],
+      "topics": [
+        "SEC Filings",
+        "Institutional Investment",
+        "Portfolio Management",
+        "13F Disclosure"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 24205
+  },
+  {
+    "url": "https://blog.google/products/gemini/gemini-3-flash",
+    "source_type": "blog",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:37:51.776387+00:00",
+    "content": {
+      "title": "Gemini 3 Flash: frontier intelligence built for speed",
+      "author": "Tulsee Doshi",
+      "published_date": "2025-12-17 00:00:00",
+      "word_count": 1178,
+      "language": "en",
+      "site_name": "Google"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "Google has announced the release of Gemini 3 Flash, a new addition to the Gemini 3 model family designed to provide frontier-level intelligence with high speed and low operational costs. The model bridges the gap between high-performance reasoning and efficiency, outperforming Gemini 2.5 Pro on several key benchmarks while operating three times faster. Gemini 3 Flash is being integrated across Google's entire ecosystem, including the Gemini app, AI Mode in Search, and developer platforms like Vertex AI and the new Google Antigravity, making advanced multimodal reasoning accessible to both developers and general consumers.",
+      "key_points": [
+        "Gemini 3 Flash combines Pro-grade reasoning capabilities with the low latency and cost-efficiency characteristic of the Flash series.",
+        "The model achieves a 90.4% score on the GPQA Diamond benchmark and 78% on SWE-bench Verified, outperforming Gemini 3 Pro in specific coding tasks.",
+        "It is 3x faster than Gemini 2.5 Pro and uses 30% fewer tokens on average to complete everyday tasks.",
+        "Pricing is set at $0.50 per 1M input tokens and $3 per 1M output tokens, significantly lowering the barrier for high-intelligence AI applications.",
+        "The model is optimized for agentic workflows, enabling real-time multimodal reasoning for tasks like video analysis, game assistance, and automated A/B testing.",
+        "Gemini 3 Flash is now the default model for the Gemini app and AI Mode in Search, replacing the previous 2.5 Flash model."
+      ],
+      "sentiment": "positive",
+      "entities": [
+        {
+          "text": "Gemini 3 Flash",
+          "type": "PRODUCT",
+          "relevance": 1.0
+        },
+        {
+          "text": "Google",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "Tulsee Doshi",
+          "type": "PERSON",
+          "relevance": 0.7
+        },
+        {
+          "text": "Google Antigravity",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        },
+        {
+          "text": "Vertex AI",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        },
+        {
+          "text": "JetBrains",
+          "type": "ORG",
+          "relevance": 0.5
+        },
+        {
+          "text": "Figma",
+          "type": "ORG",
+          "relevance": 0.5
+        },
+        {
+          "text": "Bridgewater Associates",
+          "type": "ORG",
+          "relevance": 0.5
+        }
+      ],
+      "implications": [
+        "The reduction in cost and latency for high-reasoning models may accelerate the adoption of autonomous AI agents in production environments.",
+        "Developers can now perform iterative coding and complex multimodal analysis in near real-time, potentially shortening software development lifecycles.",
+        "Consumer search experiences will become more nuanced and visually digestible as the model handles multi-faceted queries more effectively than previous iterations."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Gemini 3 Flash retains this foundation, combining Gemini 3's Pro-grade reasoning with Flash-level latency, efficiency and cost.",
+          "context": "Describes the primary design philosophy of the new model."
+        },
+        {
+          "id": 2,
+          "source_text": "On SWE-bench Verified, a benchmark for evaluating coding agent capabilities, Gemini 3 Flash achieves a score of 78%, outperforming not only the 2.5 series, but also Gemini 3 Pro.",
+          "context": "Highlights the model's unexpected superiority in specific coding benchmarks compared to its 'Pro' counterpart."
+        },
+        {
+          "id": 3,
+          "source_text": "Gemini 3 Flash is now the default model in the Gemini app, replacing 2.5 Flash.",
+          "context": "Confirms the immediate availability and impact on the general consumer user base."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Large Language Models",
+        "Software Development",
+        "Cloud Computing",
+        "Search Technology"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 35004
+  },
+  {
+    "url": "https://x.com/arcprize/status/2001330153902023157",
+    "source_type": "twitter",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:38:26.098667+00:00",
+    "content": {
+      "title": "Tweet by ARC Prize (@arcprize)",
+      "author": "ARC Prize (@arcprize)",
+      "published_date": null,
+      "word_count": 39,
+      "language": "en",
+      "site_name": "Twitter/X"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "ARC Prize has released performance data for the Gemini 3 Flash Preview (High) model on the ARC-AGI Semi-Private Eval benchmark. The results indicate that the model achieves high accuracy on ARC-AGI-1 (84.7%) and competitive results on ARC-AGI-2 (33.6%), while maintaining a significantly lower cost per task compared to other frontier AI models.",
+      "key_points": [
+        "Gemini 3 Flash Preview (High) achieved an 84.7% success rate on the ARC-AGI-1 benchmark.",
+        "The model scored 33.6% on the ARC-AGI-2 benchmark.",
+        "The cost for ARC-AGI-1 tasks is approximately $0.17 per task.",
+        "The cost for ARC-AGI-2 tasks is approximately $0.23 per task.",
+        "The model is positioned as a cost-effective alternative to other frontier models while remaining competitive in performance."
+      ],
+      "sentiment": "positive",
+      "entities": [
+        {
+          "text": "ARC Prize",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "Gemini 3 Flash Preview",
+          "type": "PRODUCT",
+          "relevance": 1.0
+        },
+        {
+          "text": "ARC-AGI",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "ARC-AGI-1",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        },
+        {
+          "text": "ARC-AGI-2",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "Increased accessibility to high-level reasoning benchmarks due to lower operational costs.",
+        "Potential shift in the AI market toward prioritizing price-to-performance ratios for reasoning tasks.",
+        "Validation of 'Flash' model architectures in handling complex, semi-private evaluation sets."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Competitive performance at a substantially lower cost than other frontier models",
+          "context": "The author's summary of how Gemini 3 Flash compares to its market competitors."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "AI Benchmarking",
+        "Model Efficiency",
+        "Reasoning Tasks"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Gemini 3 Flash Preview (High) achieved a score of 84.7% on the ARC-AGI-1 benchmark.",
+        "The cost for Gemini 3 Flash Preview (High) to perform a task on the ARC-AGI-1 benchmark is $0.17.",
+        "Gemini 3 Flash Preview (High) achieved a score of 33.6% on the ARC-AGI-2 benchmark.",
+        "The cost for Gemini 3 Flash Preview (High) to perform a task on the ARC-AGI-2 benchmark is $0.23.",
+        "Gemini 3 Flash Preview (High) is claimed to provide competitive performance at a substantially lower cost than other frontier models on the ARC-AGI evaluation."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 27226
+  },
+  {
+    "url": "https://x.com/officiallogank/status/2001322275656835348",
+    "source_type": "twitter",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:38:52.931509+00:00",
+    "content": {
+      "title": "Tweet by Logan Kilpatrick (@OfficialLoganK)",
+      "author": "Logan Kilpatrick (@OfficialLoganK)",
+      "published_date": null,
+      "word_count": 57,
+      "language": "en",
+      "site_name": "Twitter/X"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "Logan Kilpatrick announced the launch of Gemini 3 Flash, a new frontier intelligence model designed for high-scale availability. The model is highlighted for its superior performance in coding and tool calling, reportedly surpassing the Gemini 2.5 Pro model across most performance metrics while maintaining a competitive pricing structure for API users.",
+      "key_points": [
+        "Introduction of Gemini 3 Flash as a frontier intelligence model available to the public.",
+        "The model demonstrates specialized strengths in coding and tool calling capabilities.",
+        "Performance benchmarks indicate it is stronger than the Gemini 2.5 Pro model in most categories.",
+        "API pricing is set at $0.50 per 1 million input tokens and $3.00 per 1 million output tokens.",
+        "The model is designed to be accessible at scale for all users."
+      ],
+      "sentiment": "positive",
+      "entities": [
+        {
+          "text": "Logan Kilpatrick",
+          "type": "PERSON",
+          "relevance": 1.0
+        },
+        {
+          "text": "Gemini 3 Flash",
+          "type": "PRODUCT",
+          "relevance": 1.0
+        },
+        {
+          "text": "Gemini 2.5 Pro",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        },
+        {
+          "text": "API",
+          "type": "PRODUCT",
+          "relevance": 0.7
+        }
+      ],
+      "implications": [
+        "Increased accessibility to high-frontier intelligence models due to lower API costs.",
+        "Potential migration of developers from Gemini 2.5 Pro to Gemini 3 Flash for better performance-to-cost ratios.",
+        "Enhanced capabilities for automated coding and complex tool integration in software development."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Introducing Gemini 3 Flash, our frontier intelligence model, available at scale for everyone.",
+          "context": "The primary announcement of the model's release and availability."
+        },
+        {
+          "id": 2,
+          "source_text": "It excels at coding, tool calling, and is stronger than 2.5 Pro across most metrics!!",
+          "context": "A comparison of the new model's capabilities against its predecessor."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Product Launch",
+        "Software Development",
+        "Cloud Computing Pricing"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 27098
+  },
+  {
+    "url": "https://openai.com/index/frontierscience",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:39:40.073101+00:00",
+    "content": {
+      "title": "Evaluating AI\u2019s ability to perform scientific research tasks",
+      "author": null,
+      "published_date": "2025-12-16 00:00:00",
+      "word_count": 1400,
+      "language": "en",
+      "site_name": "OpenAI"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "OpenAI has introduced FrontierScience, a new benchmark designed to evaluate expert-level scientific reasoning in AI models across the fields of physics, chemistry, and biology. The benchmark addresses the limitations of existing, saturated evaluations by featuring two distinct tracks: an Olympiad track for constrained reasoning and a Research track for open-ended, PhD-level tasks. Initial evaluations show that while frontier models like GPT-5.2 are making significant strides\u2014outperforming predecessors and competitors\u2014there remains substantial room for improvement in open-ended research tasks, where models currently serve as accelerators for human-led workflows rather than independent discoverers.",
+      "key_points": [
+        "FrontierScience was developed to measure expert-level scientific capabilities that go beyond simple fact recall to include hypothesis generation and synthesis.",
+        "The benchmark consists of two tracks: FrontierScience-Olympiad (100 questions) and FrontierScience-Research (60 subtasks).",
+        "GPT-5.2 is currently the top-performing model, scoring 77% on the Olympiad track and 25% on the Research track.",
+        "The evaluation content was created in collaboration with 42 international Olympiad medalists and 45 PhD-level scientists.",
+        "A rubric-based architecture is used for grading open-ended Research tasks, allowing for nuanced analysis of intermediate reasoning steps.",
+        "Data shows a direct correlation between increased reasoning effort (longer thinking time) and improved accuracy on scientific tasks.",
+        "Current limitations of the benchmark include a lack of assessment for novel hypothesis generation and interaction with physical experimental systems."
+      ],
+      "sentiment": "positive",
+      "entities": [
+        {
+          "text": "OpenAI",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "FrontierScience",
+          "type": "PRODUCT",
+          "relevance": 1.0
+        },
+        {
+          "text": "GPT-5.2",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "GPQA",
+          "type": "PRODUCT",
+          "relevance": 0.7
+        },
+        {
+          "text": "Claude Opus 4.5",
+          "type": "PRODUCT",
+          "relevance": 0.6
+        },
+        {
+          "text": "Gemini 3 Pro",
+          "type": "PRODUCT",
+          "relevance": 0.6
+        },
+        {
+          "text": "International Math Olympiad",
+          "type": "EVENT",
+          "relevance": 0.5
+        }
+      ],
+      "implications": [
+        "AI is increasingly capable of shortening scientific workflows that previously took weeks into hours.",
+        "The shift toward rubric-based, model-graded evaluations is necessary to scale the assessment of open-ended scientific reasoning.",
+        "As AI models reach expert-level performance on existing benchmarks, the industry must develop more difficult and original testing frameworks to avoid saturation.",
+        "AI is evolving into a 'reliable partner' in scientific discovery, though human judgment remains critical for problem framing and validation."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "The most important benchmark for the scientific capabilities of AI is the novel discoveries it helps generate; those are what ultimately matter to science and society.",
+          "context": "The author notes that while FrontierScience is a critical metric, the ultimate value of AI lies in its real-world scientific output."
+        },
+        {
+          "id": 2,
+          "source_text": "FrontierScience-Research consists of 60 original research subtasks designed by PhD scientists... that are graded using a 10-point rubric.",
+          "context": "Explanation of the methodology used to evaluate complex, multi-step scientific problems that a doctoral candidate might face."
+        },
+        {
+          "id": 3,
+          "source_text": "When GPQA... was released in November 2023, GPT\u20114 scored 39%, below the expert baseline of 70%. Two years later, GPT\u20115.2 scored 92%.",
+          "context": "A comparison illustrating the rapid pace of improvement in AI scientific reasoning over a two-year period."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Scientific Research",
+        "Benchmarking",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "Machine Learning Evaluation"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 48428
+  },
+  {
+    "url": "https://x.com/arena/status/2001008010399994026",
+    "source_type": "twitter",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:40:08.503630+00:00",
+    "content": {
+      "title": "Tweet by lmarena.ai (@arena)",
+      "author": "lmarena.ai (@arena)",
+      "published_date": null,
+      "word_count": 92,
+      "language": "en",
+      "site_name": "Twitter/X"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "OpenAI has launched its latest image generation models, gpt-image-1.5 and chatgpt-image-latest, which have immediately claimed top positions on the lmarena.ai Image Arena leaderboard. The gpt-image-1.5 model has secured the #1 rank in the Text-to-Image category, while chatgpt-image-latest has taken the #1 spot for Image Editing. These models represent a significant performance leap, featuring enhanced instruction following, precise editing capabilities, and a fourfold increase in processing speed compared to previous versions.",
+      "key_points": [
+        "OpenAI's gpt-image-1.5 is now ranked #1 in the Text-to-Image category on Image Arena with a score of 1264.",
+        "chatgpt-image-latest has achieved the #1 ranking in the Image Edit category with a score of 1409.",
+        "The new models offer improved instruction following and better preservation of detail during the generation process.",
+        "Image generation and editing are now four times faster than previous iterations.",
+        "The updates are being rolled out to all ChatGPT users and are available via API as GPT Image 1.5.",
+        "gpt-image-1.5 also holds the #4 spot in the Image Edit category."
+      ],
+      "sentiment": "positive",
+      "entities": [
+        {
+          "text": "OpenAI",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "lmarena.ai",
+          "type": "ORG",
+          "relevance": 0.9
+        },
+        {
+          "text": "gpt-image-1.5",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "chatgpt-image-latest",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "ChatGPT",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        },
+        {
+          "text": "Image Arena",
+          "type": "EVENT",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "OpenAI's return to the top of the leaderboards may pressure competitors in the generative AI space to accelerate their release cycles.",
+        "The 4x speed increase significantly lowers the barrier for real-time creative workflows.",
+        "Improved instruction following and editing precision could lead to higher adoption of AI for professional graphic design and iterative editing tasks."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "gpt-image-1.5 is #1 in Text-to-Image (1264)",
+          "context": "Ranking and Elo score provided by the lmarena.ai benchmarking platform."
+        },
+        {
+          "id": 2,
+          "source_text": "4x faster than before",
+          "context": "Performance improvement metric claimed by OpenAI regarding the new flagship image generation model."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Image Generation",
+        "Benchmarking",
+        "Product Launch",
+        "Software Performance"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "OpenAI's gpt-image-1.5 model is ranked #1 in the Text-to-Image category of the Image Arena with an Elo score of 1264.",
+        "OpenAI's chatgpt-image-latest model is ranked #1 in the Image Edit category of the Image Arena with an Elo score of 1409.",
+        "OpenAI's gpt-image-1.5 model is ranked #4 in the Image Edit category of the Image Arena with an Elo score of 1395.",
+        "OpenAI's new flagship image generation model is four times faster than the previous version.",
+        "OpenAI is rolling out the new image generation model to all ChatGPT users and providing API access under the name GPT Image 1.5."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 27028
+  },
+  {
+    "url": "https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:40:36.222563+00:00",
+    "content": {
+      "title": "After Gobbling Up DRAM, NVIDIA & SK hynix Plan to Introduce an \u201cAI SSD\u201d With 10\u00d7 Higher Performance, Ringing Alarms Over NAND Supply",
+      "author": "Muhammad Zuhair",
+      "published_date": "2025-12-16 00:00:00",
+      "word_count": 372,
+      "language": "en",
+      "site_name": "Wccftech"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "NVIDIA and SK hynix are reportedly collaborating on a next-generation 'AI SSD' project titled 'Storage Next,' aimed at optimizing NAND flash memory for AI inference workloads. This new storage solution seeks to achieve performance levels of up to 100 million IOPS, roughly ten times that of current enterprise SSDs, to address the massive parameter requirements that exceed the capacity of HBM and DRAM. While the technology promises significant improvements in throughput and energy efficiency by 2027, industry experts warn that its adoption could trigger a supply crisis and price hikes in the NAND market similar to those currently affecting DRAM.",
+      "key_points": [
+        "NVIDIA and SK hynix are co-developing 'Storage Next,' an inference-optimized AI SSD solution.",
+        "The project aims for a performance milestone of 100 million IOPS, significantly outperforming traditional enterprise SSDs.",
+        "The shift from AI training to inference necessitates a pseudo-memory layer to handle massive model parameters that HBM cannot accommodate.",
+        "SK hynix plans to present a prototype of the AI SSD by the end of 2025, with a full solution expected by 2027.",
+        "The collaboration focuses on enhancing throughput and energy efficiency through advanced NAND and controller architectures.",
+        "High demand for specialized AI storage is expected to disrupt NAND supply chains and increase contract pricing."
+      ],
+      "sentiment": "mixed",
+      "entities": [
+        {
+          "text": "NVIDIA",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "SK hynix",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "Chosun Biz",
+          "type": "ORG",
+          "relevance": 0.5
+        },
+        {
+          "text": "Muhammad Zuhair",
+          "type": "PERSON",
+          "relevance": 0.3
+        },
+        {
+          "text": "Rubin CPX GPU",
+          "type": "PRODUCT",
+          "relevance": 0.7
+        },
+        {
+          "text": "NAND",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "GDDR7",
+          "type": "PRODUCT",
+          "relevance": 0.6
+        },
+        {
+          "text": "HBM",
+          "type": "PRODUCT",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "Potential for a NAND flash supply shortage similar to the current DRAM market situation.",
+        "Increased contract pricing for NAND storage products due to high demand from AI giants and CSPs.",
+        "A shift in AI hardware architecture toward using SSDs as a pseudo-memory layer for inference.",
+        "Disruption of existing supply chains leaving consumers and suppliers little time to react to market shifts."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Storage Next",
+          "context": "The internal project name for the new SSD solution being co-developed by NVIDIA and SK hynix."
+        },
+        {
+          "id": 2,
+          "source_text": "100 million IOPS",
+          "context": "The targeted performance metric for the AI SSD, which is significantly higher than traditional enterprise SSDs."
+        },
+        {
+          "id": 3,
+          "source_text": "pseudo-memory layer",
+          "context": "The functional role the AI SSD will play to accommodate model parameters that cannot fit in HBM or DRAM."
+        }
+      ],
+      "topics": [
+        "AI Infrastructure",
+        "Semiconductor Industry",
+        "NAND Flash Technology",
+        "Hardware Innovation",
+        "Supply Chain Management"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "SK hynix plans to introduce an inference-optimized AI SSD solution by 2027.",
+        "NVIDIA and SK hynix are co-developing a new SSD solution under the internal project name 'Storage Next.'",
+        "SK hynix plans to present a prototype of the AI SSD by the end of 2025.",
+        "The AI SSD being developed by SK hynix and NVIDIA is projected to scale up to 100 million IOPS (Input/Output Operations Per Second).",
+        "NVIDIA has integrated general-purpose GDDR7 memory into the Rubin CPX GPU for prefill."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 31110
+  },
+  {
+    "url": "https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:41:15.949293+00:00",
+    "content": {
+      "title": "Bloomberg",
+      "author": null,
+      "published_date": "2025-12-12 00:00:00",
+      "word_count": 79,
+      "language": "en",
+      "site_name": "bloomberg.com"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "The article, published by Bloomberg on December 12, 2025, explores the potential economic conflict between the rapid expansion of AI data centers and traditional public infrastructure projects. It suggests that the massive influx of investment and demand for construction resources driven by the artificial intelligence boom may divert essential labor, materials, and funding away from the maintenance and development of roads and bridges.",
+      "key_points": [
+        "The construction of AI data centers is experiencing a significant boom.",
+        "There is a growing concern that this boom will deplete resources available for public works.",
+        "Road and bridge projects are specifically identified as being at risk of losing necessary resources.",
+        "The competition for construction labor and materials is intensifying due to the scale of AI infrastructure needs."
+      ],
+      "sentiment": "neutral",
+      "entities": [
+        {
+          "text": "Bloomberg",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "2025-12-12",
+          "type": "DATE",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "Potential delays in critical road and bridge infrastructure repairs.",
+        "Increased costs for public construction projects due to competition with high-budget tech firms.",
+        "A possible labor shortage in the public works sector as workers move toward data center construction."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "AI Data Center Boom May Suck Resources Away From Road, Bridge Work",
+          "context": "The title of the article establishes the primary thesis regarding the diversion of resources from public infrastructure to technology-focused construction."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Infrastructure",
+        "Data Centers",
+        "Construction Industry",
+        "Resource Allocation"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Bloomberg.com offers a subscription service for global markets news.",
+        "Bloomberg maintains a Terms of Service document for its website users.",
+        "Bloomberg maintains a Cookie Policy document for its website users.",
+        "The Bloomberg.com website requires browsers to support JavaScript and cookies to proceed through its bot detection interface.",
+        "Bloomberg provides a support team to handle inquiries related to website access and reference IDs."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 41594
+  },
+  {
+    "url": "https://www.wsj.com/tech/ai/meta-developing-new-ai-image-and-video-model-code-named-mango-16e785c7",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:41:48.301817+00:00",
+    "content": {
+      "title": "Exclusive | Meta Is Developing a New AI Image and Video Model Code-Named \u2018Mango\u2019",
+      "author": "Meghan Bobrowsky",
+      "published_date": "2025-12-18 00:00:00",
+      "word_count": 84,
+      "language": "en",
+      "site_name": "The Wall Street Journal"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "Meta Platforms is developing a new artificial intelligence model specifically focused on image and video generation, code-named 'Mango.' This project is being developed alongside the company's next text-based large language model and was discussed during an internal company Q&A session. The models are currently slated for release in the first half of 2026.",
+      "key_points": [
+        "Meta is working on a new image and video-focused AI model under the code-name 'Mango.'",
+        "The development of 'Mango' is occurring in parallel with Meta's next text-based large language model.",
+        "The project was discussed internally by Meta's Chief AI Officer Alexandr Wang and Chief Product Officer Chris Cox.",
+        "The new AI models are expected to be released to the public or integrated into products in the first half of 2026."
+      ],
+      "sentiment": "neutral",
+      "entities": [
+        {
+          "text": "Meta Platforms",
+          "type": "ORG",
+          "relevance": 1.0
+        },
+        {
+          "text": "Mango",
+          "type": "PRODUCT",
+          "relevance": 0.9
+        },
+        {
+          "text": "Alexandr Wang",
+          "type": "PERSON",
+          "relevance": 0.8
+        },
+        {
+          "text": "Chris Cox",
+          "type": "PERSON",
+          "relevance": 0.8
+        }
+      ],
+      "implications": [
+        "Meta is seeking to strengthen its position in the generative media space against competitors in video and image AI.",
+        "The simultaneous development of text and media models suggests a push toward more integrated multimodal AI capabilities."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "Meta Platforms... is developing a new image and video-focused AI model code-named Mango alongside the company\u2019s next text-based large language model.",
+          "context": "Description of the dual-track development of Meta's next-generation AI models."
+        },
+        {
+          "id": 2,
+          "source_text": "The models are expected to be released in the first half of 2026.",
+          "context": "The projected timeline for the release of the 'Mango' and text-based models."
+        }
+      ],
+      "topics": [
+        "Artificial Intelligence",
+        "Generative Video",
+        "Generative Images",
+        "Product Development",
+        "Corporate Strategy"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 2,
+      "verified_claims": [],
+      "unverified_claims": [
+        "39%increase; green up pointing triangle is developing a new image and video-focused AI model code-named Mango alongside the company\u2019s next text-based large language model",
+        "Meta\u2019s chief AI officer, Alexandr Wang, talked about the artificial intelligence models in an internal company Q&A on Thursday with Chris Cox, Meta\u2019s chief product officer, according to people who heard the remarks"
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 24998
+  },
+  {
+    "url": "https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-threat-to-banks",
+    "source_type": "news_article",
+    "status": "completed",
+    "extracted_at": "2025-12-28 03:42:23.079363+00:00",
+    "content": {
+      "title": "Crypto\u2019s real threat to banks",
+      "author": null,
+      "published_date": "2025-12-15 00:00:00",
+      "word_count": 215,
+      "language": "en",
+      "site_name": "The Economist"
+    },
+    "raw_text": null,
+    "summary": {
+      "executive_summary": "The crypto industry is transitioning from a marginalized sector mocked by traditional financial elites into a powerful force that threatens Wall Street's long-standing political dominance. By gaining significant influence within the American right, digital pioneers are beginning to supplant the privileged position traditionally held by major banks. This shift marks a critical turning point where the industry is no longer being ignored or fought, but is instead achieving a state of unprecedented strength and relevance in the American power structure.",
+      "key_points": [
+        "The crypto industry has historically faced snootiness and derision from Wall Street's elite circles.",
+        "Crypto is currently supplanting Wall Street's privileged political position, particularly within the American right.",
+        "The industry uses the apocryphal 'ignore-laugh-fight-win' mantra to characterize its rise to power.",
+        "Digital pioneers are now described as being 'mightier than ever' compared to their previous status.",
+        "The real threat to traditional banks is identified as a loss of political and social influence rather than just technological competition."
+      ],
+      "sentiment": "neutral",
+      "entities": [
+        {
+          "text": "Wall Street",
+          "type": "ORG",
+          "relevance": 0.9
+        },
+        {
+          "text": "American right",
+          "type": "ORG",
+          "relevance": 0.85
+        },
+        {
+          "text": "Mahatma Gandhi",
+          "type": "PERSON",
+          "relevance": 0.3
+        }
+      ],
+      "implications": [
+        "Traditional banking institutions may face a decline in their lobbying power and political favor.",
+        "The American right-wing political platform is shifting to incorporate crypto-friendly policies.",
+        "A potential restructuring of the financial regulatory landscape as crypto gains mainstream political leverage."
+      ],
+      "footnotes": [
+        {
+          "id": 1,
+          "source_text": "First they ignore you, then they laugh at you, then they fight you, then you win.",
+          "context": "An apocryphal quote attributed to Mahatma Gandhi that serves as a popular mantra for the crypto industry's trajectory."
+        },
+        {
+          "id": 2,
+          "source_text": "The industry is supplanting Wall Street\u2019s privileged position on the American right",
+          "context": "The core thesis of the article regarding the shifting power dynamics between traditional finance and digital assets."
+        }
+      ],
+      "topics": [
+        "Cryptocurrency",
+        "Banking",
+        "Political Influence",
+        "Wall Street",
+        "American Politics"
+      ]
+    },
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [
+        {
+          "claim": "Gandhi said: \u201cFirst they ignore you, then they laugh at you, then they fight you, then you win.\u201d",
+          "rating": "unverified",
+          "source": "AP News",
+          "source_url": "https://apnews.com/article/archive-fact-checking-2315880316",
+          "explanation": "Kit Miller, director of the M",
+          "reviewed_date": null
+        },
+        {
+          "claim": "The famous quote \"First they ignore you, then they laugh at you, then they fight you, then you win\u201d originated with Mahatma Gandhi.",
+          "rating": "false",
+          "source": "Snopes",
+          "source_url": "https://www.snopes.com/fact-check/first-they-ignore-you/",
+          "explanation": "Incorrect Attribution",
+          "reviewed_date": "2016-03-01 04:51:42+00:00"
+        }
+      ],
+      "unverified_claims": [
+        "Women in America are currently having as many babies over their lifetimes as they did two decades ago.",
+        "American investors are currently increasing their investment activity in the Democratic Republic of the Congo.",
+        "Historically, 'pain at the edge of America\u2019s labour market' has served as a precursor to broader economic weakness.",
+        "The cryptocurrency industry is displacing Wall Street\u2019s traditional position of influence within the American political right."
+      ],
+      "publisher_credibility": null
+    },
+    "error": null,
+    "processing_time_ms": 36753
+  },
+  {
+    "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-flash-for-enterprises",
+    "source_type": "blog",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:42:50.479795+00:00",
+    "content": {
+      "title": "Gemini 3 Flash for Enterprises | Google Cloud Blog",
+      "author": "Saurabh Tiwary",
+      "published_date": "2025-12-17 00:00:00",
+      "word_count": 1326,
+      "language": "en",
+      "site_name": "Google Cloud"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.718902057s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.574858452s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.422964004s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.422964004s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://developers.googleblog.com/gemini-3-flash-is-now-available-in-gemini-cli",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:43:10.573396+00:00",
+    "content": {
+      "title": "Gemini 3 Flash is now available in Gemini CLI",
+      "author": "Taylor Mullen",
+      "published_date": "2025-12-17 00:00:00",
+      "word_count": 717,
+      "language": "en",
+      "site_name": "developers.googleblog.com"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 1,
+      "verified_claims": [],
+      "unverified_claims": [
+        "1):\nnpm install -g @google/gemini-cli@latest\nAfter you\u2019ve confirmed your version is 0"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 21.711212214s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 21\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 21.510648286s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 21\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 21.377281667s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 21\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 21.377281667s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 21\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://blog.google/technology/developers/gemini-3-pro-vision",
+    "source_type": "blog",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:43:39.217084+00:00",
+    "content": {
+      "title": "Gemini 3 Pro: the frontier of vision AI",
+      "author": "Rohan Doshi",
+      "published_date": "2025-12-05 00:00:00",
+      "word_count": 1254,
+      "language": "en",
+      "site_name": "Google"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 4,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Visual Extraction: To answer the Gini Index Comparison question, Gemini located and cross-referenced this info in Figure 3 about \u201cMoney Income decreased by 1",
+        "2 percent\u201d and in Table B-3 about \u201cPost-Tax Income increased by 3",
+        "2 percent\u201d\nCausal Logic: Crucially, Gemini 3 does not stop at the numbers; it correlates this gap with the text\u2019s policy analysis, correctly identifying Lapse of ARPA Policies and the end of Stimulus Payments are the main causes",
+        "\u201d This also extends to AR/XR devices, where the user can request an AI assistant to \u201cPoint to the screw according to the user manual"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.711770361s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.512842109s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.363309176s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 51.363309176s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 51\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://openai.com/index/introducing-gpt-5-2-codex",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:44:28.501484+00:00",
+    "content": {
+      "title": "Introducing GPT-5.2-Codex",
+      "author": null,
+      "published_date": "2025-12-18 00:00:00",
+      "word_count": 1138,
+      "language": "en",
+      "site_name": "OpenAI"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 1,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Due to the increased cyber capabilities, we have added additional safeguards in the model and in the product, which are outlined in the system card"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 16.272469078s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 16\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 16.056148153s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 16\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 15.90604637s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 15\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 15.90604637s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 15\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://openai.com/index/gpt-5-system-card-update-gpt-5-2",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:45:02.947756+00:00",
+    "content": {
+      "title": "Update to GPT-5 System Card: GPT-5.2",
+      "author": null,
+      "published_date": "2025-12-11 00:00:00",
+      "word_count": 55,
+      "language": "en",
+      "site_name": "OpenAI"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 41.817045339s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 41\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 41.615064169s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 41\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 41.474852778s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 41\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 41.474852778s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 41\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.foxnews.com/tech/chatgpts-gpt-5-2-here-feels-rushed",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:45:19.044917+00:00",
+    "content": {
+      "title": "ChatGPT's GPT-5.2 is here, and it feels rushed",
+      "author": "Kurt Knutsson; CyberGuy Report",
+      "published_date": "2025-12-26 00:00:00",
+      "word_count": 1029,
+      "language": "en",
+      "site_name": "Fox News"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 3,
+      "verified_claims": [],
+      "unverified_claims": [
+        "According to the company, it launched GPT-5 in August, followed by GPT-5",
+        "According to OpenAI, GPT-5",
+        "2 may cost roughly 40 percent more per million tokens than GPT-5"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 11.797922718s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 11\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 11.597195187s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 11\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 11.456261919s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 11\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 11.456261919s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 11\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://mlq.ai/news/meta-readies-nextgeneration-mango-and-avocado-ai-models-for-2026-launch",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:46:09.441992+00:00",
+    "content": {
+      "title": "Meta readies next\u2011generation \u201cMango\u201d and \u201cAvocado\u201d AI models for 2026 launch",
+      "author": "MLQ Editorial",
+      "published_date": "2025-12-20 00:00:00",
+      "word_count": 1402,
+      "language": "en",
+      "site_name": "MLQ.ai"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Meta is preparing two next-generation artificial intelligence models, an image and video system known internally as \u201cMango\u201d and a text-based large language model dubbed \u201cAvocado,\u201d with an internal roadmap targeting a launch in the first half of 2026, according to company documents and media reports",
+        "137 According to these accounts, the timeline is an internal target rather than a publicly announced launch date and could still shift as development progresses",
+        "8 The company has confirmed its focus on more capable multimodal models and stronger coding performance but has not disclosed detailed technical specifications, model sizes or training data sources for Mango and Avocado",
+        "14\nAccording to descriptions shared with employees and reported externally, Mango is intended to strengthen Meta\u2019s capabilities in multimodal generation, particularly for images and video that can respond to text prompts and potentially other forms of input",
+        "16\nThe new models are intended to compete with leading systems such as OpenAI\u2019s GPT series and Google\u2019s Gemini models by offering more capable multimodal generation and improved coding features, according to coverage in the Financial Times, Reuters and other outlets"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 35.089208236s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 35\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.895223656s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.741786068s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.741786068s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.ubergizmo.com/2025/12/meta-plans-new-visual-ai-model",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:46:25.763319+00:00",
+    "content": {
+      "title": "Meta Plans New Visual AI Model To Rival ChatGPT And Gemini",
+      "author": "Paulo Montenegro",
+      "published_date": "2025-12-22 00:00:00",
+      "word_count": 346,
+      "language": "en",
+      "site_name": "Ubergizmo"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 3,
+      "verified_claims": [],
+      "unverified_claims": [
+        "According to information published by The Wall Street Journal, this initiative shows Meta\u2019s intention to strengthen its position in the fast-changing AI market, particularly in visual content generation and processing",
+        "In an interview on Thursday the 18th, Meta\u2019s Director of AI, Alexandr Wang, and Chief Product Officer, Chris Cox, confirmed that both Mango and Avocado are set for release in the first half of 2026",
+        "These models are expected to be the first major products from the Meta Superintelligence Labs (MSL), a research and development division announced in July"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 5.144975881s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 5\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 4.996585057s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 4\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 4.857688948s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 4\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 4.857688948s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 4\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.investing.com/news/stock-market-news/nvidia-to-acquire-groq-for-20-billion-in-its-largest-deal-ever-cnbc-reports-4422745",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:47:05.775794+00:00",
+    "content": {
+      "title": "Breaking down Nvidia\u2019s unusual $20 billion deal with Groq By Investing.com",
+      "author": "Senad Karaahmetovic",
+      "published_date": "2025-12-24 00:00:00",
+      "word_count": 591,
+      "language": "en",
+      "site_name": "Investing.com"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "com -- Reports emerged on Wednesday that NVIDIA (NASDAQ:NVDA) has agreed to acquire Groq, a designer of high-performance artificial intelligence accelerator chips, in a $20 billion all-cash deal",
+        "Groq recently raised $750 million at a valuation of about $6",
+        "Groq said it has entered into a \"non-exclusive inference technology licensing agreement\" with Nvidia aimed at accelerating AI inference at global scale",
+        "Groq said it will continue to operate as an independent company, with Simon Edwards stepping into the role of chief executive officer",
+        "Wall Street weighs in\nBank of America analyst Vivek Arya said that the deal \"implies NVDA recognition that while GPU dominated AI training, the rapid shift towards inference could require more specialized chips"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 35.139539966s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 35\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.933709502s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.796751687s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.796751687s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://timesofindia.indiatimes.com/technology/tech-news/how-google-fear-and-threat-just-made-nvidia-just-spend-20-billion/articleshow/126188810.cms",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:47:25.643846+00:00",
+    "content": {
+      "title": "How 'Google fear and threat' just made Nvidia spend $20 billion - The Times of India",
+      "author": "Sourabh Kulesh",
+      "published_date": "2025-12-26 00:00:00",
+      "word_count": 463,
+      "language": "en",
+      "site_name": "The Times Of India"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 4,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Nvidia has acquired the assets of AI chip startup Groq in a $20 billion",
+        "The move is said to be driven by two key factors: the need for cost efficiency and the demand for higher processing speeds",
+        "This hit Nvidia's stock, erasing roughly $250 billion in market value",
+        "According to the company\u2019s website:\nGroq builds fast AI inference"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 5.134948123s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 5\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 4.940247354s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 4\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 4.794465492s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 4\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 4.794465492s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 4\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.calcalistech.com/ctechnews/article/hjyziyc7wl",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:47:56.780635+00:00",
+    "content": {
+      "title": "Nvidia\u2019s $20 billion Groq deal: Talent and technology over traditional acquisition | CTech",
+      "author": "Omer Kabir",
+      "published_date": "2025-12-25 00:00:00",
+      "word_count": 774,
+      "language": "en",
+      "site_name": "Ctech"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Nvidia\u2019s $20 billion Groq deal: Talent and technology over traditional acquisition\nThe transaction underscores the urgency of AI competition and the need to bypass regulatory delays",
+        "Just three months ago, Groq raised $750 million at a $6",
+        "On Wednesday, Nvidia agreed to pay, according to some reports, $20 billion, a deal that includes non-exclusive access to Groq\u2019s technology and the transfer of senior employees, led by founder and CEO Jonathan Ross, to Nvidia",
+        "$20 billion not to acquire the company, not to acquire its intellectual property, nor even for an exclusive use agreement",
+        "6 trillion, the highest in history for a public company, has relied heavily on demand for its training chips"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 35.140160461s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 35\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 35.00323491s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 35\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.857454381s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 34.857454381s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 34\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.techspot.com/news/110674-nvidia-sk-hynix-building-ai-ssd-could-10x.html",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:48:41.320807+00:00",
+    "content": {
+      "title": "Nvidia and SK hynix are building an AI SSD that could be 10x faster",
+      "author": "Skye Jacobs",
+      "published_date": "2025-12-21 00:00:00",
+      "word_count": 373,
+      "language": "en",
+      "site_name": "TechSpot"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 3,
+      "verified_claims": [],
+      "unverified_claims": [
+        "At a recent conference, SK hynix Vice President Kim Cheon-seong announced that the Korean memory manufacturer is working with Nvidia on what could become a tenfold leap in SSD performance",
+        "According to Korean outlet Chosun, Kim said his firm was developing a new SSD with ten times more performance alongside Nvidia",
+        "SK hynix aims to push this next-generation AI SSD to 100 million input/output operations per second (IOPS) \u2013 dramatically higher than the throughput of conventional enterprise-grade SSDs"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 3.129441779s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 3\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 2.994804709s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 2\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 2.858029957s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 2\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 2.858029957s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 2\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://overclock3d.net/news/storage/first-dram-now-nand-nvidia-and-sk-hynix-target-nand-with-ai-ssd-plans",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:49:06.810882+00:00",
+    "content": {
+      "title": "First DRAM, now NAND - Nvidia and SK Hynix target NAND with \"AI SSD\" plans",
+      "author": "Mark Campbell",
+      "published_date": "2025-12-19 00:00:00",
+      "word_count": 522,
+      "language": "en",
+      "site_name": "OC3D"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 3,
+      "verified_claims": [],
+      "unverified_claims": [
+        "With new \u201cHigh Bandwidth Flash\u201d (HBF) storage, Nvidia and SK Hynix aim to deliver SSDs with 100 million IOPS in 2027",
+        "Nvidia reportedly made a similar agreement with Kioxia earlier this year, aiming to create SSD hardware that can deliver over 100 million IOPS (Input Output per Second) of performance",
+        "(SK Hynix is one of the world\u2019s largest NAND producers)\nThis project could be disastrous for consumers\nNAND pricing has already increased sharply due to AI datacenter buildouts"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 33.112778643s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 33\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 32.975335168s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 32\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 32.845932157s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 32\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 32.845932157s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 32\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://arcprize.org/blog/arc-prize-2025-results-analysis",
+    "source_type": "blog",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:49:27.803704+00:00",
+    "content": {
+      "title": "ARC Prize 2025 Results and Analysis",
+      "author": "Mike Knoop",
+      "published_date": "2025-12-05 00:00:00",
+      "word_count": 3143,
+      "language": "en",
+      "site_name": "ARC Prize"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 1,
+      "verified_claims": [],
+      "unverified_claims": [
+        "According to OpenAI, only ~10% of ChatGPT free users have ever used \"thinking\" mode"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 3.055098172s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 3\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 2.856005259s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 2\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 2.68084074s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 2\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 2.68084074s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 2\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://forums.developer.nvidia.com/t/nvidia-grandmasters-win-the-arc-prize-2025-competition/353690",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:49:58.227591+00:00",
+    "content": {
+      "title": "NVIDIA Grandmasters Win the ARC Prize 2025 Competition!",
+      "author": "TomNVIDIA",
+      "published_date": "2025-12-05 00:00:00",
+      "word_count": 51,
+      "language": "en",
+      "site_name": "NVIDIA Developer Forums"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 33.117365132s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 33\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 32.983642265s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 32\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 32.845455431s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 32\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 32.845455431s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 32\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://openai.com/index/accelerating-biological-research-in-the-wet-lab",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:50:46.174721+00:00",
+    "content": {
+      "title": "Application error: a client-side exception has occurred (see the browser console for more information).",
+      "author": null,
+      "published_date": "2020-06-14 00:00:00",
+      "word_count": 14,
+      "language": "en",
+      "site_name": "openai.com"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 0,
+      "verified_claims": [],
+      "unverified_claims": [],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.617821215s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.496901976s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.365419264s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.365419264s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://techfundingnews.com/2b-raised-ranking-the-biggest-uk-ai-deals-in-2025",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:51:03.489722+00:00",
+    "content": {
+      "title": "\u00a32B+ raised: Ranking the biggest UK AI deals in 2025 \u2014 TFN",
+      "author": "Abhinaya Prabhu",
+      "published_date": "2025-12-25 00:00:00",
+      "word_count": 1583,
+      "language": "en",
+      "site_name": "Tech Funding News"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "8 billion in funding in the first half of the year, highlighting both the volume and strategic importance of AI deals in the broader UK VC landscape",
+        "The company recently secured $600 million in funding, underlining strong investor confidence in AI applications beyond large language models",
+        "While the company surpassed $1 billion in total sales this year, it also raised $200 million in a Series C round led by Tiger Global in September",
+        "In February, Fluidstack secured a $200 million in a Series A funding round",
+        "Reportedly, the company is eyeing to raise $700 million, which could value it at around $7 billion"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.56026004s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.358428885s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.201798313s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.201798313s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.datacenterknowledge.com/investing/uk-s-nscale-to-boost-us-footprint-with-865m-nc-data-center-deal",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:51:32.207780+00:00",
+    "content": {
+      "title": "UK\u2019s Nscale to Boost US Footprint with $865M Data Center Deal",
+      "author": "Shane Snider",
+      "published_date": "2025-12-24 00:00:00",
+      "word_count": 379,
+      "language": "en",
+      "site_name": "DataCenterKnowledge"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "UK-based AI infrastructure firm Nscale will invest $865 million for a 10-year, 40 MW colocation agreement with WhiteFiber\u2019s planned NC-1 data center complex in Madison, North Carolina",
+        "Earlier this year, Nscale said it would increase its North American footprint and greenfield data center pipeline by \u201chundreds of megawatts of new capacity",
+        "\u201d\nWhiteFiber has invested $150 million in the one million-square-foot facility, situated on 96 acres in a rural area north of Charlotte",
+        "WhiteFiber, a subsidiary of Canadian firm Enovum Data Centers, stated that it was also in advanced discussions with several leading lenders to address immediate buildout requirements to accommodate the Nscale deal",
+        "That could include buildouts to increase capacity, the company said"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.587047046s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.450407296s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.252854209s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.252854209s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://www.mobihealthnews.com/news/isomorphic-labs-secures-600m-funding-ai-drug-design",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:52:02.435424+00:00",
+    "content": {
+      "title": "Isomorphic Labs secures $600M in funding for AI drug design",
+      "author": "Anthony Vecchione; March",
+      "published_date": "2025-03-31 00:00:00",
+      "word_count": 467,
+      "language": "en",
+      "site_name": "MobiHealthNews"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "Drug design and development company Isomorphic Labs announced it raised $600 million in its first external funding round",
+        "According to Isomorphic Labs, AlphaFold 3 is an AI model that has the capability of predicting the makeup and interactions of life's molecules with precision",
+        "The two companies said they expect AlphaFold 3 to help transform the understanding of the biological world and drug discovery",
+        "\"We're excited to bring together a top-tier investor group with deep AI and life sciences expertise as we aim to transform this industry through an interdisciplinary approach,\" Isomorphic Labs founder and CEO Demis Hassabis said in a statement",
+        "Isomorphic received an upfront cash payment of $45 million"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.586520582s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.387141341s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.246795895s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 28.246795895s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 28\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  },
+  {
+    "url": "https://timesofindia.indiatimes.com/technology/tech-news/ai-layoffs-in-2025-crossed-50000-4-biggest-technology-companies-that-called-out-ai-in-their-job-cuts-announcement-and-how/articleshow/126106779.cms",
+    "source_type": "news_article",
+    "status": "failed",
+    "extracted_at": "2025-12-28 03:52:32.138372+00:00",
+    "content": {
+      "title": "AI layoffs in 2025 crossed 50,000: 4 biggest technology companies that called out AI in their job cuts announcement and how - The Times of India",
+      "author": "TOI Tech Desk",
+      "published_date": "2025-12-21 00:00:00",
+      "word_count": 700,
+      "language": "en",
+      "site_name": "The Times Of India"
+    },
+    "raw_text": null,
+    "summary": null,
+    "fact_check": {
+      "claims_analyzed": 5,
+      "verified_claims": [],
+      "unverified_claims": [
+        "AI-related job cuts crossed 50,000 in 2025 in the US alone, according to new data from consulting firm Challenger, Gray & Christmas (via CNBC)",
+        "The firm said that companies directly cited artificial intelligence (AI) as the reason for 54,883 job cuts this year \u2013 making it one of the biggest drivers of layoffs across the tech industry",
+        "2 trillion in wages across finance, healthcare, and professional services",
+        "Announcing the job cuts, Amazon\u2019s senior vice president of people experience and technology, Beth Galetti said that the company is \u2018making organizational changes \u2026 which will include reducing in some areas and hiring in others\u2019",
+        "Salesforce\nIn September, Salesforce CEO Marc Benioff confirmed that 4,000 customer support roles were cut with the help of AI automation"
+      ],
+      "publisher_credibility": null
+    },
+    "error": "Summarization failed: Failed to generate summary: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.567427943s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.368297578s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.220784044s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3-flash\nPlease retry in 58.220784044s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 58\n}\n]\n</last_exception>",
+    "processing_time_ms": null
+  }
+]

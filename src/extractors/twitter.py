@@ -11,7 +11,6 @@ from src.models.schemas import ExtractedContent, URLType
 
 
 
-
 class TwitterExtractor(BaseExtractor):
     """
     Extract content from Twitter/X using the syndication API.

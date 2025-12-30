@@ -2,14 +2,14 @@
 
 ## Weekly Intelligence Report
 
-**December 28, 2025**
+**December 30, 2025**
 
-10 articles analyzed | 20 sources unavailable
+23 articles analyzed | 7 sources unavailable
 
 <!--
 Speaker Notes:
 - Welcome to the AI news briefing
-- 10 articles successfully processed
+- 23 articles successfully processed
 - Cover major themes: model releases, infrastructure, acquisitions
 -->
 
@@ -17,10 +17,10 @@ Speaker Notes:
 
 # Agenda
 
-1. **AI Models & Product Launches** (6 articles)
-2. **AI M&A and Funding** (2 articles)
-3. **AI Infrastructure & Hardware** (1 articles)
-4. **AI Workforce & Industry** (1 articles)
+1. **AI Models & Product Launches** (14 articles)
+2. **AI Infrastructure & Hardware** (4 articles)
+3. **AI M&A and Funding** (3 articles)
+4. **AI Workforce & Industry** (2 articles)
 
 <!--
 Speaker Notes:
@@ -33,12 +33,12 @@ Speaker Notes:
 
 # AI Models & Product Launches
 
-## 6 Key Developments
+## 14 Key Developments
 
 <!--
 Speaker Notes:
 - Moving into AI Models & Product Launches section
-- 6 articles to cover
+- 14 articles to cover
 -->
 
 ---
@@ -97,7 +97,7 @@ URL: https://x.com/officiallogank/status/2001322275656835348
 
 ---
 
-## Evaluating AI's ability to perform scientific research tasks
+## Evaluating AI’s ability to perform scientific research tasks
 
 - FrontierScience was developed to measure expert-level scientific capabilities that go beyond simple fact recall to include hypothesis generation and synthesis.
 - The benchmark consists of two tracks: FrontierScience-Olympiad (100 questions) and FrontierScience-Research (60 subtasks).
@@ -151,14 +151,242 @@ URL: https://www.wsj.com/tech/ai/meta-developing-new-ai-image-and-video-model-co
 
 ---
 
+## Gemini 3 Flash for Enterprises | Google Cloud Blog
+
+- Gemini 3 Flash offers Pro-grade reasoning capabilities with the speed and efficiency typically associated with smaller 'Flash' models.
+- The model is optimized for high-frequency workflows, including near real-time video analysis, data extraction, and visual Q&A.
+- Significant performance improvements have been reported by early partners, including a 15% accuracy increase in data extraction for Box and a 10% baseline improvement in coding tasks for Geotab.
+- It is designed to power 'agentic' applications, enabling autonomous agents to decompose complex goals into granular tasks and follow instructions with high precision.
+
+**Source:** Google Cloud | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+Google Cloud has announced the launch of Gemini 3 Flash, a new model within the Gemini 3 family designed to provide high-speed, cost-effective, and frontier-level intelligence for enterprise workflows. The model bridges the gap between high-reasoning capabilities and low-latency execution, making it...
+
+URL: https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-flash-for-enterprises
+-->
+
+---
+
+## Gemini 3 Flash is now available in Gemini CLI
+
+- Gemini 3 Flash is now available in Gemini CLI version 0.21.1 or later for both paid and free tier users.
+- The model achieves a 78% SWE-bench Verified score, surpassing Gemini 3 Pro in agentic coding tasks.
+- It is 3x faster and significantly cheaper than Gemini 2.5 Pro, based on Artificial Analysis benchmarking.
+- The model features a massive context window capable of processing thousands of comments to extract specific actionable items.
+
+**Source:** developers.googleblog.com | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+Google has announced the integration of Gemini 3 Flash into the Gemini CLI, specifically optimized for high-frequency terminal-based developer workflows. This new model represents a significant advancement in efficiency, achieving a 78% SWE-bench Verified score for agentic coding, which outperforms ...
+
+URL: https://developers.googleblog.com/gemini-3-flash-is-now-available-in-gemini-cli
+-->
+
+---
+
+## Gemini 3 Pro: the frontier of vision AI
+
+- Advanced document processing including 'derendering' visual documents into structured code like LaTeX, HTML, and Markdown.
+- Superior spatial reasoning with pixel-precise pointing and open-vocabulary object identification for robotics and AR/XR.
+- Enhanced video understanding capable of processing 10 frames per second to capture rapid details and reason about cause-and-effect.
+- Robust screen understanding for automating desktop and mobile OS tasks, QA testing, and UX analytics.
+
+**Source:** Google | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+Gemini 3 Pro is Google's latest multimodal model, marking a significant advancement in vision AI by transitioning from basic recognition to sophisticated visual and spatial reasoning. The model achieves state-of-the-art results on major benchmarks and introduces specialized capabilities for document...
+
+URL: https://blog.google/technology/developers/gemini-3-pro-vision
+-->
+
+---
+
+## Introducing GPT-5.2-Codex
+
+- Release of GPT-5.2-Codex for paid ChatGPT users, with API access planned for the coming weeks.
+- Optimization for agentic coding tasks including large-scale refactors, code migrations, and long-context understanding.
+- Significant improvements in cybersecurity capabilities, achieving state-of-the-art results on SWE-Bench Pro and Terminal-Bench 2.0.
+- Introduction of a 'trusted access pilot' program to provide vetted security professionals with access to advanced cyber capabilities for defensive work.
+
+**Source:** OpenAI | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+OpenAI has announced the release of GPT-5.2-Codex, a specialized version of the GPT-5.2 model optimized for professional software engineering and defensive cybersecurity. The model introduces significant advancements in agentic coding, including context compaction for long-horizon tasks, improved pe...
+
+URL: https://openai.com/index/introducing-gpt-5-2-codex
+-->
+
+---
+
+## Update to GPT-5 System Card: GPT-5.2
+
+- GPT-5.2 is introduced as the newest model family within the GPT-5 series.
+- The safety mitigation approach for GPT-5.2 remains consistent with the strategies used for GPT-5 and GPT-5.1.
+- The update specifically identifies two model variants: GPT-5.2 Instant and GPT-5.2 Thinking.
+- Technical identifiers for the new models are designated as gpt-5.2-instant and gpt-5.2-thinking.
+
+**Source:** OpenAI | **Sentiment:** Neutral coverage
+
+<!--
+Speaker Notes:
+OpenAI has announced the GPT-5.2 model family, the latest iteration in the GPT-5 series. This update introduces two specific versions, GPT-5.2 Instant and GPT-5.2 Thinking, while maintaining the safety mitigation frameworks established in previous system cards for GPT-5 and GPT-5.1.
+
+URL: https://openai.com/index/gpt-5-system-card-update-gpt-5-2
+-->
+
+---
+
+## ChatGPT's GPT-5.2 is here, and it feels rushed
+
+- OpenAI's accelerated release schedule saw GPT-5, 5.1, and 5.2 launch within a five-month window in late 2025.
+- The update was prompted by competitive pressure from Google's Gemini 3 and Anthropic's Claude models.
+- GPT-5.2 replaces GPT-5.1 Instant and Thinking models as the default for both free and paid ChatGPT users.
+- Improvements are primarily internal, focusing on math, science, coding, and long context windows without adding new user tools.
+
+**Source:** Fox News | **Sentiment:** Mixed perspectives
+
+<!--
+Speaker Notes:
+OpenAI has rapidly released GPT-5.2, the third iteration of its flagship model series in late 2025, following a reported 'code red' from CEO Sam Altman to counter rising competition from Google and Anthropic. While the update replaces previous versions for all users and claims improvements in reason...
+
+URL: https://www.foxnews.com/tech/chatgpts-gpt-5-2-here-feels-rushed
+-->
+
+---
+
+## Meta readies next‑generation “Mango” and “Avocado” AI mod...
+
+- Meta is targeting a first-half 2026 release for the 'Mango' multimodal model and 'Avocado' text-based model.
+- The models are being developed by Meta Superintelligence Labs, a new unit led by Scale AI co-founder Alexandr Wang.
+- Mango is designed to advance image and video generation, exploring 'world models' that understand visual information and plan sequences.
+- Avocado is intended to surpass current Llama-based systems with a specific focus on software development and complex reasoning.
+
+**Source:** MLQ.ai | **Sentiment:** Neutral coverage
+
+<!--
+Speaker Notes:
+Meta is developing two next-generation artificial intelligence models, codenamed “Mango” and “Avocado,” with an internal roadmap targeting a launch in the first half of 2026. Developed within the newly formed Meta Superintelligence Labs led by Alexandr Wang, Mango is designed for advanced multimodal...
+
+URL: https://mlq.ai/news/meta-readies-nextgeneration-mango-and-avocado-ai-models-for-2026-launch
+-->
+
+---
+
+## ARC Prize 2025 Results and Analysis
+
+- Team NVARC won the 2025 Kaggle competition with a 24% score on the ARC-AGI-2 private evaluation set.
+- Refinement loops, which iteratively optimize programs based on feedback, have become the primary driver of AGI progress in 2025.
+- Commercial frontier models like Claude Opus 4.5 and Gemini 3 Pro are now being benchmarked on ARC-AGI by all major AI labs including OpenAI and Anthropic.
+- Small-scale models, such as the 7M parameter Tiny Recursive Model, are demonstrating high reasoning efficiency compared to massive LLMs.
+
+**Source:** ARC Prize | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+The ARC Prize 2025 results highlight significant progress in AI reasoning, driven by the emergence of 'refinement loops' and iterative optimization techniques. While the Grand Prize remains unclaimed, the competition saw a new state-of-the-art score of 24% on the ARC-AGI-2 private dataset by team NV...
+
+URL: https://arcprize.org/blog/arc-prize-2025-results-analysis
+-->
+
+---
+
+# AI Infrastructure & Hardware
+
+## 4 Key Developments
+
+<!--
+Speaker Notes:
+- Moving into AI Infrastructure & Hardware section
+- 4 articles to cover
+-->
+
+---
+
+## After Gobbling Up DRAM, NVIDIA & SK hynix Plan to Introdu...
+
+- NVIDIA and SK hynix are co-developing 'Storage Next,' an inference-optimized AI SSD solution.
+- The project aims for a performance milestone of 100 million IOPS, significantly outperforming traditional enterprise SSDs.
+- The shift from AI training to inference necessitates a pseudo-memory layer to handle massive model parameters that HBM cannot accommodate.
+- SK hynix plans to present a prototype of the AI SSD by the end of 2025, with a full solution expected by 2027.
+
+**Source:** Wccftech | **Sentiment:** Mixed perspectives
+
+<!--
+Speaker Notes:
+NVIDIA and SK hynix are reportedly collaborating on a next-generation 'AI SSD' project titled 'Storage Next,' aimed at optimizing NAND flash memory for AI inference workloads. This new storage solution seeks to achieve performance levels of up to 100 million IOPS, roughly ten times that of current e...
+
+URL: https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd
+-->
+
+---
+
+## Breaking down Nvidia’s unusual $20 billion deal with Groq...
+
+- Nvidia is paying $20 billion for a non-exclusive license to Groq’s inference technology and the hiring of key personnel.
+- Groq founder Jonathan Ross and President Sunny Madra will join Nvidia, while Simon Edwards becomes Groq's new CEO.
+- Groq will remain an independent company, suggesting the deal is a 'talent and tech' grab rather than a full merger.
+- The deal highlights a strategic shift in the AI industry from training-heavy workloads to specialized inference workloads.
+
+**Source:** Investing.com | **Sentiment:** Mixed perspectives
+
+<!--
+Speaker Notes:
+Nvidia has reportedly entered into a $20 billion all-cash agreement with AI chip designer Groq, though the deal is structured as a non-exclusive licensing agreement rather than a traditional acquisition. The arrangement focuses on Groq's high-performance inference technology and includes a significa...
+
+URL: https://www.investing.com/news/stock-market-news/nvidia-to-acquire-groq-for-20-billion-in-its-largest-deal-ever-cnbc-reports-4422745
+-->
+
+---
+
+## £2B+ raised: Ranking the biggest UK AI deals in 2025 — TFN
+
+- AI startups dominated the UK venture capital landscape in 2025, securing £1.8 billion in the first six months.
+- Nscale made history by raising $1.1 billion in the largest Series B round ever recorded in Europe to build AI-native infrastructure.
+- Isomorphic Labs, an Alphabet spin-out, secured $600 million to advance AI-driven drug discovery and protein structure prediction.
+- Infrastructure providers like Ori Industries and FluidStack are scaling to address the European shortage of sovereign AI compute capacity.
+
+**Source:** Tech Funding News | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+The UK’s AI sector experienced a landmark year in 2025, with startups securing over £1.8 billion in funding during the first half of the year alone. This growth was driven by massive investments in AI infrastructure, drug discovery, and industrial applications, highlighted by Nscale's $1.1 billion S...
+
+URL: https://techfundingnews.com/2b-raised-ranking-the-biggest-uk-ai-deals-in-2025
+-->
+
+---
+
+## UK’s Nscale to Boost US Footprint with $865M Data Center ...
+
+- Nscale signed an $865 million, 10-year deal for 40 MW of capacity at WhiteFiber’s NC-1 data center.
+- The NC-1 facility is a one million-square-foot site located on 96 acres in Madison, North Carolina.
+- Payments for the capacity are scheduled to begin in two 20 MW phases in April and May 2026.
+- This agreement follows Nscale's recent contract with Microsoft to deliver 104,000 Nvidia GPUs in Barstow, Texas.
+
+**Source:** DataCenterKnowledge | **Sentiment:** Positive outlook
+
+<!--
+Speaker Notes:
+UK-based AI infrastructure firm Nscale has committed $865 million to a 10-year colocation agreement with WhiteFiber for 40 MW of capacity at the NC-1 data center in Madison, North Carolina. This deal is a significant component of Nscale's aggressive expansion into the US market, following a $1.1 bil...
+
+URL: https://www.datacenterknowledge.com/investing/uk-s-nscale-to-boost-us-footprint-with-865m-nc-data-center-deal
+-->
+
+---
+
 # AI M&A and Funding
 
-## 2 Key Developments
+## 3 Key Developments
 
 <!--
 Speaker Notes:
 - Moving into AI M&A and Funding section
-- 2 articles to cover
+- 3 articles to cover
 -->
 
 ---
@@ -199,49 +427,37 @@ URL: https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-m
 
 ---
 
-# AI Infrastructure & Hardware
+## Isomorphic Labs secures $600M in funding for AI drug design
 
-## 1 Key Developments
+- Isomorphic Labs raised $600 million in a funding round led by Thrive Capital, with GV and Alphabet participating.
+- The company's technology suite includes AlphaFold 3 for molecular interaction prediction and AlphaProteo for designing novel proteins.
+- Funds will be used to advance the company's AI drug design engine and move its proprietary drug programs into clinical stages.
+- Isomorphic Labs expanded its strategic research collaboration with Novartis to include three additional research programs.
 
-<!--
-Speaker Notes:
-- Moving into AI Infrastructure & Hardware section
-- 1 articles to cover
--->
-
----
-
-## After Gobbling Up DRAM, NVIDIA & SK hynix Plan to Introdu...
-
-- NVIDIA and SK hynix are co-developing 'Storage Next,' an inference-optimized AI SSD solution.
-- The project aims for a performance milestone of 100 million IOPS, significantly outperforming traditional enterprise SSDs.
-- The shift from AI training to inference necessitates a pseudo-memory layer to handle massive model parameters that HBM cannot accommodate.
-- SK hynix plans to present a prototype of the AI SSD by the end of 2025, with a full solution expected by 2027.
-
-**Source:** Wccftech | **Sentiment:** Mixed perspectives
+**Source:** MobiHealthNews | **Sentiment:** Positive outlook
 
 <!--
 Speaker Notes:
-NVIDIA and SK hynix are reportedly collaborating on a next-generation 'AI SSD' project titled 'Storage Next,' aimed at optimizing NAND flash memory for AI inference workloads. This new storage solution seeks to achieve performance levels of up to 100 million IOPS, roughly ten times that of current e...
+Isomorphic Labs, an AI-driven drug discovery company launched in 2021 with Google DeepMind, has secured $600 million in its first external funding round led by Thrive Capital. The investment, which includes participation from GV and Alphabet, is intended to accelerate the development of the company'...
 
-URL: https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd
+URL: https://www.mobihealthnews.com/news/isomorphic-labs-secures-600m-funding-ai-drug-design
 -->
 
 ---
 
 # AI Workforce & Industry
 
-## 1 Key Developments
+## 2 Key Developments
 
 <!--
 Speaker Notes:
 - Moving into AI Workforce & Industry section
-- 1 articles to cover
+- 2 articles to cover
 -->
 
 ---
 
-## Crypto's real threat to banks
+## Crypto’s real threat to banks
 
 - The crypto industry has historically faced snootiness and derision from Wall Street's elite circles.
 - Crypto is currently supplanting Wall Street's privileged political position, particularly within the American right.
@@ -259,13 +475,31 @@ URL: https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-thr
 
 ---
 
+## AI layoffs in 2025 crossed 50,000: 4 biggest technology c...
+
+- Data from Challenger, Gray & Christmas indicates that 54,883 job cuts in 2025 were directly attributed to AI.
+- A Massachusetts Institute of Technology (MIT) study suggests AI can automate 11.7% of U.S. jobs, particularly in finance and healthcare.
+- Amazon reduced its corporate workforce by 14,000, aiming for a leaner structure to innovate faster using AI.
+- Microsoft has integrated AI usage into employee performance reviews, declaring the technology core to every role.
+
+**Source:** The Times Of India | **Sentiment:** Mixed perspectives
+
+<!--
+Speaker Notes:
+In 2025, AI-related layoffs in the United States surpassed 50,000, as major technology firms like Amazon, Microsoft, Salesforce, and IBM cited artificial intelligence as a primary driver for organizational restructuring. While companies leverage AI to improve profitability and efficiency—potentially...
+
+URL: https://timesofindia.indiatimes.com/technology/tech-news/ai-layoffs-in-2025-crossed-50000-4-biggest-technology-companies-that-called-out-ai-in-their-job-cuts-announcement-and-how/articleshow/126106779.cms
+-->
+
+---
+
 # Key Takeaways
 
 ## Summary
 
-- **10 articles** analyzed across AI industry
+- **23 articles** analyzed across AI industry
 - **Top Topics:** SEC Filings, Institutional Investment, Portfolio Management, 13F Disclosure, Artificial Intelligence, Large Language Models
-- **Sentiment Mix:** 5 positive, 4 neutral, 1 mixed
+- **Sentiment Mix:** 13 positive, 6 neutral, 4 mixed
 
 ## Questions?
 
@@ -282,16 +516,13 @@ Speaker Notes:
 
 The following sources could not be accessed:
 
-- cloud.google.com: Summarization failed: Failed to generate summary: 
-- developers.googleblog.com: Summarization failed: Failed to generate summary: 
-- blog.google: Summarization failed: Failed to generate summary: 
-- openai.com: Summarization failed: Failed to generate summary: 
-- openai.com: Summarization failed: Failed to generate summary: 
-- www.foxnews.com: Summarization failed: Failed to generate summary: 
-- mlq.ai: Summarization failed: Failed to generate summary: 
 - www.ubergizmo.com: Summarization failed: Failed to generate summary: 
-- www.investing.com: Summarization failed: Failed to generate summary: 
 - timesofindia.indiatimes.com: Summarization failed: Failed to generate summary: 
+- www.calcalistech.com: Summarization failed: Failed to generate summary: 
+- www.techspot.com: Summarization failed: Failed to generate summary: 
+- overclock3d.net: Summarization failed: Failed to generate summary: 
+- forums.developer.nvidia.com: Summarization failed: Failed to generate summary: 
+- openai.com: Summarization failed: Failed to generate summary: 
 
 <!--
 Speaker Notes:

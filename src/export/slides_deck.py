@@ -177,7 +177,7 @@ Speaker Notes:
 
 {bullets}
 
-**Source:** {source} | **Sentiment:** {sentiment}
+**Source:** [{source}]({result.url}) | **Sentiment:** {sentiment}
 
 <!--
 Speaker Notes:

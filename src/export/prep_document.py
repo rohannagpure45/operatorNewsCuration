@@ -251,7 +251,15 @@ class PrepDocumentGenerator:
         if result.summary and result.summary.sentiment:
             sentiment_text = f" | Sentiment: {result.summary.sentiment.value.title()}"
         
-        pdf.cell(0, 5, f"Source: {source}{sentiment_text}", new_x="LMARGIN", new_y="NEXT")
+        # Source with hyperlink
+        pdf.cell(pdf.get_string_width("Source: ") + 1, 5, "Source: ", new_x="RIGHT", new_y="TOP")
+        pdf.set_text_color(59, 130, 246)  # Blue link color
+        # Truncate source name if too long (max ~40 chars to leave room for sentiment)
+        if len(source) > 40:
+            source = source[:37] + "..."
+        pdf.cell(pdf.get_string_width(source) + 1, 5, source, link=result.url, new_x="RIGHT", new_y="TOP")
+        pdf.set_text_color(107, 114, 128)  # Reset to gray
+        pdf.cell(0, 5, sentiment_text, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(3)
         
         # Summary box

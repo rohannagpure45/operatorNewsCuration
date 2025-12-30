@@ -178,8 +178,9 @@ class PDFReportGenerator:
                 meta_items.append(f"Author: {result.content.author}")
             if result.content.published_date:
                 meta_items.append(f"Published: {result.content.published_date.strftime('%B %d, %Y')}")
-            if result.content.site_name:
-                meta_items.append(f"Source: {result.content.site_name}")
+            # Note: site_name is included separately with hyperlink below
+            # if result.content.site_name:
+            #     meta_items.append(f"Source: {result.content.site_name}")
             if result.content.word_count:
                 meta_items.append(f"{result.content.word_count:,} words")
 
@@ -187,12 +188,20 @@ class PDFReportGenerator:
             pdf.set_font("Helvetica", size=9)
             pdf.set_text_color(107, 114, 128)
             pdf.cell(0, 6, " | ".join(meta_items), new_x="LMARGIN", new_y="NEXT")
+        
+        # Source name with hyperlink
+        if result.content and result.content.site_name:
+            pdf.set_font("Helvetica", size=9)
+            pdf.set_text_color(107, 114, 128)
+            pdf.cell(pdf.get_string_width("Source: ") + 1, 6, "Source: ", new_x="RIGHT", new_y="TOP")
+            pdf.set_text_color(59, 130, 246)  # Blue link color
+            pdf.cell(0, 6, result.content.site_name, link=result.url, new_x="LMARGIN", new_y="NEXT")
 
-        # Source URL
+        # Source URL (clickable hyperlink)
         pdf.set_font("Helvetica", size=8)
-        pdf.set_text_color(156, 163, 175)
-        pdf.cell(0, 5, f"URL: {result.url[:80]}{'...' if len(result.url) > 80 else ''}", 
-                 new_x="LMARGIN", new_y="NEXT")
+        pdf.set_text_color(59, 130, 246)  # Blue link color
+        url_display = result.url[:80] + ('...' if len(result.url) > 80 else '')
+        pdf.cell(0, 5, f"URL: {url_display}", link=result.url, new_x="LMARGIN", new_y="NEXT")
         
         # Separator
         pdf.set_draw_color(229, 231, 235)

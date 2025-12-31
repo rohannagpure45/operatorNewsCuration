@@ -368,7 +368,7 @@ Speaker Notes:
 
     def _aggregated_article_slide(self, result: AggregatedResult) -> str:
         """Generate slide for a single aggregated article."""
-        title = result.title
+        title = result.title or "Untitled"
         
         # Truncate title if too long
         if len(title) > 60:

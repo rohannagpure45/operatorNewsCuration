@@ -363,7 +363,7 @@ class PrepDocumentGenerator:
         if result.summary:
             # Extract key entities for context
             if result.summary.entities:
-                orgs = [e.text for e in result.summary.entities if e.type == EntityType.ORG][:2]
+                orgs = [e.text for e in result.summary.entities if e.type == EntityType.ORGANIZATION][:2]
                 if orgs:
                     parts.append(f"Impacts {', '.join(orgs)}.")
             
@@ -508,7 +508,6 @@ class PrepDocumentGenerator:
             title_lower = result.title.lower() if result.title else ""
             combined = topics_lower + " " + title_lower
             
-            from src.export.utils import THEME_KEYWORDS
             for theme, keywords in THEME_KEYWORDS.items():
                 for kw in keywords:
                     if kw.lower() in combined:
@@ -554,7 +553,7 @@ class PrepDocumentGenerator:
         
         pdf.set_font("Helvetica", size=10)
         for i, result in enumerate(results[:5], 1):
-            title = sanitize_text(result.title)
+            title = sanitize_text(result.title) if result.title else "Untitled"
             if len(title) > 70:
                 title = title[:67] + "..."
             pdf.set_x(25)
@@ -621,7 +620,7 @@ class PrepDocumentGenerator:
             pdf.add_page()
         
         # Article title
-        title = sanitize_text(result.title)
+        title = sanitize_text(result.title) if result.title else "Untitled"
         
         pdf.set_font("Helvetica", "B", 11)
         pdf.set_text_color(17, 24, 39)
@@ -646,7 +645,7 @@ class PrepDocumentGenerator:
             # List source names with links
             source_names = []
             for source in result.sources[:3]:  # Limit to 3 sources in brief view
-                site = source.site_name or urlparse(source.url).netloc or "Unknown"
+                site = source.site_name or (urlparse(source.url).netloc if source.url else None) or "Unknown"
                 source_names.append(site)
             
             sources_text = ", ".join(source_names)
@@ -759,7 +758,7 @@ class PrepDocumentGenerator:
         
         if result.summary:
             if result.summary.entities:
-                orgs = [e.text for e in result.summary.entities if e.type == EntityType.ORG][:2]
+                orgs = [e.text for e in result.summary.entities if e.type == EntityType.ORGANIZATION][:2]
                 if orgs:
                     parts.append(f"Impacts {', '.join(orgs)}.")
             

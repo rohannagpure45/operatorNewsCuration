@@ -346,8 +346,6 @@ class PDFReportGenerator:
         pdf.set_font("Helvetica", size=9)
 
         for fn in result.summary.footnotes:
-            pdf.set_fill_color(249, 250, 251)
-            
             pdf.set_x(25)
             pdf.set_font("Helvetica", "B", 9)
             pdf.set_text_color(59, 130, 246)
@@ -710,7 +708,6 @@ class PDFReportGenerator:
         pdf.set_font("Helvetica", size=9)
 
         for fn in result.summary.footnotes:
-            pdf.set_fill_color(249, 250, 251)
             y_start = pdf.get_y()
             
             pdf.set_x(25)

@@ -214,6 +214,69 @@ class ProcessedResult(BaseModel):
     )
 
 
+class SourceReference(BaseModel):
+    """Reference to an original source article in an aggregated result."""
+
+    url: str = Field(description="Original article URL")
+    title: Optional[str] = Field(default=None, description="Original article title")
+    site_name: Optional[str] = Field(default=None, description="Source site name")
+    author: Optional[str] = Field(default=None, description="Article author")
+    published_date: Optional[datetime] = Field(
+        default=None, description="Publication date"
+    )
+    source_type: URLType = Field(
+        default=URLType.UNKNOWN, description="Type of source"
+    )
+
+
+class AggregatedResult(BaseModel):
+    """Aggregated result combining multiple similar articles into one entry."""
+
+    title: str = Field(description="Unified title for the aggregated story")
+    sources: List[SourceReference] = Field(
+        min_length=1, description="All source articles that were merged"
+    )
+    summary: ContentSummary = Field(
+        description="Combined summary with concatenated content from all sources"
+    )
+    source_type: URLType = Field(
+        default=URLType.NEWS_ARTICLE, description="Primary source type"
+    )
+    status: ProcessingStatus = Field(
+        default=ProcessingStatus.COMPLETED, description="Processing status"
+    )
+    fact_check: Optional[FactCheckReport] = Field(
+        default=None, description="Combined fact-check results"
+    )
+    is_aggregated: bool = Field(
+        default=True, description="Flag indicating this is an aggregated result"
+    )
+    original_count: int = Field(
+        default=1, description="Number of original articles merged"
+    )
+
+
+class AggregatedResultSet(BaseModel):
+    """Complete set of aggregated results after deduplication."""
+
+    results: List[AggregatedResult] = Field(
+        default_factory=list, description="List of aggregated results"
+    )
+    total_original: int = Field(
+        default=0, description="Total number of original articles before aggregation"
+    )
+    total_aggregated: int = Field(
+        default=0, description="Total number of entries after aggregation"
+    )
+    duplicates_merged: int = Field(
+        default=0, description="Number of duplicate groups that were merged"
+    )
+    aggregated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="When aggregation was performed",
+    )
+
+
 # Request/Response models for API
 class URLSubmitRequest(BaseModel):
     """Request to submit URLs for processing."""
@@ -246,4 +309,5 @@ class JobStatus(BaseModel):
     completed_at: Optional[datetime] = Field(
         default=None, description="Job completion time"
     )
+
 

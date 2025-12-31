@@ -1,6 +1,8 @@
 """Pydantic models for structured data."""
 
 from .schemas import (
+    AggregatedResult,
+    AggregatedResultSet,
     Entity,
     Footnote,
     FactCheckResult,
@@ -8,11 +10,14 @@ from .schemas import (
     ContentSummary,
     ExtractedContent,
     ProcessedResult,
+    SourceReference,
     URLType,
     Sentiment,
 )
 
 __all__ = [
+    "AggregatedResult",
+    "AggregatedResultSet",
     "Entity",
     "Footnote",
     "FactCheckResult",
@@ -20,7 +25,9 @@ __all__ = [
     "ContentSummary",
     "ExtractedContent",
     "ProcessedResult",
+    "SourceReference",
     "URLType",
     "Sentiment",
 ]
+
 

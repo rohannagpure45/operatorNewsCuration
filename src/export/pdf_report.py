@@ -17,6 +17,8 @@ from src.export.utils import (
     SENTIMENT_LABELS,
 )
 from src.models.schemas import (
+    AggregatedResult,
+    AggregatedResultSet,
     ProcessedResult,
     ProcessingStatus,
 )
@@ -63,6 +65,364 @@ class PDFReportGenerator:
                 pdf.add_page()
             self._render_result(pdf, result, skip_header=(i > 0))
         return bytes(pdf.output())
+
+    def generate_aggregated_batch(self, result_set: AggregatedResultSet) -> bytes:
+        """
+        Generate a PDF report from aggregated results.
+
+        Args:
+            result_set: AggregatedResultSet with merged/deduplicated results.
+
+        Returns:
+            PDF file contents as bytes.
+        """
+        pdf = self._create_pdf()
+        
+        # Render report header with aggregation stats
+        self._render_aggregated_report_header(pdf, result_set)
+        
+        for i, result in enumerate(result_set.results):
+            if i > 0:
+                pdf.add_page()
+            self._render_aggregated_result(pdf, result, skip_header=True)
+        
+        return bytes(pdf.output())
+
+    def _render_aggregated_report_header(self, pdf: FPDF, result_set: AggregatedResultSet):
+        """Render the header for an aggregated report."""
+        pdf.set_font("Helvetica", "B", 20)
+        pdf.set_text_color(30, 64, 175)  # Blue
+        pdf.cell(0, 15, "News Curation Report", align="C", new_x="LMARGIN", new_y="NEXT")
+        
+        pdf.set_font("Helvetica", size=10)
+        pdf.set_text_color(107, 114, 128)  # Gray
+        generated = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M UTC")
+        pdf.cell(0, 8, f"Generated: {generated}", align="C", new_x="LMARGIN", new_y="NEXT")
+        
+        # Aggregation stats
+        pdf.set_font("Helvetica", size=9)
+        pdf.set_text_color(55, 65, 81)
+        stats_text = f"{result_set.total_original} articles analyzed | {result_set.total_aggregated} unique stories | {result_set.duplicates_merged} duplicates merged"
+        pdf.cell(0, 6, stats_text, align="C", new_x="LMARGIN", new_y="NEXT")
+        
+        # Separator line
+        pdf.set_draw_color(59, 130, 246)
+        pdf.set_line_width(0.5)
+        pdf.line(20, pdf.get_y() + 5, pdf.w - 20, pdf.get_y() + 5)
+        pdf.ln(15)
+
+    def _render_aggregated_result(self, pdf: FPDF, result: AggregatedResult, skip_header: bool = False):
+        """Render a single AggregatedResult to the PDF."""
+        if not skip_header:
+            self._render_report_header(pdf)
+
+        self._render_aggregated_article_header(pdf, result)
+
+        if result.summary:
+            self._render_aggregated_summary_section(pdf, result)
+            self._render_aggregated_key_points_section(pdf, result)
+
+            if result.summary.entities:
+                self._render_aggregated_entities_section(pdf, result)
+
+            if result.summary.implications:
+                self._render_aggregated_implications_section(pdf, result)
+
+            if result.summary.footnotes:
+                self._render_aggregated_footnotes_section(pdf, result)
+
+        # Render sources section for aggregated results
+        if len(result.sources) > 1:
+            self._render_sources_section(pdf, result)
+
+        if result.fact_check:
+            self._render_aggregated_fact_check_section(pdf, result)
+
+        self._render_aggregated_metadata_footer(pdf, result)
+
+    def _render_aggregated_article_header(self, pdf: FPDF, result: AggregatedResult):
+        """Render the article header for an aggregated result."""
+        # Title
+        pdf.set_font("Helvetica", "B", 16)
+        pdf.set_text_color(17, 24, 39)  # Dark gray
+        pdf.multi_cell(0, 8, result.title, new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
+
+        # Aggregation indicator badge
+        if result.is_aggregated and result.original_count > 1:
+            pdf.set_font("Helvetica", "B", 8)
+            pdf.set_fill_color(34, 197, 94)  # Green
+            pdf.set_text_color(255, 255, 255)
+            badge_text = f"{result.original_count} Sources Combined"
+            badge_width = pdf.get_string_width(badge_text) + 10
+            pdf.cell(badge_width, 5, badge_text, fill=True, new_x="RIGHT")
+            pdf.ln(8)
+
+        # Topics
+        if result.summary and result.summary.topics:
+            pdf.set_font("Helvetica", size=9)
+            for topic in result.summary.topics:
+                pdf.set_fill_color(219, 234, 254)  # Light blue
+                pdf.set_text_color(30, 64, 175)
+                pdf.cell(pdf.get_string_width(topic) + 8, 6, topic, fill=True, new_x="RIGHT")
+                pdf.cell(3)  # spacing
+            pdf.ln(8)
+
+        # Primary source info
+        if result.sources:
+            primary = result.sources[0]
+            meta_items = []
+            if primary.author:
+                meta_items.append(f"Author: {primary.author}")
+            if primary.published_date:
+                meta_items.append(f"Published: {primary.published_date.strftime('%B %d, %Y')}")
+
+            if meta_items:
+                pdf.set_font("Helvetica", size=9)
+                pdf.set_text_color(107, 114, 128)
+                pdf.cell(0, 6, " | ".join(meta_items), new_x="LMARGIN", new_y="NEXT")
+            
+            # Primary source name with hyperlink
+            if primary.site_name:
+                pdf.set_font("Helvetica", size=9)
+                pdf.set_text_color(107, 114, 128)
+                pdf.cell(pdf.get_string_width("Primary Source: ") + 1, 6, "Primary Source: ", new_x="RIGHT", new_y="TOP")
+                pdf.set_text_color(59, 130, 246)  # Blue link color
+                pdf.cell(0, 6, primary.site_name, link=primary.url, new_x="LMARGIN", new_y="NEXT")
+
+        # Separator
+        pdf.set_draw_color(229, 231, 235)
+        pdf.line(20, pdf.get_y() + 3, pdf.w - 20, pdf.get_y() + 3)
+        pdf.ln(8)
+
+    def _render_sources_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the sources section for aggregated results with multiple sources."""
+        self._render_section_header(pdf, f"Sources ({len(result.sources)})")
+
+        pdf.set_font("Helvetica", size=9)
+
+        for i, source in enumerate(result.sources, 1):
+            # Source number and site name
+            pdf.set_x(25)
+            pdf.set_font("Helvetica", "B", 9)
+            pdf.set_text_color(55, 65, 81)
+            pdf.cell(8, 5, f"{i}.")
+            
+            site_name = source.site_name or "Unknown Source"
+            pdf.set_text_color(59, 130, 246)  # Blue link color
+            pdf.cell(pdf.get_string_width(site_name) + 2, 5, site_name, link=source.url, new_x="RIGHT")
+            
+            # Title if different from main title
+            if source.title and source.title != result.title:
+                pdf.set_font("Helvetica", "I", 8)
+                pdf.set_text_color(107, 114, 128)
+                title_display = source.title[:50] + "..." if len(source.title) > 50 else source.title
+                pdf.cell(0, 5, f' - "{title_display}"', new_x="LMARGIN", new_y="NEXT")
+            else:
+                pdf.ln(5)
+            
+            # URL
+            pdf.set_x(33)
+            pdf.set_font("Helvetica", size=7)
+            pdf.set_text_color(107, 114, 128)
+            url_display = source.url[:60] + "..." if len(source.url) > 60 else source.url
+            pdf.cell(0, 4, url_display, link=source.url, new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(2)
+
+        pdf.ln(5)
+
+    def _render_aggregated_summary_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the executive summary section for aggregated result."""
+        if not result.summary:
+            return
+
+        self._render_section_header(pdf, "Executive Summary")
+
+        sentiment = result.summary.sentiment
+        sentiment_color = SENTIMENT_COLORS.get(sentiment, (107, 114, 128))
+        sentiment_label = SENTIMENT_LABELS.get(sentiment, "Unknown")
+
+        badge_width = pdf.get_string_width(sentiment_label) + 10
+        badge_x = pdf.w - 20 - badge_width
+        badge_y = pdf.get_y() - 6
+        
+        pdf.set_fill_color(*sentiment_color)
+        pdf.set_xy(badge_x, badge_y)
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(badge_width, 6, sentiment_label, fill=True, align="C")
+
+        pdf.set_xy(20, pdf.get_y() + 2)
+        pdf.set_fill_color(240, 249, 255)
+        pdf.set_draw_color(59, 130, 246)
+        
+        pdf.set_font("Helvetica", size=10)
+        pdf.set_text_color(55, 65, 81)
+        
+        summary_text = result.summary.executive_summary
+        y_start = pdf.get_y()
+        pdf.set_x(25)
+        pdf.multi_cell(pdf.w - 50, 6, summary_text)
+        y_end = pdf.get_y()
+        
+        pdf.set_xy(20, y_start - 3)
+        pdf.rect(20, y_start - 3, pdf.w - 40, y_end - y_start + 6, style="D")
+        
+        pdf.set_y(y_end + 8)
+
+    def _render_aggregated_key_points_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the key points section for aggregated result."""
+        if not result.summary or not result.summary.key_points:
+            return
+
+        self._render_section_header(pdf, "Key Points")
+
+        pdf.set_font("Helvetica", size=10)
+        pdf.set_text_color(55, 65, 81)
+
+        for i, point in enumerate(result.summary.key_points, 1):
+            pdf.set_x(25)
+            pdf.set_font("Helvetica", "B", 10)
+            pdf.cell(8, 6, f"{i}.")
+            pdf.set_font("Helvetica", size=10)
+            pdf.multi_cell(pdf.w - 55, 6, point)
+            pdf.ln(1)
+
+        pdf.ln(5)
+
+    def _render_aggregated_entities_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the entities section for aggregated result."""
+        if not result.summary or not result.summary.entities:
+            return
+
+        self._render_section_header(pdf, "Key Entities")
+
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_fill_color(249, 250, 251)
+        pdf.set_text_color(55, 65, 81)
+        
+        col_width = (pdf.w - 40) / 2
+        pdf.set_x(20)
+        pdf.cell(col_width, 7, "Entity", border=1, fill=True)
+        pdf.cell(col_width, 7, "Type", border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
+
+        pdf.set_font("Helvetica", size=9)
+        for entity in result.summary.entities:
+            pdf.set_x(20)
+            pdf.cell(col_width, 7, entity.text[:40], border=1)
+            
+            entity_type = entity.type.value if hasattr(entity.type, 'value') else str(entity.type)
+            color = ENTITY_COLORS.get(entity_type, (240, 240, 240))
+            pdf.set_fill_color(*color)
+            pdf.cell(col_width, 7, entity_type, border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
+
+        pdf.ln(8)
+
+    def _render_aggregated_implications_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the implications section for aggregated result."""
+        if not result.summary or not result.summary.implications:
+            return
+
+        self._render_section_header(pdf, "Implications")
+
+        pdf.set_font("Helvetica", size=10)
+        pdf.set_text_color(55, 65, 81)
+
+        for imp in result.summary.implications:
+            pdf.set_x(25)
+            pdf.cell(5, 6, ">")
+            pdf.multi_cell(pdf.w - 55, 6, imp)
+            pdf.ln(1)
+
+        pdf.ln(5)
+
+    def _render_aggregated_footnotes_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the footnotes section for aggregated result."""
+        if not result.summary or not result.summary.footnotes:
+            return
+
+        self._render_section_header(pdf, "Citations & Footnotes")
+
+        pdf.set_font("Helvetica", size=9)
+
+        for fn in result.summary.footnotes:
+            pdf.set_fill_color(249, 250, 251)
+            
+            pdf.set_x(25)
+            pdf.set_font("Helvetica", "B", 9)
+            pdf.set_text_color(59, 130, 246)
+            pdf.cell(10, 5, f"[{fn.id}]")
+            
+            pdf.set_font("Helvetica", "I", 9)
+            pdf.set_text_color(75, 85, 99)
+            pdf.multi_cell(pdf.w - 60, 5, f'"{fn.source_text}"')
+            
+            pdf.set_x(35)
+            pdf.set_font("Helvetica", size=8)
+            pdf.set_text_color(107, 114, 128)
+            pdf.multi_cell(pdf.w - 60, 4, fn.context)
+            
+            pdf.ln(3)
+
+        pdf.ln(5)
+
+    def _render_aggregated_fact_check_section(self, pdf: FPDF, result: AggregatedResult):
+        """Render the fact-check section for aggregated result."""
+        fc = result.fact_check
+        if not fc:
+            return
+
+        pdf.set_fill_color(255, 251, 235)
+        pdf.set_draw_color(252, 211, 77)
+        
+        self._render_section_header(pdf, "Fact-Check Results")
+        
+        pdf.set_font("Helvetica", size=9)
+        pdf.set_text_color(107, 114, 128)
+        pdf.set_x(20)
+        pdf.cell(0, 5, f"Claims analyzed: {fc.claims_analyzed}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(3)
+
+        if fc.verified_claims:
+            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_text_color(34, 197, 94)
+            pdf.set_x(20)
+            pdf.cell(0, 6, "Verified Claims", new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(2)
+
+            for claim in fc.verified_claims:
+                self._render_verified_claim(pdf, claim)
+
+        if fc.unverified_claims:
+            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_text_color(107, 114, 128)
+            pdf.set_x(20)
+            pdf.cell(0, 6, "Unverified Claims", new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(2)
+
+            pdf.set_font("Helvetica", size=9)
+            pdf.set_text_color(107, 114, 128)
+            for claim in fc.unverified_claims:
+                pdf.set_x(25)
+                pdf.cell(5, 5, "-")
+                pdf.multi_cell(pdf.w - 55, 5, claim)
+
+        pdf.ln(8)
+
+    def _render_aggregated_metadata_footer(self, pdf: FPDF, result: AggregatedResult):
+        """Render processing metadata footer for aggregated result."""
+        pdf.set_draw_color(229, 231, 235)
+        pdf.line(20, pdf.get_y(), pdf.w - 20, pdf.get_y())
+        pdf.ln(5)
+        
+        meta_items = [f"Source Type: {result.source_type.value}"]
+        
+        if result.is_aggregated:
+            meta_items.append(f"Combined from {result.original_count} sources")
+
+        pdf.set_font("Helvetica", size=8)
+        pdf.set_text_color(156, 163, 175)
+        pdf.cell(0, 4, " | ".join(meta_items), align="L", new_x="LMARGIN", new_y="NEXT")
 
     def get_filename(self, result: ProcessedResult) -> str:
         """

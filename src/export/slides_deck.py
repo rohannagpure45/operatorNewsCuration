@@ -139,10 +139,6 @@ Speaker Notes:
         """Generate slide for a single article."""
         title = result.content.title if result.content and result.content.title else "Untitled"
         
-        # Truncate title if too long
-        if len(title) > 60:
-            title = title[:57] + "..."
-        
         # Get key points (limit to 4 for slide readability)
         key_points = []
         if result.summary and result.summary.key_points:
@@ -174,9 +170,7 @@ Speaker Notes:
         # Executive summary for speaker notes
         exec_summary = ""
         if result.summary and result.summary.executive_summary:
-            exec_summary = result.summary.executive_summary[:300]
-            if len(result.summary.executive_summary) > 300:
-                exec_summary += "..."
+            exec_summary = result.summary.executive_summary
         
         return f"""## {title}
 
@@ -370,10 +364,6 @@ Speaker Notes:
         """Generate slide for a single aggregated article."""
         title = result.title or "Untitled"
         
-        # Truncate title if too long
-        if len(title) > 60:
-            title = title[:57] + "..."
-        
         # Get key points (limit to 4-5 for slide readability)
         key_points = []
         if result.summary and result.summary.key_points:
@@ -399,9 +389,7 @@ Speaker Notes:
         # Executive summary for speaker notes
         exec_summary = ""
         if result.summary and result.summary.executive_summary:
-            exec_summary = result.summary.executive_summary[:400]
-            if len(result.summary.executive_summary) > 400:
-                exec_summary += "..."
+            exec_summary = result.summary.executive_summary
         
         # Build speaker notes with all source URLs
         source_urls = "\n".join([f"- {s.site_name or 'Source'}: {s.url}" for s in result.sources])

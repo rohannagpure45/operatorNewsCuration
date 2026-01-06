@@ -15,7 +15,8 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from src.agent import NewsAgent, process_url, process_urls
-from src.models.schemas import ProcessingStatus
+from src.export.slides_json import SlidesJSONGenerator
+from src.models.schemas import ProcessingStatus, ProcessedResult
 
 # Configure logging with Rich handler for better formatting
 logging.basicConfig(
@@ -205,6 +206,87 @@ def batch(
         output_data = [r.model_dump() for r in results]
         output.write_text(json.dumps(output_data, indent=2, default=str))
         console.print(f"\n[green]Results saved to:[/green] {output}")
+
+
+@app.command()
+def export_slides(
+    input_file: Path = typer.Argument(..., help="JSON file with processed results"),
+    output: Optional[Path] = typer.Option(
+        None, "--output", "-o", help="Output file path"
+    ),
+    format: str = typer.Option(
+        "json", "--format", "-f", help="Output format: json or markdown"
+    ),
+):
+    """Export slides from processed results in JSON (for Figma) or Markdown format."""
+    from pydantic import ValidationError
+    
+    if not input_file.exists():
+        console.print(f"[red]Error:[/red] File not found: {input_file}")
+        raise typer.Exit(1)
+
+    # Load results with JSON error handling
+    try:
+        data = json.loads(input_file.read_text())
+    except json.JSONDecodeError as e:
+        console.print(f"[red]Error:[/red] Invalid JSON in {input_file}: {e}")
+        raise typer.Exit(1)
+
+    # Handle both list of results and aggregated result set format
+    try:
+        if isinstance(data, list):
+            results = [ProcessedResult.model_validate(r) for r in data]
+            is_aggregated = False
+        elif "results" in data:
+            # Aggregated format
+            from src.models.schemas import AggregatedResult, AggregatedResultSet
+            result_set = AggregatedResultSet(
+                results=[AggregatedResult.model_validate(r) for r in data["results"]],
+                total_original=data.get("total_original", len(data["results"])),
+                total_aggregated=data.get("total_aggregated", len(data["results"])),
+                duplicates_merged=data.get("duplicates_merged", 0),
+            )
+            is_aggregated = True
+        else:
+            console.print("[red]Error:[/red] Invalid input format - expected list or object with 'results' key")
+            raise typer.Exit(1)
+    except ValidationError as e:
+        console.print(f"[red]Error:[/red] Invalid data format in {input_file}")
+        console.print(f"[dim]{e.error_count()} validation error(s)[/dim]")
+        raise typer.Exit(1)
+
+    # Generate output
+    if format.lower() == "json":
+        from src.export.slides_json import SlidesJSONGenerator
+        generator = SlidesJSONGenerator()
+        if is_aggregated:
+            output_content = generator.generate_aggregated(result_set)
+        else:
+            output_content = generator.generate(results)
+        default_ext = ".json"
+    elif format.lower() in ["markdown", "md"]:
+        from src.export.slides_deck import SlidesDeckGenerator
+        generator = SlidesDeckGenerator()
+        if is_aggregated:
+            output_content = generator.generate_aggregated(result_set)
+        else:
+            output_content = generator.generate(results)
+        default_ext = ".md"
+    else:
+        console.print(f"[red]Error:[/red] Unknown format: {format}. Use 'json' or 'markdown'")
+        raise typer.Exit(1)
+
+    # Output
+    if output:
+        output.write_text(output_content)
+        console.print(f"[green]Slides exported to:[/green] {output}")
+    else:
+        # Generate default filename
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%m_%d_%y")
+        default_output = Path(f"slides_{timestamp}{default_ext}")
+        default_output.write_text(output_content)
+        console.print(f"[green]Slides exported to:[/green] {default_output}")
 
 
 @app.command()

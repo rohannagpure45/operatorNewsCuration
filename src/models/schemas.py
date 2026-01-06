@@ -38,6 +38,14 @@ class EntityType(str, Enum):
     EVENT = "EVENT"
 
 
+class SlideType(str, Enum):
+    """Types of slides for presentation generation."""
+
+    BULLETS = "bullets"
+    QUOTE = "quote"
+    VIDEO = "video"
+
+
 class Entity(BaseModel):
     """A named entity extracted from content."""
 
@@ -54,6 +62,38 @@ class Footnote(BaseModel):
     id: int = Field(description="Footnote reference number")
     source_text: str = Field(description="The quoted or referenced text")
     context: str = Field(description="Additional context or explanation")
+
+
+class SlideContent(BaseModel):
+    """Slide-ready content optimized for presentation use."""
+
+    slide_type: SlideType = Field(
+        default=SlideType.BULLETS,
+        description="Recommended slide type based on content"
+    )
+    headline: str = Field(
+        description="Short headline for the slide (max 8 words)"
+    )
+    bullets: List[str] = Field(
+        default_factory=list,
+        description="Short bullet points (max 10 words each, 3-5 bullets)"
+    )
+    quote_text: Optional[str] = Field(
+        default=None,
+        description="Featured quote for quote slides (max 25 words)"
+    )
+    quote_attribution: Optional[str] = Field(
+        default=None,
+        description="Attribution for the quote (e.g., 'Sundar Pichai, Google CEO')"
+    )
+    video_url: Optional[str] = Field(
+        default=None,
+        description="Video URL for video slides"
+    )
+    video_caption: Optional[str] = Field(
+        default=None,
+        description="Short caption for video slides (max 12 words)"
+    )
 
 
 class ClaimRating(str, Enum):
@@ -136,6 +176,10 @@ class ContentSummary(BaseModel):
     )
     topics: List[str] = Field(
         default_factory=list, description="Main topics/themes covered"
+    )
+    slide_content: Optional[SlideContent] = Field(
+        default=None,
+        description="Slide-ready content optimized for presentations"
     )
 
 

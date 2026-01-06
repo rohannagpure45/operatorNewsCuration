@@ -3,6 +3,7 @@
 from src.export.pdf_report import PDFReportGenerator
 from src.export.prep_document import PrepDocumentGenerator
 from src.export.slides_deck import SlidesDeckGenerator
+from src.export.slides_json import SlidesJSONGenerator
 from src.export.utils import (
     DEFAULT_THEME,
     ENTITY_COLORS,
@@ -19,6 +20,7 @@ __all__ = [
     "PDFReportGenerator",
     "PrepDocumentGenerator",
     "SlidesDeckGenerator",
+    "SlidesJSONGenerator",
     # Shared utilities
     "THEME_KEYWORDS",
     "DEFAULT_THEME",

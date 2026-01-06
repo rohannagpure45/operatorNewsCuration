@@ -20,6 +20,7 @@ from src.aggregator.deduplicator import NewsAggregator, AggregationError
 from src.export.pdf_report import PDFReportGenerator
 from src.export.prep_document import PrepDocumentGenerator
 from src.export.slides_deck import SlidesDeckGenerator
+from src.export.slides_json import SlidesJSONGenerator
 from src.export.utils import sanitize_text
 from src.models.schemas import ProcessedResult
 
@@ -130,7 +131,7 @@ def sanitize_aggregated_results(result_set):
     return result_set
 
 
-def generate_deliverables(result_set, output_dir: Path, timestamp: str):
+def generate_deliverables(result_set, output_dir: Path, timestamp: str, slides_format: str = "both"):
     """Generate all deliverables from aggregated results."""
     logger.info("\n" + "=" * 60)
     logger.info("Generating Deliverables from Aggregated Data")
@@ -167,22 +168,38 @@ def generate_deliverables(result_set, output_dir: Path, timestamp: str):
         import traceback
         traceback.print_exc()
     
-    # 3. Generate slides deck
-    logger.info(f"\nGenerating slides_deck_aggregated_{timestamp}.md...")
-    try:
-        slides_gen = SlidesDeckGenerator()
-        slides_md = slides_gen.generate_aggregated(result_set)
-        slides_path = output_dir / f"slides_deck_aggregated_{timestamp}.md"
-        with open(slides_path, "w") as f:
-            f.write(slides_md)
-        logger.info(f"  ✓ Generated: {slides_path.name}")
-    except Exception as e:
-        logger.error(f"  ✗ Failed: {e}")
-        import traceback
-        traceback.print_exc()
+    # 3. Generate slides deck (Markdown) - if requested
+    if slides_format in ["both", "markdown"]:
+        logger.info(f"\nGenerating slides_deck_aggregated_{timestamp}.md...")
+        try:
+            slides_gen = SlidesDeckGenerator()
+            slides_md = slides_gen.generate_aggregated(result_set)
+            slides_path = output_dir / f"slides_deck_aggregated_{timestamp}.md"
+            with open(slides_path, "w") as f:
+                f.write(slides_md)
+            logger.info(f"  ✓ Generated: {slides_path.name}")
+        except Exception as e:
+            logger.error(f"  ✗ Failed: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    # 4. Generate slides JSON (for Figma) - if requested
+    if slides_format in ["both", "json"]:
+        logger.info(f"\nGenerating slides_aggregated_{timestamp}.json...")
+        try:
+            json_gen = SlidesJSONGenerator()
+            slides_json = json_gen.generate_aggregated(result_set)
+            json_path = output_dir / f"slides_aggregated_{timestamp}.json"
+            with open(json_path, "w") as f:
+                f.write(slides_json)
+            logger.info(f"  ✓ Generated: {json_path.name}")
+        except Exception as e:
+            logger.error(f"  ✗ Failed: {e}")
+            import traceback
+            traceback.print_exc()
 
 
-def generate_legacy_deliverables(processed_results: list, output_dir: Path, timestamp: str):
+def generate_legacy_deliverables(processed_results: list, output_dir: Path, timestamp: str, slides_format: str = "both"):
     """Generate deliverables without aggregation (legacy mode)."""
     logger.info("\n" + "=" * 60)
     logger.info("Generating Deliverables (Legacy Mode - No Aggregation)")
@@ -212,17 +229,31 @@ def generate_legacy_deliverables(processed_results: list, output_dir: Path, time
     except Exception as e:
         logger.error(f"  ✗ Failed: {e}")
     
-    # 3. Generate slides deck
-    logger.info(f"\nGenerating slides_deck_{timestamp}.md...")
-    try:
-        slides_gen = SlidesDeckGenerator()
-        slides_md = slides_gen.generate(processed_results)
-        slides_path = output_dir / f"slides_deck_{timestamp}.md"
-        with open(slides_path, "w") as f:
-            f.write(slides_md)
-        logger.info(f"  ✓ Generated: {slides_path.name}")
-    except Exception as e:
-        logger.error(f"  ✗ Failed: {e}")
+    # 3. Generate slides deck (Markdown) - if requested
+    if slides_format in ["both", "markdown"]:
+        logger.info(f"\nGenerating slides_deck_{timestamp}.md...")
+        try:
+            slides_gen = SlidesDeckGenerator()
+            slides_md = slides_gen.generate(processed_results)
+            slides_path = output_dir / f"slides_deck_{timestamp}.md"
+            with open(slides_path, "w") as f:
+                f.write(slides_md)
+            logger.info(f"  ✓ Generated: {slides_path.name}")
+        except Exception as e:
+            logger.error(f"  ✗ Failed: {e}")
+    
+    # 4. Generate slides JSON (for Figma) - if requested
+    if slides_format in ["both", "json"]:
+        logger.info(f"\nGenerating slides_{timestamp}.json...")
+        try:
+            json_gen = SlidesJSONGenerator()
+            slides_json = json_gen.generate(processed_results)
+            json_path = output_dir / f"slides_{timestamp}.json"
+            with open(json_path, "w") as f:
+                f.write(slides_json)
+            logger.info(f"  ✓ Generated: {json_path.name}")
+        except Exception as e:
+            logger.error(f"  ✗ Failed: {e}")
 
 
 def main():
@@ -257,6 +288,12 @@ def main():
         action="store_true",
         help="Save aggregated results to a JSON file"
     )
+    parser.add_argument(
+        "--slides-format",
+        choices=["both", "json", "markdown"],
+        default="both",
+        help="Slides output format: json (for Figma), markdown, or both (default)"
+    )
     
     args = parser.parse_args()
     
@@ -275,7 +312,7 @@ def main():
     
     if args.no_aggregate:
         # Legacy mode - no aggregation
-        generate_legacy_deliverables(processed_results, args.output, timestamp)
+        generate_legacy_deliverables(processed_results, args.output, timestamp, args.slides_format)
     else:
         # Aggregation mode
         result_set = aggregate_results(
@@ -289,7 +326,7 @@ def main():
             save_aggregated_results(result_set, aggregated_path)
         
         # Generate deliverables
-        generate_deliverables(result_set, args.output, timestamp)
+        generate_deliverables(result_set, args.output, timestamp, args.slides_format)
     
     logger.info("\n" + "=" * 60)
     logger.info("Complete!")

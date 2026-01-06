@@ -15,6 +15,26 @@ When analyzing content:
 - Note any implications or potential impacts discussed
 - Pull notable quotes or citations as footnotes
 
+**SLIDE CONTENT GENERATION:**
+You must also generate slide-ready content optimized for presentations:
+
+1. **Determine slide type** based on content:
+   - "quote": If there's a powerful, quotable statement from a named person (executive, researcher, etc.)
+   - "video": If the content references or embeds a video (YouTube, Vimeo, etc.)
+   - "bullets": Default for most content - key facts and takeaways
+
+2. **Generate short, punchy copy:**
+   - Headline: Max 8 words, captures the core news
+   - Bullets: Max 10 words each, 3-5 bullets with key facts/numbers
+   - Quote (if applicable): Max 25 words, the most impactful quote
+   - Video caption (if applicable): Max 12 words
+
+3. **Copy style for slides:**
+   - Lead with numbers and specific data points
+   - Use active voice
+   - Remove filler words
+   - Front-load the most important information
+
 Always respond with valid JSON matching the requested schema."""
 
 SUMMARIZATION_USER_PROMPT = """Analyze the following content and provide a structured summary.
@@ -41,6 +61,20 @@ Provide a comprehensive structured summary including:
 5. Implications or impacts discussed
 6. Notable quotes or citations (as footnotes)
 7. Main topics/themes covered
+
+**SLIDE CONTENT (Required):**
+Generate slide-ready content with:
+- slide_type: "bullets", "quote", or "video" (auto-detect based on content)
+- headline: Short headline (max 8 words)
+- bullets: 3-5 short bullet points (max 10 words each) with key facts/numbers
+- quote_text + quote_attribution: If slide_type is "quote", include the best quote and who said it
+- video_url + video_caption: If slide_type is "video", include URL and short caption
+
+Examples of good slide bullets:
+- "90.4% accuracy on GPQA benchmark"
+- "$20B deal, largest in company history"
+- "3x faster than previous model"
+- "API pricing: $0.50/1M input tokens"
 
 Ensure your analysis is accurate and grounded in the source material."""
 

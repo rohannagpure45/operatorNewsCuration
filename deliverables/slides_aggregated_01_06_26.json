@@ -1,0 +1,314 @@
+{
+  "generated_at": "2026-01-06T19:13:49.218548+00:00",
+  "total_slides": 29,
+  "total_sources": 30,
+  "duplicates_merged": 0,
+  "themes": [
+    "AI Models & Product Launches",
+    "AI Infrastructure & Hardware",
+    "AI M&A and Funding",
+    "AI Workforce & Industry"
+  ],
+  "slides": [
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Google",
+      "source_url": "https://blog.google/products/gemini/gemini-3-flash",
+      "source_count": 1,
+      "headline": "Gemini 3 Flash: frontier intelligence built for speed",
+      "quote_text": "On SWE-bench Verified, a benchmark for evaluating coding agent capabilities, Gemini 3 Flash achieves a score of 78%, outperforming not only the 2.",
+      "attribution": "Highlights the model's unexpected superiority in specific coding benchmarks compared to its 'Pro' counterpart."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Twitter/X",
+      "source_url": "https://x.com/arcprize/status/2001330153902023157",
+      "source_count": 1,
+      "headline": "Tweet by ARC Prize (@arcprize)",
+      "quote_text": "Competitive performance at a substantially lower cost than other frontier models",
+      "attribution": "The author's summary of how Gemini 3 Flash compares to its market competitors."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Twitter/X",
+      "source_url": "https://x.com/officiallogank/status/2001322275656835348",
+      "source_count": 1,
+      "headline": "Tweet by Logan Kilpatrick (@OfficialLoganK)",
+      "quote_text": "Introducing Gemini 3 Flash, our frontier intelligence model, available at scale for everyone.",
+      "attribution": "The primary announcement of the model's release and availability."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "OpenAI",
+      "source_url": "https://openai.com/index/frontierscience",
+      "source_count": 1,
+      "headline": "Evaluating AI's ability to perform scientific research tasks",
+      "quote_text": "The most important benchmark for the scientific capabilities of AI is the novel discoveries it helps generate",
+      "attribution": "The author notes that while FrontierScience is a critical metric, the ultimate value of AI lies in its real-world scientific output."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Twitter/X",
+      "source_url": "https://x.com/arena/status/2001008010399994026",
+      "source_count": 1,
+      "headline": "Tweet by lmarena.ai (@arena)",
+      "quote_text": "gpt-image-1.5 is #1 in Text-to-Image (1264)",
+      "attribution": "Ranking and Elo score provided by the lmarena.ai benchmarking platform."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "The Wall Street Journal",
+      "source_url": "https://www.wsj.com/tech/ai/meta-developing-new-ai-image-and-video-model-code-named-mango-16e785c7",
+      "source_count": 1,
+      "headline": "Exclusive | Meta Is Developing a New AI...",
+      "quote_text": "Meta Platforms... is developing a new image and video-focused AI model code-named Mango alongside the company's next text-based large language model.",
+      "attribution": "Description of the dual-track development of Meta's next-generation AI models."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Google Cloud",
+      "source_url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-flash-for-enterprises",
+      "source_count": 1,
+      "headline": "Gemini 3 Flash for Enterprises | Google Cloud...",
+      "quote_text": "Gemini 3 Flash shows a relative improvement of 15% in overall accuracy compared to Gemini 2.5 Flash, delivering breakthrough precision on our hardest extraction tasks.",
+      "attribution": "Yashodha Bhavnani, Head of AI at Box, discussing the model's performance on complex financial data and contracts."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "developers.googleblog.com",
+      "source_url": "https://developers.googleblog.com/gemini-3-flash-is-now-available-in-gemini-cli",
+      "source_count": 1,
+      "headline": "Gemini 3 Flash is now available in Gemini...",
+      "quote_text": "Gemini 3 Flash achieves a SWE-bench Verified score of 78% for agentic coding, outperforming not only the 2.5 series, but also Gemini 3 Pro.",
+      "attribution": "Benchmarking data showing the model's unexpected lead over the Pro version in specific coding metrics."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Google",
+      "source_url": "https://blog.google/technology/developers/gemini-3-pro-vision",
+      "source_count": 1,
+      "headline": "Gemini 3 Pro: the frontier of vision AI",
+      "quote_text": "Gemini 3 Pro represents a generational leap from simple recognition to true visual and spatial reasoning.",
+      "attribution": "The author's primary claim regarding the model's advancement over previous iterations."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "OpenAI",
+      "source_url": "https://openai.com/index/introducing-gpt-5-2-codex",
+      "source_count": 1,
+      "headline": "Introducing GPT-5.2-Codex",
+      "quote_text": "GPT-5.2-Codex is now better at long-context understanding, reliable tool calling, improved factuality, and native compaction",
+      "attribution": "Description of the technical improvements over previous iterations like GPT-5.1-Codex-Max."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "OpenAI",
+      "source_url": "https://openai.com/index/gpt-5-system-card-update-gpt-5-2",
+      "source_count": 1,
+      "headline": "Update to GPT-5 System Card: GPT-5.2",
+      "quote_text": "The comprehensive safety mitigation approach for these models is largely the same as that described in the GPT-5 System Card",
+      "attribution": "Confirms that safety protocols have not undergone a radical shift for this specific update, relying on previously documented methods."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Fox News",
+      "source_url": "https://www.foxnews.com/tech/chatgpts-gpt-5-2-here-feels-rushed",
+      "source_count": 1,
+      "headline": "ChatGPT's GPT-5.2 is here, and it feels rushed",
+      "quote_text": "less like a breakthrough and more like OpenAI holding its ground",
+      "attribution": "The author's concluding assessment of GPT-5.2's impact on the current AI landscape."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "MLQ.ai",
+      "source_url": "https://mlq.ai/news/meta-readies-nextgeneration-mango-and-avocado-ai-models-for-2026-launch",
+      "source_count": 1,
+      "headline": "Meta readies next-generation \"Mango\" and \"Avocado\" AI models...",
+      "quote_text": "first flagship models following a major AI reorganization",
+      "attribution": "How the projects are framed internally relative to Meta's recent structural changes."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Ubergizmo",
+      "source_url": "https://www.ubergizmo.com/2025/12/meta-plans-new-visual-ai-model",
+      "source_count": 1,
+      "headline": "Meta Plans New Visual AI Model To Rival...",
+      "quote_text": "The company has indicated plans to cut investments in the Metaverse, redirecting resources and attention to AI development.",
+      "attribution": "Evidence of Meta's strategic shift in corporate priorities."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "The Times Of India",
+      "source_url": "https://timesofindia.indiatimes.com/technology/tech-news/how-google-fear-and-threat-just-made-nvidia-just-spend-20-billion/articleshow/126188810.cms",
+      "source_count": 1,
+      "headline": "How 'Google fear and threat' just made Nvidia...",
+      "quote_text": "LPUs run Large Language Models (LLMs) and other leading models at substantially faster speeds and, on an architectural level",
+      "attribution": "Highlights the technical superiority of Groq's LPU technology in specific AI tasks compared to traditional Nvidia hardware."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "ARC Prize",
+      "source_url": "https://arcprize.org/blog/arc-prize-2025-results-analysis",
+      "source_count": 1,
+      "headline": "ARC Prize 2025 Results and Analysis",
+      "quote_text": "You'll know AGI is here when the exercise of creating tasks that are easy for regular humans but hard for AI becomes simply impossible.",
+      "attribution": "A quote from Francois Chollet regarding the ultimate goal and end-state of the ARC benchmark."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "NVIDIA Developer Forums",
+      "source_url": "https://forums.developer.nvidia.com/t/nvidia-grandmasters-win-the-arc-prize-2025-competition/353690",
+      "source_count": 1,
+      "headline": "NVIDIA Grandmasters Win the ARC Prize 2025 Competition!",
+      "quote_text": "They proved that small can be mighty by fine-tuning a compact model that out-reasoned massive systems",
+      "attribution": "Emphasizes the efficiency and reasoning capability of the team's specific technical approach."
+    },
+    {
+      "type": "bullets",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "Wccftech",
+      "source_url": "https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd",
+      "source_count": 1,
+      "headline": "After Gobbling Up DRAM, NVIDIA & SK hynix...",
+      "bullets": [
+        "NVIDIA and SK hynix are co-developing 'Storage Next",
+        "The project aims for a performance milestone of 100 million...",
+        "The shift from AI training to inference necessitates a pseudo",
+        "SK hynix plans to present a prototype of the AI...",
+        "The collaboration focuses on enhancing throughput and energy efficiency through..."
+      ]
+    },
+    {
+      "type": "quote",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "Investing.com",
+      "source_url": "https://www.investing.com/news/stock-market-news/nvidia-to-acquire-groq-for-20-billion-in-its-largest-deal-ever-cnbc-reports-4422745",
+      "source_count": 1,
+      "headline": "Breaking down Nvidia's unusual $20 billion deal with...",
+      "quote_text": "Groq said it has entered into a 'non-exclusive inference technology licensing agreement' with Nvidia aimed at accelerating AI inference at global scale.",
+      "attribution": "Official description of the deal structure clarifying it is not a standard acquisition."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "Ctech",
+      "source_url": "https://www.calcalistech.com/ctechnews/article/hjyziyc7wl",
+      "source_count": 1,
+      "headline": "Nvidia's $20 billion Groq deal: Talent and technology...",
+      "quote_text": "While we are adding talented employees to our ranks and licensing Groq's IP, we are not acquiring Groq as a company.",
+      "attribution": "Nvidia CEO Jensen Huang clarifying that the transaction is not a traditional acquisition to employees."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "TechSpot",
+      "source_url": "https://www.techspot.com/news/110674-nvidia-sk-hynix-building-ai-ssd-could-10x.html",
+      "source_count": 1,
+      "headline": "Nvidia and SK hynix are building an AI...",
+      "quote_text": "pseudo-memory layer using NAND flash and advanced controller technologies",
+      "attribution": "The architectural vision for how the new SSD will function within AI systems to bridge the gap between memory and storage."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "OC3D",
+      "source_url": "https://overclock3d.net/news/storage/first-dram-now-nand-nvidia-and-sk-hynix-target-nand-with-ai-ssd-plans",
+      "source_count": 1,
+      "headline": "First DRAM, now NAND - Nvidia and SK...",
+      "quote_text": "Nvidia and SK Hynix aim to deliver SSDs with 100 million IOPS in 2027.",
+      "attribution": "Specific performance target for the new HBF technology."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "Tech Funding News",
+      "source_url": "https://techfundingnews.com/2b-raised-ranking-the-biggest-uk-ai-deals-in-2025",
+      "source_count": 1,
+      "headline": "£2B+ raised: Ranking the biggest UK AI deals...",
+      "quote_text": "Ori operates as the connective infrastructure layer between AI applications and physical compute hardware, addressing the European shortage of sovereign AI compute capacity.",
+      "attribution": "Explains the strategic motivation behind the high valuation and funding of European infrastructure providers."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Infrastructure & Hardware",
+      "source": "DataCenterKnowledge",
+      "source_url": "https://www.datacenterknowledge.com/investing/uk-s-nscale-to-boost-us-footprint-with-865m-nc-data-center-deal",
+      "source_count": 1,
+      "headline": "UK's Nscale to Boost US Footprint with $865M...",
+      "quote_text": "This agreement validates our strategy to engineer NC-1 to meet hyperscaler specifications and support the most advanced AI workloads.",
+      "attribution": "Sam Tabar, CEO of WhiteFiber, on the strategic importance of the Nscale partnership."
+    },
+    {
+      "type": "bullets",
+      "theme": "AI M&A and Funding",
+      "source": "13f.info",
+      "source_url": "https://13f.info/13f/000204572425000008/compare/000204572425000006",
+      "source_count": 1,
+      "headline": "Situational Awareness LP",
+      "bullets": [
+        "Situational Awareness LP is identified as the reporting institutional investment...",
+        "The report focuses on a quarter-over-quarter comparison between Q2 2025...",
+        "The filing structure includes data points for Issuer Name, Symbol",
+        "The document tracks financial metrics including Value in thousands of...",
+        "The source is a standardized SEC Form 13F comparison used..."
+      ]
+    },
+    {
+      "type": "quote",
+      "theme": "AI M&A and Funding",
+      "source": "bloomberg.com",
+      "source_url": "https://www.bloomberg.com/news/newsletters/2025-12-12/ai-data-center-boom-may-suck-resources-away-from-road-bridge-work",
+      "source_count": 1,
+      "headline": "Bloomberg",
+      "quote_text": "AI Data Center Boom May Suck Resources Away From Road, Bridge Work",
+      "attribution": "The title of the article establishes the primary thesis regarding the diversion of resources from public infrastructure to technology-focused construction."
+    },
+    {
+      "type": "quote",
+      "theme": "AI M&A and Funding",
+      "source": "MobiHealthNews",
+      "source_url": "https://www.mobihealthnews.com/news/isomorphic-labs-secures-600m-funding-ai-drug-design",
+      "source_count": 1,
+      "headline": "Isomorphic Labs secures $600M in funding for AI...",
+      "quote_text": "This funding will further turbocharge the development of our next-generation AI drug design engine, help us advance our own programs into clinical development",
+      "attribution": "Founder and CEO Demis Hassabis explaining the strategic goals following the $600M funding round."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Workforce & Industry",
+      "source": "The Economist",
+      "source_url": "https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-threat-to-banks",
+      "source_count": 1,
+      "headline": "Crypto's real threat to banks",
+      "quote_text": "The industry is supplanting Wall Street's privileged position on the American right",
+      "attribution": "The core thesis of the article regarding the shifting power dynamics between traditional finance and digital assets."
+    },
+    {
+      "type": "quote",
+      "theme": "AI Workforce & Industry",
+      "source": "The Times Of India",
+      "source_url": "https://timesofindia.indiatimes.com/technology/tech-news/ai-layoffs-in-2025-crossed-50000-4-biggest-technology-companies-that-called-out-ai-in-their-job-cuts-announcement-and-how/articleshow/126106779.cms",
+      "source_count": 1,
+      "headline": "AI layoffs in 2025 crossed 50,000: 4 biggest...",
+      "quote_text": "many companies overhired during the pandemic and may now be using AI as a convenient 'excuse' for downsizing",
+      "attribution": "Perspective from Fabian Stephany of the Oxford Internet Institute on the underlying reasons for layoffs."
+    }
+  ]
+}

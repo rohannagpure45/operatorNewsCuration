@@ -1,6 +1,13 @@
 """Prompts for LLM summarization."""
 
-SUMMARIZATION_SYSTEM_PROMPT = """You are an expert content analyst and summarizer. Your task is to analyze content and produce structured summaries that are:
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from src.narrative.engine import NarrativeFramingEngine
+
+
+# Base system prompt without narrative injection
+BASE_SYSTEM_PROMPT = """You are an expert content analyst and summarizer. Your task is to analyze content and produce structured summaries that are:
 
 1. **Accurate**: Only include information present in the source material
 2. **Comprehensive**: Capture all key points and important details
@@ -33,9 +40,41 @@ You must also generate slide-ready content optimized for presentations:
    - Lead with numbers and specific data points
    - Use active voice
    - Remove filler words
-   - Front-load the most important information
+   - Front-load the most important information"""
 
-Always respond with valid JSON matching the requested schema."""
+# Narrative injection placeholder - inserted between base prompt and JSON instruction
+NARRATIVE_INJECTION_MARKER = "{{NARRATIVE_GUIDANCE}}"
+
+# Final instruction that always comes at the end
+JSON_INSTRUCTION = "\n\nAlways respond with valid JSON matching the requested schema."
+
+
+def build_system_prompt(narrative_engine: Optional["NarrativeFramingEngine"] = None) -> str:
+    """Build the complete system prompt with optional narrative injection.
+    
+    Args:
+        narrative_engine: Optional narrative framing engine. If provided and
+            enabled, its guidance will be injected into the prompt.
+            
+    Returns:
+        Complete system prompt string.
+    """
+    parts = [BASE_SYSTEM_PROMPT]
+    
+    # Inject narrative guidance if engine is provided and enabled
+    if narrative_engine is not None:
+        injection = narrative_engine.get_system_prompt_injection()
+        if injection:
+            parts.append("\n\n**FRAMING GUIDANCE:**")
+            parts.append(injection)
+    
+    parts.append(JSON_INSTRUCTION)
+    
+    return "".join(parts)
+
+
+# Legacy constant for backward compatibility
+SUMMARIZATION_SYSTEM_PROMPT = build_system_prompt()
 
 SUMMARIZATION_USER_PROMPT = """Analyze the following content and provide a structured summary.
 
@@ -99,4 +138,5 @@ Extract up to {max_claims} specific, verifiable claims from this content. Each c
 - Checkable (could be verified against external sources)
 
 Return the claims as a JSON array of strings."""
+
 

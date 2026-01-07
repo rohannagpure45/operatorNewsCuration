@@ -5,7 +5,7 @@ from functools import lru_cache
 from typing import Optional
 
 from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -73,10 +73,25 @@ class Settings(BaseSettings):
         default=60, description="Timeout for LLM requests in seconds"
     )
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"
+    # Narrative Theming (optional - enhances output framing)
+    narrative_theme: str = Field(
+        default="abundance",
+        description="Narrative theme for content framing: abundance, hope, opportunity, none",
+    )
+    narrative_enabled: bool = Field(
+        default=True,
+        description="Enable narrative framing in summaries",
+    )
+    narrative_subtlety: str = Field(
+        default="moderate",
+        description="Framing intensity: subtle, moderate, prominent",
+    )
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     @property
     def has_firebase(self) -> bool:

@@ -18,7 +18,9 @@ from src.summarizer.prompts import (
     CLAIM_EXTRACTION_PROMPT,
     SUMMARIZATION_SYSTEM_PROMPT,
     SUMMARIZATION_USER_PROMPT,
+    build_system_prompt,
 )
+from src.narrative.engine import NarrativeFramingEngine
 
 
 class RateLimiter:
@@ -82,11 +84,25 @@ class Summarizer:
         self,
         api_key: Optional[str] = None,
         model: Optional[str] = None,
+        narrative_engine: Optional[NarrativeFramingEngine] = None,
     ):
-        """Initialize the summarizer with Gemini."""
+        """Initialize the summarizer with Gemini.
+        
+        Args:
+            api_key: Optional Gemini API key. Uses settings if not provided.
+            model: Optional model name. Uses settings if not provided.
+            narrative_engine: Optional narrative framing engine. If not provided,
+                one will be created from settings.
+        """
         settings = get_settings()
         self.api_key = api_key or settings.gemini_api_key
         self.model_name = model or settings.gemini_model
+        
+        # Initialize narrative engine from settings if not provided
+        if narrative_engine is not None:
+            self.narrative_engine = narrative_engine
+        else:
+            self.narrative_engine = NarrativeFramingEngine.from_settings(settings)
 
         if not self.api_key:
             raise SummarizationError("Gemini API key is required")
@@ -139,10 +155,16 @@ class Summarizer:
                 content=self._truncate_content(content.raw_text),
             )
 
+            # Build system prompt with narrative framing if applicable
+            if self.narrative_engine.should_apply(content):
+                system_prompt = build_system_prompt(self.narrative_engine)
+            else:
+                system_prompt = SUMMARIZATION_SYSTEM_PROMPT
+
             # Generate structured summary
             summary = self.client.chat.completions.create(
                 messages=[
-                    {"role": "system", "content": SUMMARIZATION_SYSTEM_PROMPT},
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
                 response_model=ContentSummary,
@@ -277,9 +299,15 @@ class AsyncSummarizer(Summarizer):
                 content=self._truncate_content(content.raw_text),
             )
 
+            # Build system prompt with narrative framing if applicable
+            if self.narrative_engine.should_apply(content):
+                system_prompt = build_system_prompt(self.narrative_engine)
+            else:
+                system_prompt = SUMMARIZATION_SYSTEM_PROMPT
+
             summary = self.client.chat.completions.create(
                 messages=[
-                    {"role": "system", "content": SUMMARIZATION_SYSTEM_PROMPT},
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
                 response_model=ContentSummary,

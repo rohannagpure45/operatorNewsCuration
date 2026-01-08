@@ -14,6 +14,7 @@ from src.export.utils import (
     RATING_COLORS,
     SENTIMENT_COLORS,
     SENTIMENT_LABELS,
+    has_meaningful_fact_check,
 )
 from src.models.schemas import (
     AggregatedResult,
@@ -368,9 +369,13 @@ class PDFReportGenerator:
         pdf.ln(4)
 
     def _render_aggregated_fact_check_section(self, pdf: FPDF, result: AggregatedResult):
-        """Render the fact-check section for aggregated result."""
+        """Render the fact-check section for aggregated result.
+        
+        Only renders if the fact check has meaningful content (claims_analyzed > 0
+        or verified/unverified claims exist).
+        """
         fc = result.fact_check
-        if not fc:
+        if not has_meaningful_fact_check(fc):
             return
 
         pdf.set_fill_color(255, 251, 235)
@@ -510,15 +515,17 @@ class PDFReportGenerator:
 
     def _render_article_header(self, pdf: FPDF, result: ProcessedResult):
         """Render the article header section."""
-        # Title
-        title = "Untitled"
+        # Title - use empty string instead of "Untitled" for missing titles
+        title = ""
         if result.content and result.content.title:
             title = result.content.title
 
-        pdf.set_font("Helvetica", "B", 16)
-        pdf.set_text_color(17, 24, 39)  # Dark gray
-        pdf.multi_cell(0, 8, title, new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(2)
+        # Only render title if it exists
+        if title:
+            pdf.set_font("Helvetica", "B", 16)
+            pdf.set_text_color(17, 24, 39)  # Dark gray
+            pdf.multi_cell(0, 8, title, new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(2)
 
         # Topics
         if result.summary and result.summary.topics:
@@ -731,9 +738,13 @@ class PDFReportGenerator:
         pdf.ln(4)
 
     def _render_fact_check_section(self, pdf: FPDF, result: ProcessedResult):
-        """Render the fact-check section."""
+        """Render the fact-check section.
+        
+        Only renders if the fact check has meaningful content (claims_analyzed > 0
+        or verified/unverified claims exist).
+        """
         fc = result.fact_check
-        if not fc:
+        if not has_meaningful_fact_check(fc):
             return
 
         # Section with yellow background
@@ -929,8 +940,8 @@ class PDFReportGenerator:
         for result in results:
             parts.append(f"<article>")
             
-            # Title
-            title = result.content.title if result.content and result.content.title else "Untitled"
+            # Title - use empty string instead of "Untitled" for missing titles
+            title = result.content.title if result.content and result.content.title else ""
             parts.append(f"<h2>{self._escape(title)}</h2>")
             
             # Topics
@@ -977,8 +988,8 @@ class PDFReportGenerator:
                         parts.append(f"<p>{self._escape(fn.context)}</p>")
                     parts.append("</section>")
             
-            # Fact check
-            if result.fact_check:
+            # Fact check - only render if meaningful content exists
+            if has_meaningful_fact_check(result.fact_check):
                 fc = result.fact_check
                 parts.append("<section class='fact-check'>")
                 parts.append("<h3>Fact-Check Results</h3>")

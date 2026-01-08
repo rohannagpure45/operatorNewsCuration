@@ -234,14 +234,16 @@ class PrepDocumentGenerator:
         if pdf.get_y() > 220:
             pdf.add_page()
         
-        # Article title
-        title = "Untitled"
+        # Article title - use empty string instead of "Untitled" for missing titles
+        title = ""
         if result.content and result.content.title:
             title = sanitize_text(result.content.title)
         
-        pdf.set_font("Helvetica", "B", 11)
-        pdf.set_text_color(17, 24, 39)
-        pdf.multi_cell(0, 6, title, new_x="LMARGIN", new_y="NEXT")
+        # Only render title if it exists
+        if title:
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.set_text_color(17, 24, 39)
+            pdf.multi_cell(0, 6, title, new_x="LMARGIN", new_y="NEXT")
         
         # Source and sentiment
         source = ""
@@ -553,7 +555,8 @@ class PrepDocumentGenerator:
         
         pdf.set_font("Helvetica", size=10)
         for i, result in enumerate(results[:5], 1):
-            title = sanitize_text(result.title) if result.title else "Untitled"
+            # Skip results without titles in the executive summary headlines
+            title = sanitize_text(result.title) if result.title else ""
             if len(title) > 70:
                 title = title[:67] + "..."
             pdf.set_x(25)
@@ -619,12 +622,14 @@ class PrepDocumentGenerator:
         if pdf.get_y() > 220:
             pdf.add_page()
         
-        # Article title
-        title = sanitize_text(result.title) if result.title else "Untitled"
+        # Article title - use empty string instead of "Untitled" for missing titles
+        title = sanitize_text(result.title) if result.title else ""
         
-        pdf.set_font("Helvetica", "B", 11)
-        pdf.set_text_color(17, 24, 39)
-        pdf.multi_cell(0, 6, title, new_x="LMARGIN", new_y="NEXT")
+        # Only render title if it exists
+        if title:
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.set_text_color(17, 24, 39)
+            pdf.multi_cell(0, 6, title, new_x="LMARGIN", new_y="NEXT")
         
         # Aggregation badge if multiple sources
         if result.original_count > 1:

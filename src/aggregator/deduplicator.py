@@ -366,11 +366,12 @@ Summary: {summary[:500]}...
 
     def _convert_to_aggregated(self, result: ProcessedResult) -> AggregatedResult:
         """Convert a single ProcessedResult to AggregatedResult format."""
-        title = result.content.title if result.content and result.content.title else "Untitled"
+        # Use empty string instead of "Untitled" for missing titles
+        title = result.content.title if result.content and result.content.title else ""
 
         source_ref = SourceReference(
             url=result.url,
-            title=title,
+            title=title if title else None,  # Store None for source reference if no title
             site_name=result.content.site_name if result.content else None,
             author=result.content.author if result.content else None,
             published_date=result.content.published_date if result.content else None,

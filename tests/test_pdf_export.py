@@ -709,3 +709,337 @@ class TestPDFAggregatedGeneration:
         pdf_bytes = bytes(pdf.output())
         assert len(pdf_bytes) > 0
 
+
+# ============================================================================
+# Tests for Blank Title Handling (No "Untitled" Text)
+# ============================================================================
+
+
+class TestBlankTitleHandling:
+    """Tests for blank title rendering when articles lack titles.
+    
+    TDD Approach: These tests define expected behavior where missing titles
+    result in blank/empty title areas rather than displaying "Untitled".
+    """
+
+    @pytest.fixture
+    def result_without_title(self):
+        """Create a ProcessedResult with no title (title=None)."""
+        return ProcessedResult(
+            url="https://example.com/article-no-title",
+            source_type=URLType.NEWS_ARTICLE,
+            status=ProcessingStatus.COMPLETED,
+            content=ContentMetadata(word_count=500),  # No title set
+            summary=ContentSummary(
+                executive_summary="An article without a title.",
+                key_points=["Main point"],
+                sentiment=Sentiment.NEUTRAL,
+            ),
+        )
+
+    @pytest.fixture
+    def result_with_empty_title(self):
+        """Create a ProcessedResult with empty string title."""
+        return ProcessedResult(
+            url="https://example.com/article-empty-title",
+            source_type=URLType.NEWS_ARTICLE,
+            status=ProcessingStatus.COMPLETED,
+            content=ContentMetadata(title="", word_count=500),
+            summary=ContentSummary(
+                executive_summary="An article with an empty title.",
+                key_points=["Main point"],
+                sentiment=Sentiment.NEUTRAL,
+            ),
+        )
+
+    @pytest.fixture
+    def aggregated_result_without_title(self):
+        """Create an AggregatedResult with no title."""
+        from src.models.schemas import AggregatedResult, SourceReference
+        
+        return AggregatedResult(
+            title="",  # Empty title
+            sources=[
+                SourceReference(
+                    url="https://example.com/source1",
+                    site_name="Example Site",
+                    source_type=URLType.NEWS_ARTICLE,
+                ),
+            ],
+            summary=ContentSummary(
+                executive_summary="An aggregated article without a title.",
+                key_points=["Main point"],
+                sentiment=Sentiment.NEUTRAL,
+            ),
+            source_type=URLType.NEWS_ARTICLE,
+            is_aggregated=False,
+            original_count=1,
+        )
+
+    def test_pdf_does_not_show_untitled_for_missing_title(self, result_without_title):
+        """PDF should NOT contain 'Untitled' text when title is missing."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        html = generator._render_html(result_without_title)
+
+        # "Untitled" should NOT appear anywhere in the output
+        assert "Untitled" not in html
+        assert "untitled" not in html.lower()
+
+    def test_pdf_does_not_show_untitled_for_empty_title(self, result_with_empty_title):
+        """PDF should NOT contain 'Untitled' text when title is empty string."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        html = generator._render_html(result_with_empty_title)
+
+        # "Untitled" should NOT appear anywhere in the output
+        assert "Untitled" not in html
+        assert "untitled" not in html.lower()
+
+    def test_pdf_renders_valid_with_missing_title(self, result_without_title):
+        """PDF generation still produces valid PDF when title is missing."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf_bytes = generator.generate(result_without_title)
+
+        assert isinstance(pdf_bytes, bytes)
+        assert len(pdf_bytes) > 0
+        assert pdf_bytes[:5] == b"%PDF-"
+
+    def test_aggregated_pdf_does_not_show_untitled(self, aggregated_result_without_title):
+        """Aggregated PDF should NOT contain 'Untitled' for missing titles."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render the aggregated result
+        generator._render_aggregated_result(pdf, aggregated_result_without_title, skip_header=False)
+        
+        # Generate PDF bytes to ensure no errors
+        pdf_bytes = bytes(pdf.output())
+        assert pdf_bytes[:5] == b"%PDF-"
+
+    def test_batch_pdf_handles_mixed_titles(self, result_without_title, minimal_processed_result):
+        """Batch PDF handles mix of results with and without titles."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        results = [result_without_title, minimal_processed_result]
+
+        pdf_bytes = generator.generate_batch(results)
+
+        assert isinstance(pdf_bytes, bytes)
+        assert pdf_bytes[:5] == b"%PDF-"
+
+        # HTML should contain the real title but not "Untitled"
+        html = generator._render_batch_html(results)
+        assert "Simple Article" in html  # From minimal_processed_result
+        assert "Untitled" not in html
+
+
+# ============================================================================
+# Tests for Conditional Fact Check Section Rendering
+# ============================================================================
+
+
+class TestConditionalFactCheckRendering:
+    """Tests for conditionally hiding fact check section when no claims analyzed.
+    
+    TDD Approach: These tests define expected behavior where fact check sections
+    are hidden when claims_analyzed=0 and no claims exist, but visible otherwise.
+    """
+
+    @pytest.fixture
+    def result_with_empty_fact_check(self):
+        """Create a ProcessedResult with 0 claims analyzed."""
+        return ProcessedResult(
+            url="https://example.com/no-claims",
+            source_type=URLType.NEWS_ARTICLE,
+            status=ProcessingStatus.COMPLETED,
+            content=ContentMetadata(title="Article With No Claims", word_count=500),
+            summary=ContentSummary(
+                executive_summary="An article with no fact-checkable claims.",
+                key_points=["Main point"],
+                sentiment=Sentiment.NEUTRAL,
+            ),
+            fact_check=FactCheckReport(
+                claims_analyzed=0,
+                verified_claims=[],
+                unverified_claims=[],
+            ),
+        )
+
+    @pytest.fixture
+    def result_with_valid_fact_check(self):
+        """Create a ProcessedResult with actual claims analyzed."""
+        return ProcessedResult(
+            url="https://example.com/has-claims",
+            source_type=URLType.NEWS_ARTICLE,
+            status=ProcessingStatus.COMPLETED,
+            content=ContentMetadata(title="Article With Claims", word_count=500),
+            summary=ContentSummary(
+                executive_summary="An article with fact-checkable claims.",
+                key_points=["Main point"],
+                sentiment=Sentiment.POSITIVE,
+            ),
+            fact_check=FactCheckReport(
+                claims_analyzed=2,
+                verified_claims=[
+                    FactCheckResult(
+                        claim="Test claim is true",
+                        rating=ClaimRating.TRUE,
+                        source="FactChecker.org",
+                    ),
+                ],
+                unverified_claims=["Another claim could not be verified"],
+            ),
+        )
+
+    @pytest.fixture
+    def aggregated_result_with_empty_fact_check(self):
+        """Create an AggregatedResult with 0 claims analyzed."""
+        from src.models.schemas import AggregatedResult, SourceReference
+        
+        return AggregatedResult(
+            title="Aggregated Article No Claims",
+            sources=[
+                SourceReference(
+                    url="https://example.com/source1",
+                    site_name="Example Site",
+                    source_type=URLType.NEWS_ARTICLE,
+                ),
+            ],
+            summary=ContentSummary(
+                executive_summary="An aggregated article with no fact-checkable claims.",
+                key_points=["Main point"],
+                sentiment=Sentiment.NEUTRAL,
+            ),
+            source_type=URLType.NEWS_ARTICLE,
+            fact_check=FactCheckReport(
+                claims_analyzed=0,
+                verified_claims=[],
+                unverified_claims=[],
+            ),
+            is_aggregated=False,
+            original_count=1,
+        )
+
+    def test_pdf_hides_fact_check_when_zero_claims(self, result_with_empty_fact_check):
+        """Fact check section should NOT render when claims_analyzed=0."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        html = generator._render_html(result_with_empty_fact_check)
+
+        # Fact-Check section header should NOT appear
+        assert "Fact-Check Results" not in html
+        assert "Fact Check Results" not in html
+        # "Claims analyzed: 0" should NOT appear  
+        assert "Claims analyzed: 0" not in html
+
+    def test_pdf_shows_fact_check_when_has_claims(self, result_with_valid_fact_check):
+        """Fact check section SHOULD render when claims exist."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        html = generator._render_html(result_with_valid_fact_check)
+
+        # Fact-Check section should appear
+        assert "Fact-Check" in html or "Fact Check" in html
+        # Claims should be visible
+        assert "Test claim is true" in html
+        assert "FactChecker.org" in html
+
+    def test_aggregated_pdf_hides_fact_check_when_zero_claims(self, aggregated_result_with_empty_fact_check):
+        """Aggregated fact check section should NOT render when claims_analyzed=0."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render the fact check section (it should skip rendering)
+        generator._render_aggregated_fact_check_section(pdf, aggregated_result_with_empty_fact_check)
+        
+        # PDF should still be valid
+        pdf_bytes = bytes(pdf.output())
+        assert pdf_bytes[:5] == b"%PDF-"
+
+    def test_batch_pdf_per_article_fact_check_conditional(
+        self, result_with_empty_fact_check, result_with_valid_fact_check
+    ):
+        """One article with 0 claims should NOT affect other articles' fact check display."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        results = [result_with_empty_fact_check, result_with_valid_fact_check]
+
+        html = generator._render_batch_html(results)
+
+        # Should contain fact check for the article that has claims
+        assert "Test claim is true" in html
+        assert "FactChecker.org" in html
+        
+        # Should NOT show "Claims analyzed: 0" for the empty one
+        assert "Claims analyzed: 0" not in html
+
+
+# ============================================================================
+# Tests for Fact Check Helper Functions
+# ============================================================================
+
+
+class TestFactCheckHelperFunctions:
+    """Tests for helper functions that validate fact check data."""
+
+    def test_has_meaningful_fact_check_returns_false_for_none(self):
+        """has_meaningful_fact_check returns False when fact_check is None."""
+        from src.export.utils import has_meaningful_fact_check
+        
+        assert has_meaningful_fact_check(None) is False
+
+    def test_has_meaningful_fact_check_returns_false_for_zero_claims(self):
+        """has_meaningful_fact_check returns False when all claims are 0."""
+        from src.export.utils import has_meaningful_fact_check
+        
+        empty_fc = FactCheckReport(
+            claims_analyzed=0,
+            verified_claims=[],
+            unverified_claims=[],
+        )
+        
+        assert has_meaningful_fact_check(empty_fc) is False
+
+    def test_has_meaningful_fact_check_returns_true_for_analyzed_claims(self):
+        """has_meaningful_fact_check returns True when claims_analyzed > 0."""
+        from src.export.utils import has_meaningful_fact_check
+        
+        fc_with_claims = FactCheckReport(
+            claims_analyzed=3,
+            verified_claims=[],
+            unverified_claims=["claim1", "claim2", "claim3"],
+        )
+        
+        assert has_meaningful_fact_check(fc_with_claims) is True
+
+    def test_has_meaningful_fact_check_returns_true_for_verified_claims(self):
+        """has_meaningful_fact_check returns True when verified_claims exist."""
+        from src.export.utils import has_meaningful_fact_check
+        
+        fc_with_verified = FactCheckReport(
+            claims_analyzed=1,
+            verified_claims=[
+                FactCheckResult(
+                    claim="A verified claim",
+                    rating=ClaimRating.TRUE,
+                    source="Checker.org",
+                ),
+            ],
+            unverified_claims=[],
+        )
+        
+        assert has_meaningful_fact_check(fc_with_verified) is True
+

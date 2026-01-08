@@ -5,9 +5,9 @@ used across PDFReportGenerator, PrepDocumentGenerator, and SlidesDeckGenerator.
 """
 
 import re
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
-from src.models.schemas import ClaimRating, ProcessedResult, Sentiment
+from src.models.schemas import ClaimRating, FactCheckReport, ProcessedResult, Sentiment
 
 
 # Theme keywords for grouping articles by topic
@@ -141,3 +141,31 @@ def detect_theme(
     
     return default_theme
 
+
+def has_meaningful_fact_check(fact_check: Optional[FactCheckReport]) -> bool:
+    """
+    Check if a fact check report has any meaningful results to display.
+    
+    Returns False when:
+    - fact_check is None
+    - claims_analyzed is 0 AND no verified/unverified claims exist
+    
+    Returns True when:
+    - claims_analyzed > 0
+    - verified_claims has any entries
+    - unverified_claims has any entries
+    
+    Args:
+        fact_check: Optional FactCheckReport to validate.
+        
+    Returns:
+        True if the fact check has meaningful content to display, False otherwise.
+    """
+    if fact_check is None:
+        return False
+    
+    return (
+        fact_check.claims_analyzed > 0 or
+        len(fact_check.verified_claims) > 0 or
+        len(fact_check.unverified_claims) > 0
+    )

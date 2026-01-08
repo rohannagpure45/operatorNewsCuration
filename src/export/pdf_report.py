@@ -940,9 +940,9 @@ class PDFReportGenerator:
         for result in results:
             parts.append(f"<article>")
             
-            # Title - use empty string instead of "Untitled" for missing titles
-            title = result.content.title if result.content and result.content.title else ""
-            parts.append(f"<h2>{self._escape(title)}</h2>")
+            # Title - only render h2 if title exists (avoids empty heading elements)
+            if result.content and result.content.title:
+                parts.append(f"<h2>{self._escape(result.content.title)}</h2>")
             
             # Topics
             if result.summary and result.summary.topics:

@@ -137,8 +137,8 @@ Speaker Notes:
 
     def _article_slide(self, result: ProcessedResult) -> str:
         """Generate slide for a single article."""
-        # Use empty string instead of "Untitled" for missing titles
-        title = result.content.title if result.content and result.content.title else ""
+        # Slides require visible headings for markdown structure - use "Untitled" as fallback
+        title = result.content.title if result.content and result.content.title else "Untitled"
         
         # Get key points (limit to 4 for slide readability)
         key_points = []
@@ -363,8 +363,8 @@ Speaker Notes:
 
     def _aggregated_article_slide(self, result: AggregatedResult) -> str:
         """Generate slide for a single aggregated article."""
-        # Use empty string instead of "Untitled" for missing titles
-        title = result.title or ""
+        # Slides require visible headings for markdown structure - use "Untitled" as fallback
+        title = result.title or "Untitled"
         
         # Get key points (limit to 4-5 for slide readability)
         key_points = []

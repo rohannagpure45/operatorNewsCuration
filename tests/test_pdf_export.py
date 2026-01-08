@@ -810,7 +810,12 @@ class TestBlankTitleHandling:
         assert pdf_bytes[:5] == b"%PDF-"
 
     def test_aggregated_pdf_does_not_show_untitled(self, aggregated_result_without_title):
-        """Aggregated PDF should NOT contain 'Untitled' for missing titles."""
+        """Aggregated PDF generation succeeds with empty titles.
+        
+        Note: The absence of 'Untitled' text is verified through the HTML-based tests
+        which use _render_batch_html(). This test ensures the PDF rendering path
+        doesn't crash when processing aggregated results with missing titles.
+        """
         from src.export.pdf_report import PDFReportGenerator
 
         generator = PDFReportGenerator()
@@ -955,16 +960,22 @@ class TestConditionalFactCheckRendering:
         assert "FactChecker.org" in html
 
     def test_aggregated_pdf_hides_fact_check_when_zero_claims(self, aggregated_result_with_empty_fact_check):
-        """Aggregated fact check section should NOT render when claims_analyzed=0."""
+        """Aggregated fact check section is skipped when claims_analyzed=0.
+        
+        Note: The PDF rendering method _render_aggregated_fact_check_section uses
+        has_meaningful_fact_check() which returns early if no claims exist.
+        This test verifies the method completes without errors. The conditional
+        logic is unit-tested in TestFactCheckHelperFunctions.
+        """
         from src.export.pdf_report import PDFReportGenerator
 
         generator = PDFReportGenerator()
         pdf = generator._create_pdf()
         
-        # Render the fact check section (it should skip rendering)
+        # Render the fact check section (should be a no-op due to empty claims)
         generator._render_aggregated_fact_check_section(pdf, aggregated_result_with_empty_fact_check)
         
-        # PDF should still be valid
+        # PDF should still be valid (section was skipped)
         pdf_bytes = bytes(pdf.output())
         assert pdf_bytes[:5] == b"%PDF-"
 

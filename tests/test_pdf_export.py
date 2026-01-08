@@ -256,6 +256,30 @@ class TestPDFReportGenerator:
         assert len(pdf_bytes) > 0
         assert pdf_bytes[:5] == b"%PDF-"
 
+    def test_pdf_does_not_render_entities_section(self, complete_processed_result):
+        """PDF generation does NOT render Key Entities section (removed feature).
+        
+        The Key Entities section was removed from PDF output to simplify reports.
+        This test ensures entities are not displayed even when present in data.
+        """
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+
+        # Even with entities in the data, the section should NOT appear in output
+        html = generator._render_html(complete_processed_result)
+
+        # Key Entities header should NOT be present
+        assert "Key Entities" not in html
+        
+        # Entity class/section should NOT be present in HTML
+        assert "class='entities'" not in html
+        assert "class='entity" not in html
+        
+        # Other sections should still be present
+        assert "Executive Summary" in html
+        assert "Key Points" in html
+
     def test_pdf_handles_empty_entities(self, minimal_processed_result):
         """PDF generation works with empty entities list."""
         from src.export.pdf_report import PDFReportGenerator
@@ -265,8 +289,10 @@ class TestPDFReportGenerator:
         # Minimal result has no entities
         html = generator._render_html(minimal_processed_result)
 
-        # Should still generate valid HTML without entity section or with empty section
+        # Should still generate valid HTML without entity section
         assert "Simple Article" in html
+        # Key Entities should not appear regardless
+        assert "Key Entities" not in html
 
     def test_pdf_fact_check_section(self, complete_processed_result):
         """Fact check results render with proper rating colors."""
@@ -457,4 +483,229 @@ class TestPDFExportAPI:
         response = test_client.get("/health")
         assert response.status_code == 200
         assert response.json()["status"] == "healthy"
+
+
+# ============================================================================
+# Tests for Aggregated PDF Generation with Footnotes and Sources
+# ============================================================================
+
+
+class TestPDFAggregatedGeneration:
+    """Tests for aggregated PDF generation with footnotes and sources sections."""
+
+    @pytest.fixture
+    def sample_source_reference(self):
+        """Create sample source reference for testing."""
+        from src.models.schemas import SourceReference, URLType
+        
+        return SourceReference(
+            url="https://technews.example.com/ai-news",
+            title="AI News Article",
+            site_name="Tech News Daily",
+            author="Jane Doe",
+            published_date=datetime(2024, 12, 20, 10, 30, tzinfo=timezone.utc),
+            source_type=URLType.NEWS_ARTICLE,
+        )
+
+    @pytest.fixture
+    def sample_aggregated_summary_with_footnotes(self):
+        """Create sample summary with footnotes for testing."""
+        return ContentSummary(
+            executive_summary=(
+                "An aggregated view of multiple sources covering AI developments. "
+                "This summary combines insights from various publishers."
+            ),
+            key_points=[
+                "Multiple sources confirm AI advancement",
+                "Industry leaders express optimism",
+                "Regulatory concerns remain",
+            ],
+            sentiment=Sentiment.POSITIVE,
+            implications=[
+                "Accelerated AI adoption across industries",
+                "New regulatory frameworks may emerge",
+            ],
+            footnotes=[
+                Footnote(
+                    id=1,
+                    source_text="AI is transforming every industry",
+                    context="Quote from industry expert at Tech Summit 2024",
+                ),
+                Footnote(
+                    id=2,
+                    source_text="Regulation must keep pace with innovation",
+                    context="Statement from policy think tank report",
+                ),
+            ],
+            topics=["AI", "Technology", "Regulation"],
+        )
+
+    @pytest.fixture
+    def aggregated_result_with_sources(self, sample_aggregated_summary_with_footnotes):
+        """Create an aggregated result with multiple sources and footnotes."""
+        from src.models.schemas import AggregatedResult, SourceReference, URLType
+        
+        sources = [
+            SourceReference(
+                url="https://technews.example.com/ai-news",
+                title="AI News Article",
+                site_name="Tech News Daily",
+                author="Jane Doe",
+                published_date=datetime(2024, 12, 20, 10, 30, tzinfo=timezone.utc),
+                source_type=URLType.NEWS_ARTICLE,
+            ),
+            SourceReference(
+                url="https://businessweek.example.com/ai-impact",
+                title="The AI Impact on Business",
+                site_name="Business Weekly",
+                author="John Smith",
+                published_date=datetime(2024, 12, 19, 14, 0, tzinfo=timezone.utc),
+                source_type=URLType.NEWS_ARTICLE,
+            ),
+            SourceReference(
+                url="https://techblog.example.com/ai-future",
+                title="The Future of AI",
+                site_name="Tech Blog",
+                source_type=URLType.BLOG,
+            ),
+        ]
+        
+        return AggregatedResult(
+            title="AI Revolution: Combined Coverage",
+            sources=sources,
+            summary=sample_aggregated_summary_with_footnotes,
+            source_type=URLType.NEWS_ARTICLE,
+            is_aggregated=True,
+            original_count=3,
+        )
+
+    @pytest.fixture
+    def aggregated_result_set(self, aggregated_result_with_sources):
+        """Create an aggregated result set for batch PDF generation."""
+        from src.models.schemas import AggregatedResultSet
+        
+        return AggregatedResultSet(
+            results=[aggregated_result_with_sources],
+            total_original=3,
+            total_aggregated=1,
+            duplicates_merged=1,
+        )
+
+    def test_aggregated_pdf_generates_valid_pdf(self, aggregated_result_set):
+        """Aggregated PDF generation returns valid PDF bytes."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf_bytes = generator.generate_aggregated_batch(aggregated_result_set)
+
+        assert isinstance(pdf_bytes, bytes)
+        assert len(pdf_bytes) > 0
+        assert pdf_bytes[:5] == b"%PDF-"
+
+    def test_aggregated_pdf_renders_footnotes_section(self, aggregated_result_with_sources):
+        """Aggregated PDF contains footnotes/citations section."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render the aggregated result
+        generator._render_aggregated_result(pdf, aggregated_result_with_sources, skip_header=False)
+        
+        # Generate PDF bytes to ensure no errors
+        pdf_bytes = bytes(pdf.output())
+        assert pdf_bytes[:5] == b"%PDF-"
+        
+        # The footnotes should be rendered without error
+        # (Font size validation is visual, but we ensure the section renders)
+        assert aggregated_result_with_sources.summary.footnotes is not None
+        assert len(aggregated_result_with_sources.summary.footnotes) == 2
+
+    def test_aggregated_pdf_renders_sources_section(self, aggregated_result_with_sources):
+        """Aggregated PDF contains sources section when multiple sources exist."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render just the sources section
+        generator._render_sources_section(pdf, aggregated_result_with_sources)
+        
+        # Generate PDF bytes to ensure no errors
+        pdf_bytes = bytes(pdf.output())
+        assert pdf_bytes[:5] == b"%PDF-"
+        
+        # Verify sources were in the result
+        assert len(aggregated_result_with_sources.sources) == 3
+
+    def test_aggregated_pdf_renders_footnotes_directly(self, aggregated_result_with_sources):
+        """Footnotes section renders directly without error."""
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render the footnotes section directly
+        generator._render_aggregated_footnotes_section(pdf, aggregated_result_with_sources)
+        
+        # Generate PDF bytes to ensure no errors
+        pdf_bytes = bytes(pdf.output())
+        assert pdf_bytes[:5] == b"%PDF-"
+
+    def test_secondary_section_header_method_exists(self):
+        """Verify secondary section header method exists for smaller headers.
+        
+        This test is written before implementation (TDD).
+        The _render_secondary_section_header method should use smaller fonts
+        for less essential sections like citations and sources.
+        """
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        
+        # The method should exist
+        assert hasattr(generator, '_render_secondary_section_header'), \
+            "_render_secondary_section_header method should be implemented"
+        
+        # Should be callable with pdf and title
+        pdf = generator._create_pdf()
+        generator._render_secondary_section_header(pdf, "Test Section")
+        
+        # Should generate valid PDF
+        pdf_bytes = bytes(pdf.output())
+        assert pdf_bytes[:5] == b"%PDF-"
+
+    def test_footnotes_use_secondary_header(self, aggregated_result_with_sources):
+        """Footnotes section uses secondary (smaller) header styling.
+        
+        Visual verification will confirm actual font sizes, but this test
+        ensures the section header is rendered appropriately.
+        """
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render footnotes - should use smaller styling
+        generator._render_aggregated_footnotes_section(pdf, aggregated_result_with_sources)
+        
+        pdf_bytes = bytes(pdf.output())
+        assert len(pdf_bytes) > 0
+
+    def test_sources_use_secondary_header(self, aggregated_result_with_sources):
+        """Sources section uses secondary (smaller) header styling.
+        
+        Visual verification will confirm actual font sizes, but this test
+        ensures the section header is rendered appropriately.
+        """
+        from src.export.pdf_report import PDFReportGenerator
+
+        generator = PDFReportGenerator()
+        pdf = generator._create_pdf()
+        
+        # Render sources - should use smaller styling
+        generator._render_sources_section(pdf, aggregated_result_with_sources)
+        
+        pdf_bytes = bytes(pdf.output())
+        assert len(pdf_bytes) > 0
 

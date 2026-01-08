@@ -11,7 +11,6 @@ from typing import List, Optional
 from fpdf import FPDF
 
 from src.export.utils import (
-    ENTITY_COLORS,
     RATING_COLORS,
     SENTIMENT_COLORS,
     SENTIMENT_LABELS,
@@ -122,8 +121,6 @@ class PDFReportGenerator:
             self._render_aggregated_summary_section(pdf, result)
             self._render_aggregated_key_points_section(pdf, result)
 
-            if result.summary.entities:
-                self._render_aggregated_entities_section(pdf, result)
 
             if result.summary.implications:
                 self._render_aggregated_implications_section(pdf, result)
@@ -196,40 +193,43 @@ class PDFReportGenerator:
         pdf.ln(8)
 
     def _render_sources_section(self, pdf: FPDF, result: AggregatedResult):
-        """Render the sources section for aggregated results with multiple sources."""
-        self._render_section_header(pdf, f"Sources ({len(result.sources)})")
+        """Render the sources section for aggregated results with multiple sources.
+        
+        Uses smaller font sizes to de-emphasize this supplementary section.
+        """
+        self._render_secondary_section_header(pdf, f"Sources ({len(result.sources)})")
 
-        pdf.set_font("Helvetica", size=9)
+        pdf.set_font("Helvetica", size=7)
 
         for i, source in enumerate(result.sources, 1):
             # Source number and site name
             pdf.set_x(25)
-            pdf.set_font("Helvetica", "B", 9)
+            pdf.set_font("Helvetica", "B", 7)
             pdf.set_text_color(55, 65, 81)
-            pdf.cell(8, 5, f"{i}.")
+            pdf.cell(8, 4, f"{i}.")
             
             site_name = source.site_name or "Unknown Source"
             pdf.set_text_color(59, 130, 246)  # Blue link color
-            pdf.cell(pdf.get_string_width(site_name) + 2, 5, site_name, link=source.url, new_x="RIGHT")
+            pdf.cell(pdf.get_string_width(site_name) + 2, 4, site_name, link=source.url, new_x="RIGHT")
             
             # Title if different from main title
             if source.title and source.title != result.title:
-                pdf.set_font("Helvetica", "I", 8)
+                pdf.set_font("Helvetica", "I", 6)
                 pdf.set_text_color(107, 114, 128)
                 title_display = source.title[:50] + "..." if len(source.title) > 50 else source.title
-                pdf.cell(0, 5, f' - "{title_display}"', new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(0, 4, f' - "{title_display}"', new_x="LMARGIN", new_y="NEXT")
             else:
-                pdf.ln(5)
+                pdf.ln(4)
             
             # URL
             pdf.set_x(33)
-            pdf.set_font("Helvetica", size=7)
+            pdf.set_font("Helvetica", size=6)
             pdf.set_text_color(107, 114, 128)
             url_display = source.url[:60] + "..." if len(source.url) > 60 else source.url
-            pdf.cell(0, 4, url_display, link=source.url, new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 3, url_display, link=source.url, new_x="LMARGIN", new_y="NEXT")
             pdf.ln(2)
 
-        pdf.ln(5)
+        pdf.ln(4)
 
     def _render_aggregated_summary_section(self, pdf: FPDF, result: AggregatedResult):
         """Render the executive summary section for aggregated result."""
@@ -337,32 +337,35 @@ class PDFReportGenerator:
         pdf.ln(5)
 
     def _render_aggregated_footnotes_section(self, pdf: FPDF, result: AggregatedResult):
-        """Render the footnotes section for aggregated result."""
+        """Render the footnotes section for aggregated result.
+        
+        Uses smaller font sizes to de-emphasize this supplementary section.
+        """
         if not result.summary or not result.summary.footnotes:
             return
 
-        self._render_section_header(pdf, "Citations & Footnotes")
+        self._render_secondary_section_header(pdf, "Citations & Footnotes")
 
-        pdf.set_font("Helvetica", size=9)
+        pdf.set_font("Helvetica", size=7)
 
         for fn in result.summary.footnotes:
             pdf.set_x(25)
-            pdf.set_font("Helvetica", "B", 9)
+            pdf.set_font("Helvetica", "B", 7)
             pdf.set_text_color(59, 130, 246)
-            pdf.cell(10, 5, f"[{fn.id}]")
+            pdf.cell(10, 4, f"[{fn.id}]")
             
-            pdf.set_font("Helvetica", "I", 9)
+            pdf.set_font("Helvetica", "I", 7)
             pdf.set_text_color(75, 85, 99)
-            pdf.multi_cell(pdf.w - 60, 5, f'"{fn.source_text}"')
+            pdf.multi_cell(pdf.w - 60, 4, f'"{fn.source_text}"')
             
             pdf.set_x(35)
-            pdf.set_font("Helvetica", size=8)
+            pdf.set_font("Helvetica", size=6)
             pdf.set_text_color(107, 114, 128)
-            pdf.multi_cell(pdf.w - 60, 4, fn.context)
+            pdf.multi_cell(pdf.w - 60, 3, fn.context)
             
-            pdf.ln(3)
+            pdf.ln(2)
 
-        pdf.ln(5)
+        pdf.ln(4)
 
     def _render_aggregated_fact_check_section(self, pdf: FPDF, result: AggregatedResult):
         """Render the fact-check section for aggregated result."""
@@ -476,8 +479,6 @@ class PDFReportGenerator:
             self._render_summary_section(pdf, result)
             self._render_key_points_section(pdf, result)
 
-            if result.summary.entities:
-                self._render_entities_section(pdf, result)
 
             if result.summary.implications:
                 self._render_implications_section(pdf, result)
@@ -699,34 +700,35 @@ class PDFReportGenerator:
         pdf.ln(5)
 
     def _render_footnotes_section(self, pdf: FPDF, result: ProcessedResult):
-        """Render the footnotes section."""
+        """Render the footnotes section.
+        
+        Uses smaller font sizes to de-emphasize this supplementary section.
+        """
         if not result.summary or not result.summary.footnotes:
             return
 
-        self._render_section_header(pdf, "Citations & Footnotes")
+        self._render_secondary_section_header(pdf, "Citations & Footnotes")
 
-        pdf.set_font("Helvetica", size=9)
+        pdf.set_font("Helvetica", size=7)
 
         for fn in result.summary.footnotes:
-            y_start = pdf.get_y()
-            
             pdf.set_x(25)
-            pdf.set_font("Helvetica", "B", 9)
+            pdf.set_font("Helvetica", "B", 7)
             pdf.set_text_color(59, 130, 246)
-            pdf.cell(10, 5, f"[{fn.id}]")
+            pdf.cell(10, 4, f"[{fn.id}]")
             
-            pdf.set_font("Helvetica", "I", 9)
+            pdf.set_font("Helvetica", "I", 7)
             pdf.set_text_color(75, 85, 99)
-            pdf.multi_cell(pdf.w - 60, 5, f'"{fn.source_text}"')
+            pdf.multi_cell(pdf.w - 60, 4, f'"{fn.source_text}"')
             
             pdf.set_x(35)
-            pdf.set_font("Helvetica", size=8)
+            pdf.set_font("Helvetica", size=6)
             pdf.set_text_color(107, 114, 128)
-            pdf.multi_cell(pdf.w - 60, 4, fn.context)
+            pdf.multi_cell(pdf.w - 60, 3, fn.context)
             
-            pdf.ln(3)
+            pdf.ln(2)
 
-        pdf.ln(5)
+        pdf.ln(4)
 
     def _render_fact_check_section(self, pdf: FPDF, result: ProcessedResult):
         """Render the fact-check section."""
@@ -883,6 +885,21 @@ class PDFReportGenerator:
         pdf.line(20, pdf.get_y(), pdf.w - 20, pdf.get_y())
         pdf.ln(5)
 
+    def _render_secondary_section_header(self, pdf: FPDF, title: str):
+        """Render a smaller section header for supplementary sections.
+        
+        Used for less essential sections like Citations & Footnotes and Sources
+        to de-emphasize them relative to main content sections.
+        """
+        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_text_color(107, 114, 128)  # Lighter gray for de-emphasis
+        pdf.cell(0, 6, title, new_x="LMARGIN", new_y="NEXT")
+        
+        pdf.set_draw_color(229, 231, 235)
+        pdf.set_line_width(0.2)
+        pdf.line(20, pdf.get_y(), pdf.w - 20, pdf.get_y())
+        pdf.ln(4)
+
     def _render_html(self, result: ProcessedResult) -> str:
         """
         Render a ProcessedResult as HTML (for testing purposes).
@@ -951,13 +968,6 @@ class PDFReportGenerator:
                     parts.append(f"<li>{self._escape(point)}</li>")
                 parts.append("</section>")
                 
-                # Entities
-                if result.summary.entities:
-                    parts.append("<section class='entities'>")
-                    for entity in result.summary.entities:
-                        entity_type = entity.type.value if hasattr(entity.type, 'value') else str(entity.type)
-                        parts.append(f"<span class='entity {entity_type.lower()}'>{self._escape(entity.text)}</span>")
-                    parts.append("</section>")
                 
                 # Footnotes
                 if result.summary.footnotes:

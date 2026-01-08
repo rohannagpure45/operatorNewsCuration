@@ -1,0 +1,831 @@
+{
+  "total_original": 30,
+  "total_aggregated": 7,
+  "duplicates_merged": 4,
+  "aggregated_at": "2026-01-07T21:21:37.377218+00:00",
+  "results": [
+    {
+      "title": "Google Launches Gemini 3 Flash AI Model",
+      "sources": [
+        {
+          "url": "https://blog.google/products/gemini/gemini-3-flash",
+          "title": "Gemini 3 Flash: frontier intelligence built for speed",
+          "site_name": "Google",
+          "author": "Tulsee Doshi",
+          "published_date": "2025-12-17T00:00:00",
+          "source_type": "blog"
+        },
+        {
+          "url": "https://x.com/arcprize/status/2001330153902023157",
+          "title": "Tweet by ARC Prize (@arcprize)",
+          "site_name": "Twitter/X",
+          "author": "ARC Prize (@arcprize)",
+          "published_date": null,
+          "source_type": "twitter"
+        },
+        {
+          "url": "https://x.com/officiallogank/status/2001322275656835348",
+          "title": "Tweet by Logan Kilpatrick (@OfficialLoganK)",
+          "site_name": "Twitter/X",
+          "author": "Logan Kilpatrick (@OfficialLoganK)",
+          "published_date": null,
+          "source_type": "twitter"
+        },
+        {
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-flash-for-enterprises",
+          "title": "Gemini 3 Flash for Enterprises | Google Cloud Blog",
+          "site_name": "Google Cloud",
+          "author": "Saurabh Tiwary",
+          "published_date": "2025-12-17T00:00:00",
+          "source_type": "blog"
+        }
+      ],
+      "summary": {
+        "executive_summary": "Google has expanded its Gemini 3 model family with the release of Gemini 3 Flash, a high-speed, cost-effective model designed to provide frontier-level intelligence. Combining Pro-grade reasoning with Flash-level latency, the model achieves significant performance milestones, including a 90.4% score on the GPQA Diamond benchmark and a 78% score on SWE-bench Verified. Gemini 3 Flash is being integrated across Google's ecosystem, replacing Gemini 2.5 Flash as the default model in the Gemini app and AI Mode in Search, while offering developers a 3x speed increase over previous versions at a fraction of the cost. | Gemini 3 Flash Preview (High) has demonstrated strong performance on the ARC-AGI semi-private evaluation benchmarks. The model achieved an accuracy of 84.7% on ARC-AGI-1 and 33.6% on ARC-AGI-2, while maintaining significantly lower operational costs compared to other frontier models. These results highlight a shift toward more cost-effective reasoning capabilities in large language models. | Logan Kilpatrick has announced the launch of Gemini 3 Flash, a new frontier intelligence model designed for high-performance tasks. The model is specifically optimized for coding and tool calling, with performance metrics exceeding those of the previous 2.5 Pro model. It is now available at scale via API with a highly competitive pricing structure of $0.50 per million input tokens and $3.00 per million output tokens. | Google Cloud has launched Gemini 3 Flash, a high-performance AI model designed to provide frontier intelligence at high speeds and low costs for enterprise applications. It bridges the gap between complex reasoning and real-time responsiveness, supporting multimodal processing, agentic coding, and automated workflows. Early enterprise partners, including Box and Salesforce, report significant performance gains, such as a 15% accuracy improvement in data extraction and a 10% boost in coding task efficiency compared to previous iterations.",
+        "key_points": [
+          "Gemini 3 Flash delivers Pro-grade reasoning with significantly reduced latency and cost.",
+          "Achieves 90.4% on GPQA Diamond and 81.2% on MMMU Pro benchmarks.",
+          "Outperforms Gemini 3 Pro on the SWE-bench Verified coding benchmark with a 78% score.",
+          "Operates 3x faster than Gemini 2.5 Pro while using 30% fewer tokens on average.",
+          "Priced competitively for developers at $0.50 per 1M input tokens and $3 per 1M output tokens.",
+          "Now the default model for millions of users in the Gemini app and Search AI Mode.",
+          "Adopted by major enterprises including JetBrains, Bridgewater Associates, and Figma.",
+          "Gemini 3 Flash Preview (High) achieved 84.7% accuracy on the ARC-AGI-1 benchmark.",
+          "The model reached 33.6% accuracy on the ARC-AGI-2 semi-private evaluation.",
+          "Operational costs are notably low, at $0.17 per task for ARC-AGI-1."
+        ],
+        "sentiment": "positive",
+        "entities": [
+          {
+            "text": "Tulsee Doshi",
+            "type": "PERSON",
+            "relevance": 0.8
+          },
+          {
+            "text": "Google",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "Gemini 3 Flash",
+            "type": "PRODUCT",
+            "relevance": 1.0
+          },
+          {
+            "text": "JetBrains",
+            "type": "ORG",
+            "relevance": 0.7
+          },
+          {
+            "text": "Bridgewater Associates",
+            "type": "ORG",
+            "relevance": 0.7
+          },
+          {
+            "text": "Figma",
+            "type": "ORG",
+            "relevance": 0.7
+          },
+          {
+            "text": "Vertex AI",
+            "type": "PRODUCT",
+            "relevance": 0.9
+          },
+          {
+            "text": "Google Antigravity",
+            "type": "PRODUCT",
+            "relevance": 0.8
+          },
+          {
+            "text": "ARC Prize",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "Gemini 3 Flash Preview (High)",
+            "type": "PRODUCT",
+            "relevance": 1.0
+          },
+          {
+            "text": "ARC-AGI-1",
+            "type": "PRODUCT",
+            "relevance": 0.9
+          },
+          {
+            "text": "ARC-AGI-2",
+            "type": "PRODUCT",
+            "relevance": 0.9
+          },
+          {
+            "text": "Logan Kilpatrick",
+            "type": "PERSON",
+            "relevance": 1.0
+          },
+          {
+            "text": "2.5 Pro",
+            "type": "PRODUCT",
+            "relevance": 0.8
+          },
+          {
+            "text": "Google Cloud",
+            "type": "ORG",
+            "relevance": 1.0
+          }
+        ],
+        "implications": [
+          "Democratizes high-level reasoning by providing frontier intelligence for free in the Gemini app.",
+          "Reduces operational costs for developers through improved token efficiency and lower pricing.",
+          "Accelerates the development of agentic workflows and real-time interactive applications.",
+          "Enhances productivity in software engineering with state-of-the-art coding capabilities.",
+          "Improves user experience in Search through more nuanced and visually digestible AI responses."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "Gemini 3 Flash, which offers frontier intelligence built for speed at a fraction of the cost.",
+            "context": "The primary value proposition of the new model release."
+          },
+          {
+            "id": 2,
+            "source_text": "Gemini 3 Flash is now the default model in the Gemini app, replacing 2.5 Flash.",
+            "context": "Indicates the immediate upgrade for global consumer users."
+          },
+          {
+            "id": 3,
+            "source_text": "It outperforms 2.5 Pro while being 3x faster at a fraction of the cost.",
+            "context": "Comparison of speed and efficiency against previous generation models."
+          },
+          {
+            "id": 4,
+            "source_text": "Competitive performance at a substantially lower cost than other frontier models",
+            "context": "The primary takeaway regarding the value proposition of the Gemini 3 Flash model."
+          },
+          {
+            "id": 5,
+            "source_text": "It excels at coding, tool calling, and is stronger than 2.5 Pro across most metrics!!",
+            "context": "Logan Kilpatrick highlighting the performance advantages of the new model over its predecessor."
+          }
+        ],
+        "topics": [
+          "Enterprise Software",
+          "Cloud Computing Costs",
+          "Software Development",
+          "Multimodal Technology",
+          "AGI Benchmarking",
+          "Model Efficiency",
+          "Cloud Computing",
+          "Artificial Intelligence"
+        ],
+        "slide_content": null
+      },
+      "source_type": "twitter",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 10,
+        "verified_claims": [],
+        "unverified_claims": [
+          "Gemini 3 Flash achieved a score of 90.4% on the GPQA Diamond benchmark and 33.7% on the Humanity's Last Exam benchmark (without tools).",
+          "Geotab reported an immediate 10% baseline improvement on agentic coding tasks, including complex user-driven queries, when using the Gemini 3 Flash model.",
+          "Since the launch of Gemini 3 Pro and Gemini 3 Deep Think mode, Google has been processing over 1 trillion tokens per day on its API.",
+          "Internal evaluations by Warp showed an 8% lift in fix accuracy for its Suggested Code Diffs feature using the Gemini 3 Flash model.",
+          "On the SWE-bench Verified benchmark for evaluating coding agent capabilities, Gemini 3 Flash achieved a score of 78%.",
+          "Gemini 3 Flash shows a relative improvement of 15% in overall accuracy compared to Gemini 2.5 Flash on extraction tasks such as handwriting, long-form contracts, and complex financial data, according to Box.",
+          "Gemini 3 Flash is available in preview on several platforms, including Gemini Enterprise, Vertex AI, Google Antigravity, Gemini CLI, and AI Studio.",
+          "Gemini 3 Flash achieved an improvement of over 7% on Harvey's BigLaw Bench compared to its predecessor, Gemini 2.5 Flash.",
+          "Gemini 3 Flash is priced at $0.50 per 1 million input tokens and $3 per 1 million output tokens, with audio input priced at $1 per 1 million input tokens.",
+          "Gemini 3 Flash is 3x faster than Gemini 2.5 Pro based on Artificial Analysis benchmarking."
+        ],
+        "publisher_credibility": null
+      },
+      "is_aggregated": true,
+      "original_count": 4
+    },
+    {
+      "title": "Situational Awareness LP",
+      "sources": [
+        {
+          "url": "https://13f.info/13f/000204572425000008/compare/000204572425000006",
+          "title": "Situational Awareness LP",
+          "site_name": "13f.info",
+          "author": null,
+          "published_date": null,
+          "source_type": "sec_filing"
+        }
+      ],
+      "summary": {
+        "executive_summary": "Situational Awareness LP has released a comparative analysis of its investment holdings for the third quarter of 2025 against the second quarter of 2025. This SEC 13F filing provides a detailed breakdown of the firm's portfolio, including issuer names, share counts, and market values. The report is designed to highlight significant shifts in investment strategy and position sizing over the three-month period.",
+        "key_points": [
+          "Comparison of Q2 2025 and Q3 2025 portfolio holdings.",
+          "Detailed tracking of share counts and principal amounts.",
+          "Market value assessment in thousands of dollars ($000).",
+          "Calculation of percentage changes and absolute differences in positions.",
+          "Categorization by issuer name, class, and CUSIP."
+        ],
+        "sentiment": "neutral",
+        "entities": [
+          {
+            "text": "Situational Awareness LP",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "SEC",
+            "type": "ORG",
+            "relevance": 0.8
+          }
+        ],
+        "implications": [
+          "Increased transparency into institutional trading patterns.",
+          "Potential market signaling based on fund rebalancing.",
+          "Regulatory compliance with SEC 13F reporting requirements."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "Situational Awareness LP",
+            "context": "The primary entity filing the 13F report."
+          }
+        ],
+        "topics": [
+          "Institutional Investing",
+          "SEC Filings",
+          "Portfolio Management",
+          "Financial Regulation"
+        ],
+        "slide_content": {
+          "slide_type": "bullets",
+          "headline": "Situational Awareness LP Q3 2025 Portfolio Update",
+          "bullets": [
+            "Compares Q2 2025 vs Q3 2025 investment holdings",
+            "Reports market values in thousands of dollars",
+            "Tracks share count and principal value fluctuations",
+            "Identifies positions by issuer name and CUSIP"
+          ],
+          "quote_text": null,
+          "quote_attribution": null,
+          "video_url": null,
+          "video_caption": null
+        }
+      },
+      "source_type": "sec_filing",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 0,
+        "verified_claims": [],
+        "unverified_claims": [],
+        "publisher_credibility": null
+      },
+      "is_aggregated": false,
+      "original_count": 1
+    },
+    {
+      "title": "Untitled",
+      "sources": [
+        {
+          "url": "https://openai.com/index/frontierscience",
+          "title": "Untitled",
+          "site_name": null,
+          "author": null,
+          "published_date": null,
+          "source_type": "news_article"
+        }
+      ],
+      "summary": {
+        "executive_summary": "OpenAI has introduced FrontierScience, a new benchmark designed to evaluate AI's expert-level scientific reasoning across physics, chemistry, and biology. This benchmark addresses the limitations of existing datasets like GPQA, which have become saturated as models like GPT-5.2 reach high levels of performance. FrontierScience consists of two distinct tracks: an 'Olympiad' track for constrained reasoning and a 'Research' track for multi-step, open-ended scientific tasks, providing a more rigorous assessment of how AI can accelerate real-world scientific workflows.",
+        "key_points": [
+          "FrontierScience includes over 700 questions across physics, chemistry, and biology subfields.",
+          "GPT-5.2 is the top-performing model, scoring 77% on the Olympiad track and 25% on the Research track.",
+          "The benchmark was developed in collaboration with 42 Olympiad medalists and 45 PhD-level scientists.",
+          "A rubric-based grading system assesses the accuracy of intermediate reasoning steps in open-ended tasks.",
+          "OpenAI has open-sourced the gold sets for both the Olympiad (100 questions) and Research (60 questions) tracks.",
+          "Current models excel at structured reasoning but still struggle with niche concepts and open-ended thinking.",
+          "The benchmark serves as a 'north star' for developing AI that can act as a reliable partner in scientific discovery."
+        ],
+        "sentiment": "positive",
+        "entities": [
+          {
+            "text": "OpenAI",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "FrontierScience",
+            "type": "PRODUCT",
+            "relevance": 1.0
+          },
+          {
+            "text": "GPT-5.2",
+            "type": "PRODUCT",
+            "relevance": 0.9
+          },
+          {
+            "text": "GPT-5",
+            "type": "PRODUCT",
+            "relevance": 0.8
+          },
+          {
+            "text": "Claude Opus 4.5",
+            "type": "PRODUCT",
+            "relevance": 0.7
+          },
+          {
+            "text": "Gemini 3 Pro",
+            "type": "PRODUCT",
+            "relevance": 0.7
+          },
+          {
+            "text": "GPQA",
+            "type": "PRODUCT",
+            "relevance": 0.6
+          },
+          {
+            "text": "International Math Olympiad",
+            "type": "EVENT",
+            "relevance": 0.5
+          }
+        ],
+        "implications": [
+          "AI models are transitioning from simple fact recall to complex, multi-step scientific reasoning.",
+          "Human judgment remains essential for framing problems and validating AI-generated scientific insights.",
+          "Future AI development will likely focus on generating novel hypotheses and interacting with physical experimental systems.",
+          "Standardized benchmarks like FrontierScience are necessary to track progress as models surpass existing expert baselines."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "In the end, the most important benchmark for the scientific capabilities of AI is the novel discoveries it helps generate; those are what ultimately matter to science and society.",
+            "context": "The author emphasizes that while benchmarks are useful for measurement, real-world impact is the final metric of success."
+          },
+          {
+            "id": 2,
+            "source_text": "FrontierScience-Research consists of 60 original research subtasks designed by PhD scientists... graded using a 10-point rubric.",
+            "context": "Details the methodology used to evaluate open-ended research capabilities beyond simple multiple-choice questions."
+          }
+        ],
+        "topics": [
+          "Artificial Intelligence",
+          "Scientific Research",
+          "Benchmarking",
+          "Physics",
+          "Chemistry",
+          "Biology",
+          "Model Evaluation"
+        ],
+        "slide_content": {
+          "slide_type": "bullets",
+          "headline": "OpenAI Launches FrontierScience Benchmark for AI Research",
+          "bullets": [
+            "GPT-5.2 leads with 77% score on Olympiad track",
+            "Benchmark covers physics, chemistry, and biology subfields",
+            "700+ questions verified by PhD experts and medalists",
+            "Research track measures multi-step tasks with 10-point rubrics",
+            "GPT-5.2 achieves 25% on open-ended research-style tasks"
+          ],
+          "quote_text": "The most important benchmark for AI is the novel discoveries it helps generate; those are what ultimately matter to science and society.",
+          "quote_attribution": "OpenAI FrontierScience Report",
+          "video_url": null,
+          "video_caption": null
+        }
+      },
+      "source_type": "news_article",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 0,
+        "verified_claims": [],
+        "unverified_claims": [],
+        "publisher_credibility": null
+      },
+      "is_aggregated": false,
+      "original_count": 1
+    },
+    {
+      "title": "Tweet by lmarena.ai (@arena)",
+      "sources": [
+        {
+          "url": "https://x.com/arena/status/2001008010399994026",
+          "title": "Tweet by lmarena.ai (@arena)",
+          "site_name": "Twitter/X",
+          "author": "lmarena.ai (@arena)",
+          "published_date": null,
+          "source_type": "twitter"
+        }
+      ],
+      "summary": {
+        "executive_summary": "OpenAI has introduced two new image models, gpt-image-1.5 and chatgpt-image-latest, which have immediately claimed the top positions on the Image Arena leaderboard. The models demonstrate significant advancements in text-to-image generation and image editing, with gpt-image-1.5 taking the #1 spot in text-to-image and chatgpt-image-latest leading the image editing category. These updates prioritize speed and precision, offering a 4x performance increase over previous versions while improving instruction following and detail preservation.",
+        "key_points": [
+          "gpt-image-1.5 is currently ranked #1 in the Text-to-Image category with a score of 1264.",
+          "chatgpt-image-latest is ranked #1 in the Image Edit category with a score of 1409.",
+          "The new flagship image generation models are 4x faster than their predecessors.",
+          "Key features include stronger instruction following and more precise image editing.",
+          "The models are rolling out to all ChatGPT users and are available via API as GPT Image 1.5.",
+          "gpt-image-1.5 also holds the #4 spot in the Image Edit category."
+        ],
+        "sentiment": "positive",
+        "entities": [
+          {
+            "text": "OpenAI",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "lmarena.ai",
+            "type": "ORG",
+            "relevance": 0.9
+          },
+          {
+            "text": "gpt-image-1.5",
+            "type": "PRODUCT",
+            "relevance": 0.95
+          },
+          {
+            "text": "chatgpt-image-latest",
+            "type": "PRODUCT",
+            "relevance": 0.95
+          },
+          {
+            "text": "ChatGPT",
+            "type": "PRODUCT",
+            "relevance": 0.8
+          }
+        ],
+        "implications": [
+          "Increased competitive pressure on other image generation models like Midjourney and Stable Diffusion.",
+          "Faster turnaround times for developers using the API for image-related tasks.",
+          "Improved user experience for ChatGPT users through more accurate and faster visual content creation."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "4x faster than before",
+            "context": "Performance metric comparing the new image generation model to previous OpenAI versions."
+          },
+          {
+            "id": 2,
+            "source_text": "gpt-image-1.5 is #1 in Text-to-Image (1264)",
+            "context": "The specific Elo rating and rank achieved by the new model on the LMSYS Image Arena."
+          }
+        ],
+        "topics": [
+          "Artificial Intelligence",
+          "Image Generation",
+          "Benchmarking",
+          "Product Launch"
+        ],
+        "slide_content": {
+          "slide_type": "bullets",
+          "headline": "OpenAI Models Claim #1 in Image Arena",
+          "bullets": [
+            "gpt-image-1.5 ranks #1 in Text-to-Image generation",
+            "chatgpt-image-latest takes #1 spot for Image Editing",
+            "New models deliver 4x faster generation speeds",
+            "Enhanced instruction following and detail preservation",
+            "Available today for ChatGPT users and API"
+          ],
+          "quote_text": "Introducing ChatGPT Images, powered by our flagship new image generation model... 4x faster than before.",
+          "quote_attribution": "OpenAI",
+          "video_url": null,
+          "video_caption": null
+        }
+      },
+      "source_type": "twitter",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 5,
+        "verified_claims": [],
+        "unverified_claims": [
+          "gpt-image-1.5 is ranked #1 in the Text-to-Image category of the Image Arena with an Elo score of 1264.",
+          "chatgpt-image-latest is ranked #1 in the Image Edit category of the Image Arena with an Elo score of 1409.",
+          "gpt-image-1.5 is ranked #4 in the Image Edit category of the Image Arena with an Elo score of 1395.",
+          "OpenAI's new flagship image generation model is 4x faster than its previous version.",
+          "OpenAI is rolling out GPT Image 1.5 to the API and ChatGPT for all users starting on the day of the announcement."
+        ],
+        "publisher_credibility": null
+      },
+      "is_aggregated": false,
+      "original_count": 1
+    },
+    {
+      "title": "After Gobbling Up DRAM, NVIDIA & SK hynix Plan to Introduce an \"AI SSD\" With 10\u00d7 Higher Performance, Ringing Alarms Over NAND Supply",
+      "sources": [
+        {
+          "url": "https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd",
+          "title": "After Gobbling Up DRAM, NVIDIA & SK hynix Plan to Introduce an \"AI SSD\" With 10\u00d7 Higher Performance, Ringing Alarms Over NAND Supply",
+          "site_name": "Wccftech",
+          "author": "Muhammad Zuhair",
+          "published_date": "2025-12-16T00:00:00",
+          "source_type": "news_article"
+        }
+      ],
+      "summary": {
+        "executive_summary": "NVIDIA and SK hynix are reportedly co-developing a specialized 'AI SSD' under the internal project name 'Storage Next,' aimed at revolutionizing inference workloads. This new storage solution is designed to deliver up to 100 million IOPS, providing a high-throughput pseudo-memory layer for massive AI model parameters that exceed the capacity of HBM and DRAM. While the technology promises a 10x performance leap and significant efficiency gains, it has sparked concerns regarding the stability of the NAND flash supply chain, potentially mirroring the price volatility currently seen in the DRAM market.",
+        "key_points": [
+          "NVIDIA and SK hynix are collaborating on 'Storage Next' for AI inference.",
+          "The AI SSD aims for 100 million IOPS, 10x higher than enterprise SSDs.",
+          "A prototype is expected by late 2026 with a 2027 launch goal.",
+          "The solution serves as a pseudo-memory layer for massive model parameters.",
+          "Focuses on low-latency and high-throughput for the shift to inference workloads.",
+          "The project utilizes advanced NAND and controller architectures for energy efficiency.",
+          "High demand for these chips may cause NAND supply shortages and price hikes."
+        ],
+        "sentiment": "mixed",
+        "entities": [
+          {
+            "text": "NVIDIA",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "SK hynix",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "Chosun Biz",
+            "type": "ORG",
+            "relevance": 0.7
+          },
+          {
+            "text": "Muhammad Zuhair",
+            "type": "PERSON",
+            "relevance": 0.3
+          },
+          {
+            "text": "Rubin CPX GPU",
+            "type": "PRODUCT",
+            "relevance": 0.8
+          },
+          {
+            "text": "Storage Next",
+            "type": "PRODUCT",
+            "relevance": 0.9
+          }
+        ],
+        "implications": [
+          "Massive efficiency gains for AI inference by reducing latency.",
+          "Democratization of large model handling via cost-effective pseudo-memory layers.",
+          "Potential for significant NAND flash price increases due to supply pressure.",
+          "Shift in hardware tech stacks to prioritize inference over training."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "100 million IOPS",
+            "context": "The performance target for the new AI SSD, significantly exceeding current enterprise standards."
+          },
+          {
+            "id": 2,
+            "source_text": "pseudo-memory layer",
+            "context": "The role the AI SSD will play in accommodating model parameters too large for HBM."
+          }
+        ],
+        "topics": [
+          "AI Hardware",
+          "Semiconductor Supply Chain",
+          "Data Storage Innovation",
+          "Inference Optimization"
+        ],
+        "slide_content": {
+          "slide_type": "bullets",
+          "headline": "NVIDIA and SK hynix Developing 100M IOPS AI SSD",
+          "bullets": [
+            "Targeting 100 million IOPS for AI inference workloads",
+            "10x performance increase over traditional enterprise SSDs",
+            "Prototype expected late 2026; 2027 market launch",
+            "Creates pseudo-memory layer for massive model parameters",
+            "Rising demand threatens global NAND flash supply stability"
+          ],
+          "quote_text": null,
+          "quote_attribution": null,
+          "video_url": null,
+          "video_caption": null
+        }
+      },
+      "source_type": "news_article",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 5,
+        "verified_claims": [],
+        "unverified_claims": [
+          "SK hynix plans to introduce an inference-optimized AI SSD solution by 2027.",
+          "NVIDIA and SK hynix are co-developing a new SSD solution under the internal project name 'Storage Next.'",
+          "NVIDIA has decided to integrate general-purpose GDDR7 memory into the Rubin CPX GPU for prefill.",
+          "SK hynix plans to present a prototype of its AI SSD by the end of 2025.",
+          "The AI SSD being developed by SK hynix and NVIDIA is projected to scale up to 100 million IOPS (Input/Output Operations Per Second)."
+        ],
+        "publisher_credibility": null
+      },
+      "is_aggregated": false,
+      "original_count": 1
+    },
+    {
+      "title": "Exclusive | Meta Is Developing a New AI Image and Video Model Code-Named 'Mango'",
+      "sources": [
+        {
+          "url": "https://www.wsj.com/tech/ai/meta-developing-new-ai-image-and-video-model-code-named-mango-16e785c7",
+          "title": "Exclusive | Meta Is Developing a New AI Image and Video Model Code-Named 'Mango'",
+          "site_name": "The Wall Street Journal",
+          "author": "Meghan Bobrowsky",
+          "published_date": "2025-12-18T00:00:00",
+          "source_type": "news_article"
+        }
+      ],
+      "summary": {
+        "executive_summary": "Meta Platforms is developing a new AI model code-named 'Mango' that focuses specifically on image and video generation. The project was revealed during an internal company Q&A featuring Meta's Chief AI Officer Alexandr Wang and Chief Product Officer Chris Cox. Mango is being developed concurrently with the company's next-generation text-based large language model, with both systems slated for release in the first half of 2026.",
+        "key_points": [
+          "Meta is developing a new image and video-focused AI model code-named 'Mango'.",
+          "The model is being built alongside Meta's next text-based large language model.",
+          "Release for the new AI models is expected in the first half of 2026.",
+          "Chief AI Officer Alexandr Wang discussed the models in an internal Q&A with CPO Chris Cox.",
+          "The development highlights Meta's strategic focus on multimodal AI capabilities."
+        ],
+        "sentiment": "neutral",
+        "entities": [
+          {
+            "text": "Meta Platforms",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "Mango",
+            "type": "PRODUCT",
+            "relevance": 0.95
+          },
+          {
+            "text": "Alexandr Wang",
+            "type": "PERSON",
+            "relevance": 0.85
+          },
+          {
+            "text": "Chris Cox",
+            "type": "PERSON",
+            "relevance": 0.8
+          },
+          {
+            "text": "Wall Street Journal",
+            "type": "ORG",
+            "relevance": 0.5
+          }
+        ],
+        "implications": [
+          "Meta aims to compete more directly with specialized video and image generation AI providers.",
+          "Future Meta products will likely feature more advanced integrated media generation tools.",
+          "The 2026 timeline suggests a long-term development cycle for high-fidelity multimodal models."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "The models are expected to be released in the first half of 2026.",
+            "context": "Timeline for the public availability of both Mango and the next text-based LLM."
+          }
+        ],
+        "topics": [
+          "Artificial Intelligence",
+          "Generative Video",
+          "Generative Image",
+          "Product Roadmap",
+          "Multimodal AI"
+        ],
+        "slide_content": {
+          "slide_type": "bullets",
+          "headline": "Meta Developing 'Mango' Image and Video AI",
+          "bullets": [
+            "New 'Mango' model targets image and video generation",
+            "Scheduled for release in first half of 2026",
+            "Developing alongside next-generation text-based LLM",
+            "Project led by Chief AI Officer Alexandr Wang",
+            "Internal Q&A confirms strategic multimodal AI focus"
+          ],
+          "quote_text": null,
+          "quote_attribution": null,
+          "video_url": null,
+          "video_caption": null
+        }
+      },
+      "source_type": "news_article",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 5,
+        "verified_claims": [],
+        "unverified_claims": [
+          "Meta Platforms is developing a new image and video-focused AI model code-named Mango.",
+          "Meta is developing its next text-based large language model alongside the Mango model.",
+          "Alexandr Wang is identified as Meta's chief AI officer.",
+          "Chris Cox is Meta's chief product officer.",
+          "The new AI models are expected to be released in the first half of 2026."
+        ],
+        "publisher_credibility": null
+      },
+      "is_aggregated": false,
+      "original_count": 1
+    },
+    {
+      "title": "Untitled",
+      "sources": [
+        {
+          "url": "https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-threat-to-banks",
+          "title": "Untitled",
+          "site_name": null,
+          "author": null,
+          "published_date": null,
+          "source_type": "news_article"
+        }
+      ],
+      "summary": {
+        "executive_summary": "The cryptocurrency industry has evolved from a marginalized and mocked sector into a formidable force that is actively challenging Wall Street's traditional dominance. By supplanting the privileged position of established financial institutions within the American political right, crypto is establishing itself as a 'new financial aristocracy' with unprecedented influence.",
+        "key_points": [
+          "The crypto industry has transitioned from being ignored and mocked to achieving significant power.",
+          "Crypto is displacing Wall Street's long-standing influence on the American political right.",
+          "Digital pioneers are now described as a 'new financial aristocracy' in the financial landscape.",
+          "The industry has successfully navigated the 'ignore, laugh, fight' stages of institutional resistance.",
+          "Wall Street's elite status is being directly challenged by the rising might of digital finance."
+        ],
+        "sentiment": "neutral",
+        "entities": [
+          {
+            "text": "Wall Street",
+            "type": "ORG",
+            "relevance": 1.0
+          },
+          {
+            "text": "American right",
+            "type": "ORG",
+            "relevance": 0.9
+          },
+          {
+            "text": "Mahatma Gandhi",
+            "type": "PERSON",
+            "relevance": 0.3
+          },
+          {
+            "text": "Congo",
+            "type": "LOC",
+            "relevance": 0.1
+          },
+          {
+            "text": "China",
+            "type": "LOC",
+            "relevance": 0.1
+          }
+        ],
+        "implications": [
+          "A significant shift in political lobbying power from traditional banks to crypto firms.",
+          "Potential for legislative and regulatory changes favoring digital assets.",
+          "The erosion of the traditional financial establishment's monopoly on conservative economic policy."
+        ],
+        "footnotes": [
+          {
+            "id": 1,
+            "source_text": "First they ignore you, then they laugh at you, then they fight you, then you win.",
+            "context": "An apocryphal quote often attributed to Gandhi, used as a mantra by the crypto industry."
+          },
+          {
+            "id": 2,
+            "source_text": "A new financial aristocracy",
+            "context": "Refers to the industry's rising power and influence."
+          }
+        ],
+        "topics": [
+          "Cryptocurrency",
+          "Wall Street",
+          "Political Influence",
+          "Financial Aristocracy",
+          "American Politics"
+        ],
+        "slide_content": {
+          "slide_type": "bullets",
+          "headline": "Crypto Supplanting Wall Street's Political Influence",
+          "bullets": [
+            "Crypto industry displacing Wall Street on American right.",
+            "Digital pioneers evolving into 'new financial aristocracy.'",
+            "Industry power now mightier than traditional financial elites.",
+            "Crypto moves past mockery to achieve institutional victory.",
+            "Wall Street losing its privileged status in Washington."
+          ],
+          "quote_text": null,
+          "quote_attribution": null,
+          "video_url": null,
+          "video_caption": null
+        }
+      },
+      "source_type": "news_article",
+      "status": "completed",
+      "fact_check": {
+        "claims_analyzed": 1,
+        "verified_claims": [
+          {
+            "claim": "Indian independence leader Gandhi once stated, \"I like your Christ, I do not like your Christians. Your Christians are so unlike your Christ.\"",
+            "rating": "unverified",
+            "source": "Snopes.com",
+            "source_url": "https://www.snopes.com/fact-check/did-gandhi-say-this-about-christians/",
+            "explanation": "Unproven",
+            "reviewed_date": "2022-12-26T01:00:01Z"
+          }
+        ],
+        "unverified_claims": [],
+        "publisher_credibility": null
+      },
+      "is_aggregated": false,
+      "original_count": 1
+    }
+  ]
+}

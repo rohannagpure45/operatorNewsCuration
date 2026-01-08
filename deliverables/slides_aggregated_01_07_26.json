@@ -1,0 +1,130 @@
+{
+  "generated_at": "2026-01-07T21:21:37.506480+00:00",
+  "total_slides": 7,
+  "total_sources": 30,
+  "duplicates_merged": 4,
+  "themes": [
+    "AI Models & Product Launches",
+    "AI M&A and Funding",
+    "AI Workforce & Industry"
+  ],
+  "slides": [
+    {
+      "type": "quote",
+      "theme": "AI Models & Product Launches",
+      "source": "Google",
+      "source_url": "https://blog.google/products/gemini/gemini-3-flash",
+      "source_count": 4,
+      "all_sources": [
+        {
+          "name": "Google",
+          "url": "https://blog.google/products/gemini/gemini-3-flash"
+        },
+        {
+          "name": "Twitter/X",
+          "url": "https://x.com/arcprize/status/2001330153902023157"
+        },
+        {
+          "name": "Twitter/X",
+          "url": "https://x.com/officiallogank/status/2001322275656835348"
+        },
+        {
+          "name": "Google Cloud",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-flash-for-enterprises"
+        }
+      ],
+      "headline": "Google Launches Gemini 3 Flash AI Model",
+      "quote_text": "Gemini 3 Flash, which offers frontier intelligence built for speed at a fraction of the cost.",
+      "attribution": "The primary value proposition of the new model release."
+    },
+    {
+      "type": "bullets",
+      "theme": "AI Models & Product Launches",
+      "source": null,
+      "source_url": "https://openai.com/index/frontierscience",
+      "source_count": 1,
+      "headline": "OpenAI Launches FrontierScience Benchmark for AI Research",
+      "bullets": [
+        "GPT-5.2 leads with 77% score on Olympiad track",
+        "Benchmark covers physics, chemistry, and biology subfields",
+        "700+ questions verified by PhD experts and medalists",
+        "Research track measures multi-step tasks with 10-point rubrics",
+        "GPT-5.2 achieves 25% on open-ended research-style tasks"
+      ]
+    },
+    {
+      "type": "bullets",
+      "theme": "AI Models & Product Launches",
+      "source": "Twitter/X",
+      "source_url": "https://x.com/arena/status/2001008010399994026",
+      "source_count": 1,
+      "headline": "OpenAI Models Claim #1 in Image Arena",
+      "bullets": [
+        "gpt-image-1.5 ranks #1 in Text-to-Image generation",
+        "chatgpt-image-latest takes #1 spot for Image Editing",
+        "New models deliver 4x faster generation speeds",
+        "Enhanced instruction following and detail preservation",
+        "Available today for ChatGPT users and API"
+      ]
+    },
+    {
+      "type": "bullets",
+      "theme": "AI Models & Product Launches",
+      "source": "Wccftech",
+      "source_url": "https://wccftech.com/after-gobbling-up-dram-nvidia-sk-hynix-plan-to-introduce-an-ai-ssd",
+      "source_count": 1,
+      "headline": "NVIDIA and SK hynix Developing 100M IOPS AI SSD",
+      "bullets": [
+        "Targeting 100 million IOPS for AI inference workloads",
+        "10x performance increase over traditional enterprise SSDs",
+        "Prototype expected late 2026; 2027 market launch",
+        "Creates pseudo-memory layer for massive model parameters",
+        "Rising demand threatens global NAND flash supply stability"
+      ]
+    },
+    {
+      "type": "bullets",
+      "theme": "AI Models & Product Launches",
+      "source": "The Wall Street Journal",
+      "source_url": "https://www.wsj.com/tech/ai/meta-developing-new-ai-image-and-video-model-code-named-mango-16e785c7",
+      "source_count": 1,
+      "headline": "Meta Developing 'Mango' Image and Video AI",
+      "bullets": [
+        "New 'Mango' model targets image and video generation",
+        "Scheduled for release in first half of 2026",
+        "Developing alongside next-generation text-based LLM",
+        "Project led by Chief AI Officer Alexandr Wang",
+        "Internal Q&A confirms strategic multimodal AI focus"
+      ]
+    },
+    {
+      "type": "bullets",
+      "theme": "AI M&A and Funding",
+      "source": "13f.info",
+      "source_url": "https://13f.info/13f/000204572425000008/compare/000204572425000006",
+      "source_count": 1,
+      "headline": "Situational Awareness LP Q3 2025 Portfolio Update",
+      "bullets": [
+        "Compares Q2 2025 vs Q3 2025 investment holdings",
+        "Reports market values in thousands of dollars",
+        "Tracks share count and principal value fluctuations",
+        "Identifies positions by issuer name and CUSIP"
+      ]
+    },
+    {
+      "type": "bullets",
+      "theme": "AI Workforce & Industry",
+      "source": null,
+      "source_url": "https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-threat-to-banks",
+      "source_count": 1,
+      "headline": "Crypto Supplanting Wall Street's Political Influence",
+      "bullets": [
+        "Crypto industry displacing Wall Street on American right.",
+        "Digital pioneers evolving into 'new financial aristocracy.'",
+        "Industry power now mightier than traditional financial elites.",
+        "Crypto moves past mockery to achieve institutional victory.",
+        "Wall Street losing its privileged status in Washington."
+      ]
+    }
+  ]
+}

@@ -395,6 +395,8 @@ class PDFReportGenerator:
         
         Only renders if the fact check has meaningful content (claims_analyzed > 0
         or verified/unverified claims exist).
+        
+        Uses smaller font sizes to de-emphasize this supplementary section.
         """
         fc = result.fact_check
         if not has_meaningful_fact_check(fc):
@@ -403,39 +405,39 @@ class PDFReportGenerator:
         pdf.set_fill_color(255, 251, 235)
         pdf.set_draw_color(252, 211, 77)
         
-        self._render_section_header(pdf, "Fact-Check Results")
+        self._render_secondary_section_header(pdf, "Fact-Check Results")
         
-        pdf.set_font("Helvetica", size=9)
+        pdf.set_font("Helvetica", size=7)
         pdf.set_text_color(107, 114, 128)
         pdf.set_x(20)
-        pdf.cell(0, 5, f"Claims analyzed: {fc.claims_analyzed}", new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(3)
+        pdf.cell(0, 4, f"Claims analyzed: {fc.claims_analyzed}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
 
         if fc.verified_claims:
-            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_font("Helvetica", "B", 8)
             pdf.set_text_color(34, 197, 94)
             pdf.set_x(20)
-            pdf.cell(0, 6, "Verified Claims", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 5, "Verified Claims", new_x="LMARGIN", new_y="NEXT")
             pdf.ln(2)
 
             for claim in fc.verified_claims:
                 self._render_verified_claim(pdf, claim)
 
         if fc.unverified_claims:
-            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_font("Helvetica", "B", 8)
             pdf.set_text_color(107, 114, 128)
             pdf.set_x(20)
-            pdf.cell(0, 6, "Unverified Claims", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 5, "Unverified Claims", new_x="LMARGIN", new_y="NEXT")
             pdf.ln(2)
 
-            pdf.set_font("Helvetica", size=9)
+            pdf.set_font("Helvetica", size=7)
             pdf.set_text_color(107, 114, 128)
             for claim in fc.unverified_claims:
                 pdf.set_x(25)
-                pdf.cell(5, 5, "-")
-                pdf.multi_cell(pdf.w - 55, 5, self._sanitize_text(claim))
+                pdf.cell(5, 4, "-")
+                pdf.multi_cell(pdf.w - 55, 4, self._sanitize_text(claim))
 
-        pdf.ln(8)
+        pdf.ln(6)
 
     def _render_aggregated_metadata_footer(self, pdf: FPDF, result: AggregatedResult):
         """Render processing metadata footer for aggregated result."""
@@ -764,6 +766,8 @@ class PDFReportGenerator:
         
         Only renders if the fact check has meaningful content (claims_analyzed > 0
         or verified/unverified claims exist).
+        
+        Uses smaller font sizes to de-emphasize this supplementary section.
         """
         fc = result.fact_check
         if not has_meaningful_fact_check(fc):
@@ -775,20 +779,20 @@ class PDFReportGenerator:
         
         y_start = pdf.get_y()
         
-        self._render_section_header(pdf, "Fact-Check Results")
+        self._render_secondary_section_header(pdf, "Fact-Check Results")
         
-        pdf.set_font("Helvetica", size=9)
+        pdf.set_font("Helvetica", size=7)
         pdf.set_text_color(107, 114, 128)
         pdf.set_x(20)
-        pdf.cell(0, 5, f"Claims analyzed: {fc.claims_analyzed}", new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(3)
+        pdf.cell(0, 4, f"Claims analyzed: {fc.claims_analyzed}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
 
         # Verified claims
         if fc.verified_claims:
-            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_font("Helvetica", "B", 8)
             pdf.set_text_color(34, 197, 94)
             pdf.set_x(20)
-            pdf.cell(0, 6, "Verified Claims", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 5, "Verified Claims", new_x="LMARGIN", new_y="NEXT")
             pdf.ln(2)
 
             for claim in fc.verified_claims:
@@ -796,18 +800,18 @@ class PDFReportGenerator:
 
         # Unverified claims
         if fc.unverified_claims:
-            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_font("Helvetica", "B", 8)
             pdf.set_text_color(107, 114, 128)
             pdf.set_x(20)
-            pdf.cell(0, 6, "Unverified Claims", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 5, "Unverified Claims", new_x="LMARGIN", new_y="NEXT")
             pdf.ln(2)
 
-            pdf.set_font("Helvetica", size=9)
+            pdf.set_font("Helvetica", size=7)
             pdf.set_text_color(107, 114, 128)
             for claim in fc.unverified_claims:
                 pdf.set_x(25)
-                pdf.cell(5, 5, "-")  # Bullet
-                pdf.multi_cell(pdf.w - 55, 5, self._sanitize_text(claim))
+                pdf.cell(5, 4, "-")  # Bullet
+                pdf.multi_cell(pdf.w - 55, 4, self._sanitize_text(claim))
 
         # Publisher credibility
         if fc.publisher_credibility:
@@ -850,7 +854,10 @@ class PDFReportGenerator:
         pdf.ln(8)
 
     def _render_verified_claim(self, pdf: FPDF, claim):
-        """Render a single verified claim."""
+        """Render a single verified claim.
+        
+        Uses smaller font sizes to match the de-emphasized fact-check section.
+        """
         pdf.set_fill_color(255, 255, 255)
         pdf.set_draw_color(229, 231, 235)
         
@@ -858,9 +865,9 @@ class PDFReportGenerator:
         
         # Claim text
         pdf.set_x(25)
-        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_font("Helvetica", "B", 7)
         pdf.set_text_color(55, 65, 81)
-        pdf.multi_cell(pdf.w - 55, 5, self._sanitize_text(claim.claim))
+        pdf.multi_cell(pdf.w - 55, 4, self._sanitize_text(claim.claim))
         
         # Rating badge
         rating_color = RATING_COLORS.get(claim.rating, (107, 114, 128))
@@ -868,26 +875,26 @@ class PDFReportGenerator:
         
         pdf.set_fill_color(*rating_color)
         pdf.set_x(25)
-        pdf.set_font("Helvetica", "B", 8)
+        pdf.set_font("Helvetica", "B", 6)
         pdf.set_text_color(255, 255, 255)
-        badge_width = pdf.get_string_width(rating_label) + 8
-        pdf.cell(badge_width, 5, rating_label, fill=True)
-        pdf.ln(3)
+        badge_width = pdf.get_string_width(rating_label) + 6
+        pdf.cell(badge_width, 4, rating_label, fill=True)
+        pdf.ln(2)
         
         # Source
         pdf.set_x(25)
-        pdf.set_font("Helvetica", size=8)
+        pdf.set_font("Helvetica", size=6)
         pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 4, self._sanitize_text(f"Source: {claim.source}"), new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 3, self._sanitize_text(f"Source: {claim.source}"), new_x="LMARGIN", new_y="NEXT")
         
         # Explanation
         if claim.explanation:
             pdf.set_x(25)
-            pdf.set_font("Helvetica", "I", 8)
+            pdf.set_font("Helvetica", "I", 6)
             pdf.set_text_color(75, 85, 99)
-            pdf.multi_cell(pdf.w - 55, 4, self._sanitize_text(claim.explanation))
+            pdf.multi_cell(pdf.w - 55, 3, self._sanitize_text(claim.explanation))
         
-        pdf.ln(5)
+        pdf.ln(4)
 
     def _render_metadata_footer(self, pdf: FPDF, result: ProcessedResult):
         """Render processing metadata footer."""

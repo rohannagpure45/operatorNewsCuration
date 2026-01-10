@@ -2,7 +2,7 @@
 
 ## Weekly Intelligence Report
 
-**January 09, 2026**
+**January 10, 2026**
 
 10 articles analyzed | 20 sources unavailable
 

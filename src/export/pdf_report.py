@@ -35,6 +35,28 @@ class PDFReportGenerator:
         """Initialize the PDF report generator."""
         pass
 
+    def _sanitize_text(self, text: str) -> str:
+        """Sanitize text to be compatible with Latin-1 encoding (standard fonts)."""
+        if not text:
+            return ""
+        
+        replacements = {
+            '\u2018': "'",  # Left single quote
+            '\u2019': "'",  # Right single quote
+            '\u201c': '"',  # Left double quote
+            '\u201d': '"',  # Right double quote
+            '\u2013': "-",  # En dash
+            '\u2014': "--", # Em dash
+            '\u2026': "...", # Ellipsis
+            '\u00a0': " ",  # Non-breaking space
+        }
+        
+        for char, repl in replacements.items():
+            text = text.replace(char, repl)
+            
+        # Fallback for other characters: replace with ? or ignore
+        return text.encode('latin-1', 'replace').decode('latin-1')
+
     def generate(self, result: ProcessedResult) -> bytes:
         """
         Generate a PDF report from a ProcessedResult.
@@ -143,7 +165,7 @@ class PDFReportGenerator:
         # Title
         pdf.set_font("Helvetica", "B", 16)
         pdf.set_text_color(17, 24, 39)  # Dark gray
-        pdf.multi_cell(0, 8, result.title, new_x="LMARGIN", new_y="NEXT")
+        pdf.multi_cell(0, 8, self._sanitize_text(result.title), new_x="LMARGIN", new_y="NEXT")
         pdf.ln(2)
 
         # Aggregation indicator badge
@@ -178,7 +200,7 @@ class PDFReportGenerator:
             if meta_items:
                 pdf.set_font("Helvetica", size=9)
                 pdf.set_text_color(107, 114, 128)
-                pdf.cell(0, 6, " | ".join(meta_items), new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(0, 6, self._sanitize_text(" | ".join(meta_items)), new_x="LMARGIN", new_y="NEXT")
             
             # Primary source name with hyperlink
             if primary.site_name:
@@ -186,7 +208,7 @@ class PDFReportGenerator:
                 pdf.set_text_color(107, 114, 128)
                 pdf.cell(pdf.get_string_width("Primary Source: ") + 1, 6, "Primary Source: ", new_x="RIGHT", new_y="TOP")
                 pdf.set_text_color(59, 130, 246)  # Blue link color
-                pdf.cell(0, 6, primary.site_name, link=primary.url, new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(0, 6, self._sanitize_text(primary.site_name), link=primary.url, new_x="LMARGIN", new_y="NEXT")
 
         # Separator
         pdf.set_draw_color(229, 231, 235)
@@ -211,14 +233,14 @@ class PDFReportGenerator:
             
             site_name = source.site_name or "Unknown Source"
             pdf.set_text_color(59, 130, 246)  # Blue link color
-            pdf.cell(pdf.get_string_width(site_name) + 2, 4, site_name, link=source.url, new_x="RIGHT")
+            pdf.cell(pdf.get_string_width(site_name) + 2, 4, self._sanitize_text(site_name), link=source.url, new_x="RIGHT")
             
             # Title if different from main title
             if source.title and source.title != result.title:
                 pdf.set_font("Helvetica", "I", 6)
                 pdf.set_text_color(107, 114, 128)
                 title_display = source.title[:50] + "..." if len(source.title) > 50 else source.title
-                pdf.cell(0, 4, f' - "{title_display}"', new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(0, 4, self._sanitize_text(f' - "{title_display}"'), new_x="LMARGIN", new_y="NEXT")
             else:
                 pdf.ln(4)
             
@@ -263,7 +285,7 @@ class PDFReportGenerator:
         summary_text = result.summary.executive_summary
         y_start = pdf.get_y()
         pdf.set_x(25)
-        pdf.multi_cell(pdf.w - 50, 6, summary_text)
+        pdf.multi_cell(pdf.w - 50, 6, self._sanitize_text(summary_text))
         y_end = pdf.get_y()
         
         pdf.set_xy(20, y_start - 3)
@@ -286,7 +308,7 @@ class PDFReportGenerator:
             pdf.set_font("Helvetica", "B", 10)
             pdf.cell(8, 6, f"{i}.")
             pdf.set_font("Helvetica", size=10)
-            pdf.multi_cell(pdf.w - 55, 6, point)
+            pdf.multi_cell(pdf.w - 55, 6, self._sanitize_text(point))
             pdf.ln(1)
 
         pdf.ln(5)
@@ -310,7 +332,7 @@ class PDFReportGenerator:
         pdf.set_font("Helvetica", size=9)
         for entity in result.summary.entities:
             pdf.set_x(20)
-            pdf.cell(col_width, 7, entity.text[:40], border=1)
+            pdf.cell(col_width, 7, self._sanitize_text(entity.text[:40]), border=1)
             
             entity_type = entity.type.value if hasattr(entity.type, 'value') else str(entity.type)
             color = ENTITY_COLORS.get(entity_type, (240, 240, 240))
@@ -332,7 +354,7 @@ class PDFReportGenerator:
         for imp in result.summary.implications:
             pdf.set_x(25)
             pdf.cell(5, 6, ">")
-            pdf.multi_cell(pdf.w - 55, 6, imp)
+            pdf.multi_cell(pdf.w - 55, 6, self._sanitize_text(imp))
             pdf.ln(1)
 
         pdf.ln(5)
@@ -357,12 +379,12 @@ class PDFReportGenerator:
             
             pdf.set_font("Helvetica", "I", 7)
             pdf.set_text_color(75, 85, 99)
-            pdf.multi_cell(pdf.w - 60, 4, f'"{fn.source_text}"')
+            pdf.multi_cell(pdf.w - 60, 4, self._sanitize_text(f'"{fn.source_text}"'))
             
             pdf.set_x(35)
             pdf.set_font("Helvetica", size=6)
             pdf.set_text_color(107, 114, 128)
-            pdf.multi_cell(pdf.w - 60, 3, fn.context)
+            pdf.multi_cell(pdf.w - 60, 3, self._sanitize_text(fn.context))
             
             pdf.ln(2)
 
@@ -411,7 +433,7 @@ class PDFReportGenerator:
             for claim in fc.unverified_claims:
                 pdf.set_x(25)
                 pdf.cell(5, 5, "-")
-                pdf.multi_cell(pdf.w - 55, 5, claim)
+                pdf.multi_cell(pdf.w - 55, 5, self._sanitize_text(claim))
 
         pdf.ln(8)
 
@@ -428,7 +450,7 @@ class PDFReportGenerator:
 
         pdf.set_font("Helvetica", size=8)
         pdf.set_text_color(156, 163, 175)
-        pdf.cell(0, 4, " | ".join(meta_items), align="L", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 4, self._sanitize_text(" | ".join(meta_items)), align="L", new_x="LMARGIN", new_y="NEXT")
 
     def get_filename(self, result: ProcessedResult) -> str:
         """
@@ -524,7 +546,7 @@ class PDFReportGenerator:
         if title:
             pdf.set_font("Helvetica", "B", 16)
             pdf.set_text_color(17, 24, 39)  # Dark gray
-            pdf.multi_cell(0, 8, title, new_x="LMARGIN", new_y="NEXT")
+            pdf.multi_cell(0, 8, self._sanitize_text(title), new_x="LMARGIN", new_y="NEXT")
             pdf.ln(2)
 
         # Topics
@@ -541,7 +563,7 @@ class PDFReportGenerator:
         meta_items = []
         if result.content:
             if result.content.author:
-                meta_items.append(f"Author: {result.content.author}")
+                meta_items.append(self._sanitize_text(f"Author: {result.content.author}"))
             if result.content.published_date:
                 meta_items.append(f"Published: {result.content.published_date.strftime('%B %d, %Y')}")
             # Note: site_name is included separately with hyperlink below
@@ -561,7 +583,7 @@ class PDFReportGenerator:
             pdf.set_text_color(107, 114, 128)
             pdf.cell(pdf.get_string_width("Source: ") + 1, 6, "Source: ", new_x="RIGHT", new_y="TOP")
             pdf.set_text_color(59, 130, 246)  # Blue link color
-            pdf.cell(0, 6, result.content.site_name, link=result.url, new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 6, self._sanitize_text(result.content.site_name), link=result.url, new_x="LMARGIN", new_y="NEXT")
 
         # Source URL (clickable hyperlink)
         pdf.set_font("Helvetica", size=8)
@@ -591,7 +613,7 @@ class PDFReportGenerator:
         pdf.set_font("Helvetica", size=10)
         pdf.set_text_color(127, 29, 29)
         error_msg = result.error or "Unknown error occurred"
-        pdf.multi_cell(pdf.w - 50, 5, error_msg)
+        pdf.multi_cell(pdf.w - 50, 5, self._sanitize_text(error_msg))
         pdf.ln(10)
 
     def _render_summary_section(self, pdf: FPDF, result: ProcessedResult):
@@ -630,7 +652,7 @@ class PDFReportGenerator:
         summary_text = result.summary.executive_summary
         y_start = pdf.get_y()
         pdf.set_x(25)
-        pdf.multi_cell(pdf.w - 50, 6, summary_text)
+        pdf.multi_cell(pdf.w - 50, 6, self._sanitize_text(summary_text))
         y_end = pdf.get_y()
         
         # Draw background rectangle
@@ -654,7 +676,7 @@ class PDFReportGenerator:
             pdf.set_font("Helvetica", "B", 10)
             pdf.cell(8, 6, f"{i}.")
             pdf.set_font("Helvetica", size=10)
-            pdf.multi_cell(pdf.w - 55, 6, point)
+            pdf.multi_cell(pdf.w - 55, 6, self._sanitize_text(point))
             pdf.ln(1)
 
         pdf.ln(5)
@@ -679,7 +701,7 @@ class PDFReportGenerator:
         pdf.set_font("Helvetica", size=9)
         for entity in result.summary.entities:
             pdf.set_x(20)
-            pdf.cell(col_width, 7, entity.text[:40], border=1)
+            pdf.cell(col_width, 7, self._sanitize_text(entity.text[:40]), border=1)
             
             entity_type = entity.type.value if hasattr(entity.type, 'value') else str(entity.type)
             color = ENTITY_COLORS.get(entity_type, (240, 240, 240))
@@ -701,7 +723,7 @@ class PDFReportGenerator:
         for imp in result.summary.implications:
             pdf.set_x(25)
             pdf.cell(5, 6, ">")  # Arrow indicator
-            pdf.multi_cell(pdf.w - 55, 6, imp)
+            pdf.multi_cell(pdf.w - 55, 6, self._sanitize_text(imp))
             pdf.ln(1)
 
         pdf.ln(5)
@@ -726,12 +748,12 @@ class PDFReportGenerator:
             
             pdf.set_font("Helvetica", "I", 7)
             pdf.set_text_color(75, 85, 99)
-            pdf.multi_cell(pdf.w - 60, 4, f'"{fn.source_text}"')
+            pdf.multi_cell(pdf.w - 60, 4, self._sanitize_text(f'"{fn.source_text}"'))
             
             pdf.set_x(35)
             pdf.set_font("Helvetica", size=6)
             pdf.set_text_color(107, 114, 128)
-            pdf.multi_cell(pdf.w - 60, 3, fn.context)
+            pdf.multi_cell(pdf.w - 60, 3, self._sanitize_text(fn.context))
             
             pdf.ln(2)
 
@@ -785,7 +807,7 @@ class PDFReportGenerator:
             for claim in fc.unverified_claims:
                 pdf.set_x(25)
                 pdf.cell(5, 5, "-")  # Bullet
-                pdf.multi_cell(pdf.w - 55, 5, claim)
+                pdf.multi_cell(pdf.w - 55, 5, self._sanitize_text(claim))
 
         # Publisher credibility
         if fc.publisher_credibility:
@@ -838,7 +860,7 @@ class PDFReportGenerator:
         pdf.set_x(25)
         pdf.set_font("Helvetica", "B", 9)
         pdf.set_text_color(55, 65, 81)
-        pdf.multi_cell(pdf.w - 55, 5, claim.claim)
+        pdf.multi_cell(pdf.w - 55, 5, self._sanitize_text(claim.claim))
         
         # Rating badge
         rating_color = RATING_COLORS.get(claim.rating, (107, 114, 128))
@@ -856,14 +878,14 @@ class PDFReportGenerator:
         pdf.set_x(25)
         pdf.set_font("Helvetica", size=8)
         pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 4, f"Source: {claim.source}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 4, self._sanitize_text(f"Source: {claim.source}"), new_x="LMARGIN", new_y="NEXT")
         
         # Explanation
         if claim.explanation:
             pdf.set_x(25)
             pdf.set_font("Helvetica", "I", 8)
             pdf.set_text_color(75, 85, 99)
-            pdf.multi_cell(pdf.w - 55, 4, claim.explanation)
+            pdf.multi_cell(pdf.w - 55, 4, self._sanitize_text(claim.explanation))
         
         pdf.ln(5)
 
@@ -883,7 +905,7 @@ class PDFReportGenerator:
 
         pdf.set_font("Helvetica", size=8)
         pdf.set_text_color(156, 163, 175)
-        pdf.cell(0, 4, " | ".join(meta_items), align="L", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 4, self._sanitize_text(" | ".join(meta_items)), align="L", new_x="LMARGIN", new_y="NEXT")
 
     def _render_section_header(self, pdf: FPDF, title: str):
         """Render a section header."""

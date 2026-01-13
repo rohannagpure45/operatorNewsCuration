@@ -11,8 +11,16 @@ import streamlit as st
 logger = logging.getLogger(__name__)
 
 from src.agent import NewsAgent
+from src.cache.cache import CacheEntry, LocalCache
 from src.export.pdf_report import PDFReportGenerator
 from src.models.schemas import ProcessedResult, ProcessingStatus, Sentiment, URLType
+
+
+# Initialize cache singleton (cached across Streamlit reruns)
+@st.cache_resource
+def get_cache():
+    """Get or create the local cache singleton."""
+    return LocalCache()
 
 
 # Page configuration
@@ -266,16 +274,19 @@ def main():
 
         st.markdown("---")
 
-        # History (stored in session state)
-        if "history" not in st.session_state:
-            st.session_state.history = []
+        # Recents section - load from persistent cache
+        cache = get_cache()
+        recent_entries = cache.get_recent(limit=10)
 
-        if st.session_state.history:
-            st.markdown("### Recent URLs")
-            for i, item in enumerate(reversed(st.session_state.history[-10:])):
-                status_icon = "✅" if item["status"] == "completed" else "❌"
-                if st.button(f"{status_icon} {item['url'][:40]}...", key=f"history_{i}"):
-                    st.session_state.selected_url = item["url"]
+        if recent_entries:
+            st.markdown("### 🕒 Recents")
+            for i, entry in enumerate(recent_entries):
+                status_icon = "✅" if entry.status == "completed" else "❌"
+                # Show title if available, otherwise use URL (with truthy fallback)
+                original_text = entry.title or entry.url or "Unknown"
+                truncated_text = original_text if len(original_text) <= 35 else original_text[:35] + "..."
+                if st.button(f"{status_icon} {truncated_text}", key=f"recent_{i}"):
+                    st.session_state.selected_url = entry.url
 
         st.markdown("---")
         st.caption("Built with Trafilatura, Gemini, and Playwright")
@@ -308,13 +319,15 @@ def main():
 
                         progress.progress(100, text="Complete!")
 
-                        # Add to history (keep only last 100 items)
-                        st.session_state.history.append({
-                            "url": url,
-                            "status": result.status.value,
-                            "timestamp": datetime.now().isoformat(),
-                        })
-                        st.session_state.history = st.session_state.history[-100:]
+                        # Save to persistent cache
+                        cache = get_cache()
+                        cache.add_entry(CacheEntry(
+                            url=url,
+                            title=result.content.title if result.content else None,
+                            status=result.status.value,
+                            timestamp=datetime.now(),
+                            source_type=result.source_type.value,
+                        ))
 
                         st.markdown("---")
                         display_result(result)
@@ -445,64 +458,60 @@ def main():
                     results = []
                     
                     # Process URLs one at a time for better progress tracking
-                    agent = NewsAgent()
-                    try:
-                        for i, url in enumerate(urls_to_process):
-                            # Update current status
-                            current_status.info(f"🔄 Processing: {url[:70]}...")
+                    # Each URL gets a fresh agent to avoid event loop conflicts
+                    for i, url in enumerate(urls_to_process):
+                        # Update current status
+                        current_status.info(f"🔄 Processing: {url[:70]}...")
+                        
+                        # Calculate ETA
+                        elapsed = time_module.time() - start_time
+                        if processing_times:
+                            avg_time = sum(processing_times) / len(processing_times)
+                            remaining = (total_urls - i) * avg_time
+                            eta_str = f"{int(remaining // 60)}m {int(remaining % 60)}s"
+                        else:
+                            eta_str = "Calculating..."
+                        
+                        # Update metrics
+                        completed_metric.metric("✅ Completed", completed_count)
+                        failed_metric.metric("❌ Failed", failed_count)
+                        elapsed_metric.metric("⏱️ Elapsed", f"{int(elapsed // 60)}m {int(elapsed % 60)}s")
+                        eta_metric.metric("📊 ETA", eta_str)
+                        
+                        # Update progress bar
+                        progress_bar.progress((i) / total_urls)
+                        
+                        # Process this URL with a fresh agent (via process_url_async)
+                        url_start = time_module.time()
+                        try:
+                            result = run_async(process_url_async(url, skip_fact_check))
+                            results.append(result)
                             
-                            # Calculate ETA
-                            elapsed = time_module.time() - start_time
-                            if processing_times:
-                                avg_time = sum(processing_times) / len(processing_times)
-                                remaining = (total_urls - i) * avg_time
-                                eta_str = f"{int(remaining // 60)}m {int(remaining % 60)}s"
-                            else:
-                                eta_str = "Calculating..."
+                            url_time = time_module.time() - url_start
+                            processing_times.append(url_time)
                             
-                            # Update metrics
-                            completed_metric.metric("✅ Completed", completed_count)
-                            failed_metric.metric("❌ Failed", failed_count)
-                            elapsed_metric.metric("⏱️ Elapsed", f"{int(elapsed // 60)}m {int(elapsed % 60)}s")
-                            eta_metric.metric("📊 ETA", eta_str)
-                            
-                            # Update progress bar
-                            progress_bar.progress((i) / total_urls)
-                            
-                            # Process this URL
-                            url_start = time_module.time()
-                            try:
-                                result = run_async(agent.process(url, skip_fact_check=skip_fact_check))
-                                results.append(result)
-                                
-                                url_time = time_module.time() - url_start
-                                processing_times.append(url_time)
-                                
-                                if result.status == ProcessingStatus.COMPLETED:
-                                    completed_count += 1
-                                    with url_status_container:
-                                        st.success(f"✅ {url[:60]}... ({int(url_time)}s)")
-                                else:
-                                    failed_count += 1
-                                    with url_status_container:
-                                        st.error(f"❌ {url[:60]}... - {result.error or 'Failed'}")
-                            
-                            except Exception as url_error:
-                                failed_count += 1
-                                url_time = time_module.time() - url_start
-                                processing_times.append(url_time)
+                            if result.status == ProcessingStatus.COMPLETED:
+                                completed_count += 1
                                 with url_status_container:
-                                    st.error(f"❌ {url[:60]}... - {str(url_error)[:50]}")
-                                # Create a failed result
-                                results.append(ProcessedResult(
-                                    url=url,
-                                    source_type=URLType.UNKNOWN,
-                                    status=ProcessingStatus.FAILED,
-                                    error=str(url_error),
-                                ))
-                    finally:
-                        # Always cleanup agent resources
-                        run_async(agent.close())
+                                    st.success(f"✅ {url[:60]}... ({int(url_time)}s)")
+                            else:
+                                failed_count += 1
+                                with url_status_container:
+                                    st.error(f"❌ {url[:60]}... - {result.error or 'Failed'}")
+                        
+                        except Exception as url_error:
+                            failed_count += 1
+                            url_time = time_module.time() - url_start
+                            processing_times.append(url_time)
+                            with url_status_container:
+                                st.error(f"❌ {url[:60]}... - {str(url_error)[:50]}")
+                            # Create a failed result
+                            results.append(ProcessedResult(
+                                url=url,
+                                source_type=URLType.UNKNOWN,
+                                status=ProcessingStatus.FAILED,
+                                error=str(url_error),
+                            ))
                 
                     # Final update (only runs if processing completed without exception)
                     progress_bar.progress(1.0)
@@ -513,14 +522,16 @@ def main():
                     eta_metric.metric("📊 Status", "Done!")
                     current_status.success(f"🎉 Completed processing {total_urls} URLs!")
 
-                    # Add to history
+                    # Save to persistent cache
+                    cache = get_cache()
                     for result in results:
-                        st.session_state.history.append({
-                            "url": result.url,
-                            "status": result.status.value,
-                            "timestamp": datetime.now().isoformat(),
-                        })
-                    st.session_state.history = st.session_state.history[-100:]
+                        cache.add_entry(CacheEntry(
+                            url=result.url,
+                            title=result.content.title if result.content else None,
+                            status=result.status.value,
+                            timestamp=datetime.now(),
+                            source_type=result.source_type.value,
+                        ))
 
                     # Display results
                     st.markdown("---")

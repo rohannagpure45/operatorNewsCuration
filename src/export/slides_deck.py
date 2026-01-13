@@ -2,10 +2,14 @@
 
 Generates structured markdown that can be imported into Google Slides, PowerPoint,
 or rendered with tools like Marp, reveal.js, or Slidev.
+
+Uses slide_content from LLM output with template-based rendering per slide type.
 """
 
+import json
 from collections import defaultdict
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
@@ -15,7 +19,18 @@ from src.models.schemas import (
     AggregatedResultSet,
     ProcessedResult,
     ProcessingStatus,
+    SlideType,
 )
+
+
+# Word limits from slide templates
+WORD_LIMITS = {
+    "headline": 8,
+    "bullet": 12,
+    "bullet_count": 4,
+    "quote": 25,
+    "caption": 12,
+}
 
 
 class SlidesDeckGenerator:
@@ -23,11 +38,47 @@ class SlidesDeckGenerator:
     Generate Markdown slides deck from ProcessedResult objects.
     
     Output format uses Marp-compatible markdown with --- slide separators.
+    Uses slide_content from LLM output when available.
     """
 
     def __init__(self):
         """Initialize the slides deck generator."""
-        pass
+        self._load_templates()
+
+    def _load_templates(self):
+        """Load slide templates configuration."""
+        template_path = Path(__file__).parent / "slide_templates.json"
+        if template_path.exists():
+            with open(template_path) as f:
+                self.templates = json.load(f)
+        else:
+            self.templates = {"slide_types": {}, "copy_guidelines": {}}
+
+    def _truncate_words(self, text: str, max_words: int) -> str:
+        """Truncate text to max words with ellipsis."""
+        if not text:
+            return ""
+        words = text.split()
+        if len(words) <= max_words:
+            return text
+        return " ".join(words[:max_words]) + "..."
+
+    def _clean_bullet(self, text: str) -> str:
+        """Clean bullet text: remove filler, truncate, format."""
+        if not text:
+            return ""
+        # Remove common filler words at start
+        filler_starts = ["The ", "A ", "An ", "This ", "That ", "There "]
+        for filler in filler_starts:
+            if text.startswith(filler):
+                text = text[len(filler):]
+                break
+        # Truncate to word limit
+        text = self._truncate_words(text, WORD_LIMITS["bullet"])
+        # Remove trailing period
+        text = text.rstrip(".")
+        return text
+
 
     def generate(self, results: List[ProcessedResult]) -> str:
         """
@@ -136,48 +187,198 @@ Speaker Notes:
 -->"""
 
     def _article_slide(self, result: ProcessedResult) -> str:
-        """Generate slide for a single article."""
-        # Slides require visible headings for markdown structure - use "Untitled" as fallback
-        title = result.content.title if result.content and result.content.title else "Untitled"
+        """Generate slide for a single article using slide_content when available.
         
-        # Get key points (limit to 4 for slide readability)
-        key_points = []
-        if result.summary and result.summary.key_points:
-            key_points = result.summary.key_points[:4]
-        
-        # Format as bullet points with fallback for empty
-        bullets = "\n".join([f"- {point}" for point in key_points]) if key_points else "- No key points available"
-        
+        Uses LLM-generated slide_content for optimized, net-less copy.
+        Falls back to key_points if slide_content not available.
+        """
+        # Check if we have slide_content from LLM
+        slide_content = None
+        if result.summary and result.summary.slide_content:
+            slide_content = result.summary.slide_content
+
+        # Get headline (prefer slide_content headline, then title, then fallback)
+        if slide_content and slide_content.headline:
+            headline = self._truncate_words(slide_content.headline, WORD_LIMITS["headline"])
+        elif result.content and result.content.title:
+            headline = self._truncate_words(result.content.title, WORD_LIMITS["headline"])
+        else:
+            headline = "Untitled"
+
         # Get source info
         source = ""
         if result.content and result.content.site_name:
             source = result.content.site_name
         else:
-            # Extract domain from URL safely
             parsed = urlparse(result.url or "")
             source = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
-        
-        # Get sentiment
-        sentiment = ""
-        if result.summary and result.summary.sentiment:
-            sentiment_map = {
-                "positive": "Positive outlook",
-                "negative": "Concerns raised", 
-                "neutral": "Neutral coverage",
-                "mixed": "Mixed perspectives"
-            }
-            sentiment = sentiment_map.get(result.summary.sentiment.value, "")
-        
+
         # Executive summary for speaker notes
         exec_summary = ""
         if result.summary and result.summary.executive_summary:
             exec_summary = result.summary.executive_summary
+
+        # Render based on slide type
+        if slide_content:
+            return self._render_slide_by_type(
+                slide_content, headline, source, result.url, exec_summary
+            )
+        else:
+            # Fallback: use key_points if no slide_content
+            return self._render_fallback_slide(result, headline, source, exec_summary)
+
+    def _render_slide_by_type(self, slide_content, headline: str, source: str, 
+                               url: str, exec_summary: str) -> str:
+        """Render slide based on its type."""
+        slide_type = slide_content.slide_type
+
+        if slide_type == SlideType.QUOTE:
+            return self._render_quote_slide(slide_content, headline, source, url, exec_summary)
+        elif slide_type == SlideType.VIDEO:
+            return self._render_video_slide(slide_content, headline, source, url, exec_summary)
+        elif slide_type == SlideType.CHART:
+            return self._render_chart_slide(slide_content, headline, source, url, exec_summary)
+        elif slide_type == SlideType.COMPARISON:
+            return self._render_comparison_slide(slide_content, headline, source, url, exec_summary)
+        else:
+            # Default: bullets or bullets_image
+            return self._render_bullets_slide(slide_content, headline, source, url, exec_summary)
+
+    def _render_bullets_slide(self, slide_content, headline: str, source: str,
+                               url: str, exec_summary: str) -> str:
+        """Render a bullets slide with short, punchy copy."""
+        # Get and clean bullets (max 4)
+        bullets_raw = slide_content.bullets[:WORD_LIMITS["bullet_count"]] if slide_content.bullets else []
+        bullets_clean = [self._clean_bullet(b) for b in bullets_raw if b]
         
-        return f"""## {title}
+        if not bullets_clean:
+            bullets_clean = ["Key details pending"]
+        
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean])
+        
+        # Image suggestion note
+        image_note = ""
+        if slide_content.image_suggestion:
+            image_note = f"\nImage: {slide_content.image_suggestion}"
 
-{bullets}
+        return f"""## {headline}
 
-**Source:** [{source}]({result.url}) | **Sentiment:** {sentiment}
+{bullets_md}
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}{image_note}
+
+URL: {url}
+-->"""
+
+    def _render_quote_slide(self, slide_content, headline: str, source: str,
+                             url: str, exec_summary: str) -> str:
+        """Render a quote slide with attribution."""
+        quote = self._truncate_words(slide_content.quote_text or "", WORD_LIMITS["quote"])
+        attribution = slide_content.quote_attribution or ""
+        
+        return f"""## {headline}
+
+> "{quote}"
+
+**— {attribution}**
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {url}
+-->"""
+
+    def _render_video_slide(self, slide_content, headline: str, source: str,
+                             url: str, exec_summary: str) -> str:
+        """Render a video slide with caption."""
+        video_url = slide_content.video_url or url
+        caption = self._truncate_words(slide_content.video_caption or "", WORD_LIMITS["caption"])
+        
+        return f"""## {headline}
+
+🎬 **Video:** [{caption or "Watch Video"}]({video_url})
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+Video: {video_url}
+URL: {url}
+-->"""
+
+    def _render_chart_slide(self, slide_content, headline: str, source: str,
+                             url: str, exec_summary: str) -> str:
+        """Render a chart slide with data points."""
+        # Use bullets as data points for chart
+        bullets_raw = slide_content.bullets[:3] if slide_content.bullets else []
+        bullets_clean = [self._clean_bullet(b) for b in bullets_raw if b]
+        
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean]) if bullets_clean else "- Data visualization"
+        
+        caption = self._truncate_words(slide_content.chart_caption or "", 15)
+        
+        return f"""## {headline}
+
+📊 **Chart:** {caption}
+
+{bullets_md}
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {url}
+-->"""
+
+    def _render_comparison_slide(self, slide_content, headline: str, source: str,
+                                  url: str, exec_summary: str) -> str:
+        """Render a comparison slide."""
+        left = self._truncate_words(slide_content.comparison_left or "Option A", 15)
+        right = self._truncate_words(slide_content.comparison_right or "Option B", 15)
+        
+        return f"""## {headline}
+
+| Left | Right |
+|------|-------|
+| {left} | {right} |
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {url}
+-->"""
+
+    def _render_fallback_slide(self, result: ProcessedResult, headline: str,
+                                source: str, exec_summary: str) -> str:
+        """Fallback rendering when no slide_content available."""
+        # Get key points (limit to 4)
+        key_points = []
+        if result.summary and result.summary.key_points:
+            key_points = result.summary.key_points[:WORD_LIMITS["bullet_count"]]
+        
+        # Clean and format bullets
+        bullets_clean = [self._clean_bullet(p) for p in key_points]
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean]) if bullets_clean else "- No key points available"
+        
+        return f"""## {headline}
+
+{bullets_md}
+
+**Source:** [{source}]({result.url})
 
 <!--
 Speaker Notes:
@@ -185,6 +386,7 @@ Speaker Notes:
 
 URL: {result.url}
 -->"""
+
 
     def _summary_slide(self, results: List[ProcessedResult]) -> str:
         """Generate summary slide with key takeaways."""
@@ -362,49 +564,61 @@ Speaker Notes:
 -->"""
 
     def _aggregated_article_slide(self, result: AggregatedResult) -> str:
-        """Generate slide for a single aggregated article."""
-        # Slides require visible headings for markdown structure - use "Untitled" as fallback
-        title = result.title or "Untitled"
+        """Generate slide for a single aggregated article using slide_content when available.
         
-        # Get key points (limit to 4-5 for slide readability)
-        key_points = []
-        if result.summary and result.summary.key_points:
-            max_points = 5 if result.original_count > 1 else 4
-            key_points = result.summary.key_points[:max_points]
-        
-        bullets = "\n".join([f"- {point}" for point in key_points]) if key_points else "- No key points available"
+        Uses LLM-generated slide_content for optimized, net-less copy.
+        Falls back to key_points if slide_content not available.
+        """
+        # Check if we have slide_content from LLM
+        slide_content = None
+        if result.summary and result.summary.slide_content:
+            slide_content = result.summary.slide_content
+
+        # Get headline (prefer slide_content headline, then title, then fallback)
+        if slide_content and slide_content.headline:
+            headline = self._truncate_words(slide_content.headline, WORD_LIMITS["headline"])
+        elif result.title:
+            headline = self._truncate_words(result.title, WORD_LIMITS["headline"])
+        else:
+            headline = "Untitled"
         
         # Build sources section
         sources_markdown = self._format_sources_markdown(result)
-        
-        # Get sentiment
-        sentiment = ""
-        if result.summary and result.summary.sentiment:
-            sentiment_map = {
-                "positive": "Positive outlook",
-                "negative": "Concerns raised", 
-                "neutral": "Neutral coverage",
-                "mixed": "Mixed perspectives"
-            }
-            sentiment = sentiment_map.get(result.summary.sentiment.value, "")
         
         # Executive summary for speaker notes
         exec_summary = ""
         if result.summary and result.summary.executive_summary:
             exec_summary = result.summary.executive_summary
         
-        # Build speaker notes with all source URLs
-        source_urls = "\n".join([f"- {s.site_name or 'Source'}: {s.url}" for s in result.sources])
+        # Build speaker notes with all source URLs (guard against None sources)
+        source_urls = "\n".join([f"- {s.site_name or 'Source'}: {s.url}" for s in (result.sources or [])])
         
-        return f"""## {title}
+        # Get bullets - prefer slide_content bullets, fallback to key_points
+        if slide_content and slide_content.bullets:
+            bullets_raw = slide_content.bullets[:WORD_LIMITS["bullet_count"]]
+            bullets_clean = [self._clean_bullet(b) for b in bullets_raw if b]
+        elif result.summary and result.summary.key_points:
+            key_points = result.summary.key_points[:WORD_LIMITS["bullet_count"]]
+            bullets_clean = [self._clean_bullet(p) for p in key_points]
+        else:
+            bullets_clean = []
+        
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean]) if bullets_clean else "- No key points available"
+        
+        # Image suggestion note for speaker notes
+        image_note = ""
+        if slide_content and slide_content.image_suggestion:
+            image_note = f"\nImage: {slide_content.image_suggestion}"
+        
+        return f"""## {headline}
 
-{bullets}
+{bullets_md}
 
-{sources_markdown} | **Sentiment:** {sentiment}
+{sources_markdown}
 
 <!--
 Speaker Notes:
-{exec_summary}
+{exec_summary}{image_note}
 
 Sources ({result.original_count}):
 {source_urls}

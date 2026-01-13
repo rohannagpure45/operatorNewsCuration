@@ -22,25 +22,37 @@ When analyzing content:
 - Note any implications or potential impacts discussed
 - Pull notable quotes or citations as footnotes
 
-**SLIDE CONTENT GENERATION:**
-You must also generate slide-ready content optimized for presentations:
+**SLIDE CONTENT GENERATION (Critical):**
 
-1. **Determine slide type** based on content:
-   - "quote": If there's a powerful, quotable statement from a named person (executive, researcher, etc.)
-   - "video": If the content references or embeds a video (YouTube, Vimeo, etc.)
-   - "bullets": Default for most content - key facts and takeaways
+You MUST generate slide-ready content using "net-less copy" style:
+- NO filler words (just, very, really, basically, actually)
+- NO complete sentences - use punchy fragments
+- Lead with NUMBERS and specific data points
+- Use active voice only
+- Front-load the most important information
 
-2. **Generate short, punchy copy:**
-   - Headline: Max 8 words, captures the core news
-   - Bullets: Max 10 words each, 3-5 bullets with key facts/numbers
-   - Quote (if applicable): Max 25 words, the most impactful quote
-   - Video caption (if applicable): Max 12 words
+**SLIDE TYPE DETECTION:**
+Choose the slide type based on content:
+- "bullets" or "bullets_image": Default for most content with key facts (use bullets_image if content has visual element)
+- "quote": ONLY if there's a powerful statement from a NAMED executive/researcher/official
+- "video": ONLY if content references or embeds a video (YouTube, Vimeo, demo)
+- "chart": If content contains percentage data, growth numbers, or market comparisons
+- "comparison": If content compares two products/companies/models side-by-side
 
-3. **Copy style for slides:**
-   - Lead with numbers and specific data points
-   - Use active voice
-   - Remove filler words
-   - Front-load the most important information"""
+**STRICT WORD LIMITS:**
+- Headline: MAX 8 words (Example: "Nvidia Acquires Groq for $20B")
+- Bullets: MAX 12 words each, 3-4 bullets only
+- Quote: MAX 25 words
+- Captions: MAX 12 words
+
+**BULLET WRITING RULES:**
+✓ GOOD: "$20B deal, largest in company history"
+✓ GOOD: "90.4% accuracy on GPQA benchmark"
+✓ GOOD: "API pricing: $0.50/1M input tokens"
+✗ BAD: "The company announced that they have completed a deal"
+✗ BAD: "According to the announcement, this represents"
+
+Always suggest an image type that would complement the slide (e.g., "product screenshot", "CEO headshot", "data chart")."""
 
 # Narrative injection placeholder - inserted between base prompt and JSON instruction
 NARRATIVE_INJECTION_MARKER = "{{NARRATIVE_GUIDANCE}}"
@@ -101,19 +113,34 @@ Provide a comprehensive structured summary including:
 6. Notable quotes or citations (as footnotes)
 7. Main topics/themes covered
 
-**SLIDE CONTENT (Required):**
-Generate slide-ready content with:
-- slide_type: "bullets", "quote", or "video" (auto-detect based on content)
-- headline: Short headline (max 8 words)
-- bullets: 3-5 short bullet points (max 10 words each) with key facts/numbers
-- quote_text + quote_attribution: If slide_type is "quote", include the best quote and who said it
-- video_url + video_caption: If slide_type is "video", include URL and short caption
+**SLIDE CONTENT (REQUIRED - USE NET-LESS COPY):**
 
-Examples of good slide bullets:
-- "90.4% accuracy on GPQA benchmark"
-- "$20B deal, largest in company history"
-- "3x faster than previous model"
-- "API pricing: $0.50/1M input tokens"
+Generate slide-ready content. THIS IS CRITICAL - follow these rules exactly:
+
+1. **slide_type** - Choose ONE:
+   - "bullets" or "bullets_image": For key facts (most common)
+   - "quote": ONLY for powerful executive/researcher quotes
+   - "video": ONLY if article contains video embed
+   - "chart": For percentage/growth data
+   - "comparison": For product/model comparisons
+
+2. **headline**: MAX 8 WORDS. Example: "Nvidia Acquires Groq for $20B"
+
+3. **bullets**: EXACTLY 3-4 bullets, MAX 12 words each
+   ✓ "$20B deal, largest in company history"
+   ✓ "90.4% accuracy on GPQA benchmark"
+   ✓ "Hallucination rate drops to 5.8%"
+   ✗ "The company announced that they completed a deal" (TOO WORDY)
+
+4. **quote_text** + **quote_attribution**: Only if slide_type is "quote"
+
+5. **video_url** + **video_caption**: Only if slide_type is "video"
+
+6. **chart_caption**: Only if slide_type is "chart" (max 15 words)
+
+7. **comparison_left** + **comparison_right**: Only if slide_type is "comparison"
+
+8. **image_suggestion**: Always include (e.g., "product screenshot", "CEO headshot", "data chart")
 
 Ensure your analysis is accurate and grounded in the source material."""
 

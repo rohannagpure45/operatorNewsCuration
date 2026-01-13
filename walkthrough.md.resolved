@@ -1,0 +1,2330 @@
+# Slide Generation Improvements - Walkthrough
+
+## Summary
+
+Improved the slides deck generation to match the WTF Slides template format with proper slide type detection and concise "net-less" copy.
+
+## Changes Made
+
+### 1. New Slide Template Configuration
+**File:** [slide_templates.json](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slide_templates.json)
+
+Created a JSON configuration defining 8 slide types with word limits:
+- [bullets](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#247-276) / `bullets_image` - Key facts (4 bullets × 12 words max)
+- [quote](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#277-297) - Impactful statements (25 words max)
+- [video](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#298-317) - Video embed (12 word caption)
+- [chart](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#318-343) - Data visualization (15 word caption)
+- [comparison](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#344-364) - Side-by-side (2 × 15 words)
+- [section_header](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/pdf_report.py#917-927) - Topic transitions (6 words)
+
+---
+
+### 2. Schema Updates
+**File:** [schemas.py](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/models/schemas.py)
+
+```diff:schemas.py
+"""Pydantic models for structured data in the News Curation Agent."""
+
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
+from pydantic import BaseModel, Field, HttpUrl
+
+
+class URLType(str, Enum):
+    """Supported URL types for content extraction."""
+
+    TWITTER = "twitter"
+    NEWS_ARTICLE = "news_article"
+    BLOG = "blog"
+    SEC_FILING = "sec_filing"
+    UNKNOWN = "unknown"
+
+
+class Sentiment(str, Enum):
+    """Sentiment classification for content."""
+
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
+    MIXED = "mixed"
+
+
+class EntityType(str, Enum):
+    """Types of named entities."""
+
+    PERSON = "PERSON"
+    ORGANIZATION = "ORG"
+    LOCATION = "LOC"
+    DATE = "DATE"
+    MONEY = "MONEY"
+    PRODUCT = "PRODUCT"
+    EVENT = "EVENT"
+
+
+class SlideType(str, Enum):
+    """Types of slides for presentation generation."""
+
+    BULLETS = "bullets"
+    QUOTE = "quote"
+    VIDEO = "video"
+
+
+class Entity(BaseModel):
+    """A named entity extracted from content."""
+
+    text: str = Field(description="The entity text as it appears in the content")
+    type: EntityType = Field(description="The type of entity")
+    relevance: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0, description="Relevance score (0-1)"
+    )
+
+
+class Footnote(BaseModel):
+    """A footnote with source attribution."""
+
+    id: int = Field(description="Footnote reference number")
+    source_text: str = Field(description="The quoted or referenced text")
+    context: str = Field(description="Additional context or explanation")
+
+
+class SlideContent(BaseModel):
+    """Slide-ready content optimized for presentation use."""
+
+    slide_type: SlideType = Field(
+        default=SlideType.BULLETS,
+        description="Recommended slide type based on content"
+    )
+    headline: str = Field(
+        description="Short headline for the slide (max 8 words)"
+    )
+    bullets: List[str] = Field(
+        default_factory=list,
+        description="Short bullet points (max 10 words each, 3-5 bullets)"
+    )
+    quote_text: Optional[str] = Field(
+        default=None,
+        description="Featured quote for quote slides (max 25 words)"
+    )
+    quote_attribution: Optional[str] = Field(
+        default=None,
+        description="Attribution for the quote (e.g., 'Sundar Pichai, Google CEO')"
+    )
+    video_url: Optional[str] = Field(
+        default=None,
+        description="Video URL for video slides"
+    )
+    video_caption: Optional[str] = Field(
+        default=None,
+        description="Short caption for video slides (max 12 words)"
+    )
+
+
+class ClaimRating(str, Enum):
+    """Rating levels for fact-checked claims."""
+
+    TRUE = "true"
+    MOSTLY_TRUE = "mostly_true"
+    MIXED = "mixed"
+    MOSTLY_FALSE = "mostly_false"
+    FALSE = "false"
+    UNVERIFIED = "unverified"
+    INSUFFICIENT_DATA = "insufficient_data"
+
+
+class FactCheckResult(BaseModel):
+    """Result of fact-checking a specific claim."""
+
+    claim: str = Field(description="The claim that was fact-checked")
+    rating: ClaimRating = Field(description="The fact-check rating")
+    source: str = Field(description="The fact-checking organization")
+    source_url: Optional[str] = Field(
+        default=None, description="URL to the fact-check article"
+    )
+    explanation: Optional[str] = Field(
+        default=None, description="Brief explanation of the rating"
+    )
+    reviewed_date: Optional[datetime] = Field(
+        default=None, description="When the claim was reviewed"
+    )
+
+
+class PublisherCredibility(BaseModel):
+    """Publisher credibility information."""
+
+    score: Optional[int] = Field(
+        default=None, ge=0, le=100, description="Credibility score (0-100)"
+    )
+    source: str = Field(description="Source of the credibility rating")
+    notes: Optional[str] = Field(default=None, description="Additional notes")
+
+
+class FactCheckReport(BaseModel):
+    """Complete fact-check report for content."""
+
+    claims_analyzed: int = Field(
+        default=0, description="Number of claims analyzed"
+    )
+    verified_claims: List[FactCheckResult] = Field(
+        default_factory=list, description="Claims that were verified"
+    )
+    unverified_claims: List[str] = Field(
+        default_factory=list, description="Claims that couldn't be verified"
+    )
+    publisher_credibility: Optional[PublisherCredibility] = Field(
+        default=None, description="Publisher credibility information"
+    )
+
+
+class ContentSummary(BaseModel):
+    """Structured summary of content generated by LLM."""
+
+    executive_summary: str = Field(
+        description="One paragraph overview of the content"
+    )
+    key_points: List[str] = Field(
+        min_length=1,
+        max_length=10,
+        description="Main takeaways from the content (3-7 points)",
+    )
+    sentiment: Sentiment = Field(description="Overall sentiment of the content")
+    entities: List[Entity] = Field(
+        default_factory=list, description="Key named entities mentioned"
+    )
+    implications: List[str] = Field(
+        default_factory=list,
+        description="Potential implications or impacts discussed",
+    )
+    footnotes: List[Footnote] = Field(
+        default_factory=list, description="Notable quotes or citations"
+    )
+    topics: List[str] = Field(
+        default_factory=list, description="Main topics/themes covered"
+    )
+    slide_content: Optional[SlideContent] = Field(
+        default=None,
+        description="Slide-ready content optimized for presentations"
+    )
+
+
+class ContentMetadata(BaseModel):
+    """Metadata about the extracted content."""
+
+    title: Optional[str] = Field(default=None, description="Content title")
+    author: Optional[str] = Field(default=None, description="Author name")
+    published_date: Optional[datetime] = Field(
+        default=None, description="Publication date"
+    )
+    word_count: int = Field(default=0, description="Word count of content")
+    language: str = Field(default="en", description="Content language code")
+    site_name: Optional[str] = Field(default=None, description="Source site name")
+
+
+class ExtractedContent(BaseModel):
+    """Content extracted from a URL."""
+
+    url: str = Field(description="Original URL")
+    url_type: URLType = Field(description="Detected URL type")
+    raw_text: str = Field(description="Extracted text content")
+    metadata: ContentMetadata = Field(
+        default_factory=ContentMetadata, description="Content metadata"
+    )
+    extracted_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), description="Extraction timestamp"
+    )
+    extraction_method: str = Field(
+        default="unknown", description="Method used for extraction"
+    )
+    fallback_used: bool = Field(
+        default=False, description="Whether Wayback fallback was used"
+    )
+
+
+class ProcessingStatus(str, Enum):
+    """Status of URL processing."""
+
+    PENDING = "pending"
+    EXTRACTING = "extracting"
+    FACT_CHECKING = "fact_checking"
+    SUMMARIZING = "summarizing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class ProcessedResult(BaseModel):
+    """Complete result of processing a URL."""
+
+    url: str = Field(description="Original URL")
+    source_type: URLType = Field(description="Detected source type")
+    status: ProcessingStatus = Field(
+        default=ProcessingStatus.PENDING, description="Processing status"
+    )
+    extracted_at: Optional[datetime] = Field(
+        default=None, description="When content was extracted"
+    )
+    content: Optional[ContentMetadata] = Field(
+        default=None, description="Content metadata"
+    )
+    raw_text: Optional[str] = Field(
+        default=None, description="Raw extracted text (optional, for debugging)"
+    )
+    summary: Optional[ContentSummary] = Field(
+        default=None, description="Generated summary"
+    )
+    fact_check: Optional[FactCheckReport] = Field(
+        default=None, description="Fact-check results"
+    )
+    error: Optional[str] = Field(
+        default=None, description="Error message if processing failed"
+    )
+    processing_time_ms: Optional[int] = Field(
+        default=None, description="Total processing time in milliseconds"
+    )
+
+
+class SourceReference(BaseModel):
+    """Reference to an original source article in an aggregated result."""
+
+    url: str = Field(description="Original article URL")
+    title: Optional[str] = Field(default=None, description="Original article title")
+    site_name: Optional[str] = Field(default=None, description="Source site name")
+    author: Optional[str] = Field(default=None, description="Article author")
+    published_date: Optional[datetime] = Field(
+        default=None, description="Publication date"
+    )
+    source_type: URLType = Field(
+        default=URLType.UNKNOWN, description="Type of source"
+    )
+
+
+class AggregatedResult(BaseModel):
+    """Aggregated result combining multiple similar articles into one entry."""
+
+    title: str = Field(description="Unified title for the aggregated story")
+    sources: List[SourceReference] = Field(
+        min_length=1, description="All source articles that were merged"
+    )
+    summary: ContentSummary = Field(
+        description="Combined summary with concatenated content from all sources"
+    )
+    source_type: URLType = Field(
+        default=URLType.NEWS_ARTICLE, description="Primary source type"
+    )
+    status: ProcessingStatus = Field(
+        default=ProcessingStatus.COMPLETED, description="Processing status"
+    )
+    fact_check: Optional[FactCheckReport] = Field(
+        default=None, description="Combined fact-check results"
+    )
+    is_aggregated: bool = Field(
+        default=True, description="Flag indicating this is an aggregated result"
+    )
+    original_count: int = Field(
+        default=1, description="Number of original articles merged"
+    )
+
+
+class AggregatedResultSet(BaseModel):
+    """Complete set of aggregated results after deduplication."""
+
+    results: List[AggregatedResult] = Field(
+        default_factory=list, description="List of aggregated results"
+    )
+    total_original: int = Field(
+        default=0, description="Total number of original articles before aggregation"
+    )
+    total_aggregated: int = Field(
+        default=0, description="Total number of entries after aggregation"
+    )
+    duplicates_merged: int = Field(
+        default=0, description="Number of duplicate groups that were merged"
+    )
+    aggregated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="When aggregation was performed",
+    )
+
+
+# Request/Response models for API
+class URLSubmitRequest(BaseModel):
+    """Request to submit URLs for processing."""
+
+    urls: List[str] = Field(
+        min_length=1, max_length=100, description="List of URLs to process"
+    )
+    include_raw_text: bool = Field(
+        default=False, description="Include raw extracted text in response"
+    )
+    skip_fact_check: bool = Field(
+        default=False, description="Skip fact-checking step"
+    )
+
+
+class JobStatus(BaseModel):
+    """Status of a processing job."""
+
+    job_id: str = Field(description="Unique job identifier")
+    status: ProcessingStatus = Field(description="Overall job status")
+    total_urls: int = Field(description="Total URLs in the job")
+    completed: int = Field(default=0, description="Number of completed URLs")
+    failed: int = Field(default=0, description="Number of failed URLs")
+    results: List[ProcessedResult] = Field(
+        default_factory=list, description="Processing results"
+    )
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), description="Job creation time"
+    )
+    completed_at: Optional[datetime] = Field(
+        default=None, description="Job completion time"
+    )
+
+
+===
+"""Pydantic models for structured data in the News Curation Agent."""
+
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
+from pydantic import BaseModel, Field, HttpUrl
+
+
+class URLType(str, Enum):
+    """Supported URL types for content extraction."""
+
+    TWITTER = "twitter"
+    NEWS_ARTICLE = "news_article"
+    BLOG = "blog"
+    SEC_FILING = "sec_filing"
+    UNKNOWN = "unknown"
+
+
+class Sentiment(str, Enum):
+    """Sentiment classification for content."""
+
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
+    MIXED = "mixed"
+
+
+class EntityType(str, Enum):
+    """Types of named entities."""
+
+    PERSON = "PERSON"
+    ORGANIZATION = "ORG"
+    LOCATION = "LOC"
+    DATE = "DATE"
+    MONEY = "MONEY"
+    PRODUCT = "PRODUCT"
+    EVENT = "EVENT"
+
+
+class SlideType(str, Enum):
+    """Types of slides for presentation generation.
+    
+    Based on WTF Slides template analysis:
+    - bullets: Key facts without image (default)
+    - bullets_image: Key facts with supporting visual (most common)
+    - quote: Impactful statement from named person
+    - video: Video embed or demo visual
+    - section_header: Topic transitions between themes
+    - chart: Data visualization with minimal text
+    - comparison: Side-by-side visual comparison
+    """
+
+    BULLETS = "bullets"
+    BULLETS_IMAGE = "bullets_image"
+    QUOTE = "quote"
+    VIDEO = "video"
+    SECTION_HEADER = "section_header"
+    CHART = "chart"
+    COMPARISON = "comparison"
+
+
+class Entity(BaseModel):
+    """A named entity extracted from content."""
+
+    text: str = Field(description="The entity text as it appears in the content")
+    type: EntityType = Field(description="The type of entity")
+    relevance: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0, description="Relevance score (0-1)"
+    )
+
+
+class Footnote(BaseModel):
+    """A footnote with source attribution."""
+
+    id: int = Field(description="Footnote reference number")
+    source_text: str = Field(description="The quoted or referenced text")
+    context: str = Field(description="Additional context or explanation")
+
+
+class SlideContent(BaseModel):
+    """Slide-ready content optimized for presentation use.
+    
+    Based on WTF Slides template format with strict word limits.
+    """
+
+    slide_type: SlideType = Field(
+        default=SlideType.BULLETS,
+        description="Recommended slide type based on content"
+    )
+    headline: str = Field(
+        description="Short headline for the slide (max 8 words)"
+    )
+    bullets: List[str] = Field(
+        default_factory=list,
+        description="Short bullet points (max 12 words each, 3-4 bullets)"
+    )
+    quote_text: Optional[str] = Field(
+        default=None,
+        description="Featured quote for quote slides (max 25 words)"
+    )
+    quote_attribution: Optional[str] = Field(
+        default=None,
+        description="Attribution for the quote (e.g., 'Sundar Pichai, Google CEO')"
+    )
+    video_url: Optional[str] = Field(
+        default=None,
+        description="Video URL for video slides"
+    )
+    video_caption: Optional[str] = Field(
+        default=None,
+        description="Short caption for video slides (max 12 words)"
+    )
+    chart_caption: Optional[str] = Field(
+        default=None,
+        description="Caption for chart slides (max 15 words)"
+    )
+    comparison_left: Optional[str] = Field(
+        default=None,
+        description="Left side caption for comparison slides (max 15 words)"
+    )
+    comparison_right: Optional[str] = Field(
+        default=None,
+        description="Right side caption for comparison slides (max 15 words)"
+    )
+    image_suggestion: Optional[str] = Field(
+        default=None,
+        description="Suggested image type (e.g., 'product photo', 'CEO headshot', 'chart')"
+    )
+
+
+class ClaimRating(str, Enum):
+    """Rating levels for fact-checked claims."""
+
+    TRUE = "true"
+    MOSTLY_TRUE = "mostly_true"
+    MIXED = "mixed"
+    MOSTLY_FALSE = "mostly_false"
+    FALSE = "false"
+    UNVERIFIED = "unverified"
+    INSUFFICIENT_DATA = "insufficient_data"
+
+
+class FactCheckResult(BaseModel):
+    """Result of fact-checking a specific claim."""
+
+    claim: str = Field(description="The claim that was fact-checked")
+    rating: ClaimRating = Field(description="The fact-check rating")
+    source: str = Field(description="The fact-checking organization")
+    source_url: Optional[str] = Field(
+        default=None, description="URL to the fact-check article"
+    )
+    explanation: Optional[str] = Field(
+        default=None, description="Brief explanation of the rating"
+    )
+    reviewed_date: Optional[datetime] = Field(
+        default=None, description="When the claim was reviewed"
+    )
+
+
+class PublisherCredibility(BaseModel):
+    """Publisher credibility information."""
+
+    score: Optional[int] = Field(
+        default=None, ge=0, le=100, description="Credibility score (0-100)"
+    )
+    source: str = Field(description="Source of the credibility rating")
+    notes: Optional[str] = Field(default=None, description="Additional notes")
+
+
+class FactCheckReport(BaseModel):
+    """Complete fact-check report for content."""
+
+    claims_analyzed: int = Field(
+        default=0, description="Number of claims analyzed"
+    )
+    verified_claims: List[FactCheckResult] = Field(
+        default_factory=list, description="Claims that were verified"
+    )
+    unverified_claims: List[str] = Field(
+        default_factory=list, description="Claims that couldn't be verified"
+    )
+    publisher_credibility: Optional[PublisherCredibility] = Field(
+        default=None, description="Publisher credibility information"
+    )
+
+
+class ContentSummary(BaseModel):
+    """Structured summary of content generated by LLM."""
+
+    executive_summary: str = Field(
+        description="One paragraph overview of the content"
+    )
+    key_points: List[str] = Field(
+        min_length=1,
+        max_length=10,
+        description="Main takeaways from the content (3-7 points)",
+    )
+    sentiment: Sentiment = Field(description="Overall sentiment of the content")
+    entities: List[Entity] = Field(
+        default_factory=list, description="Key named entities mentioned"
+    )
+    implications: List[str] = Field(
+        default_factory=list,
+        description="Potential implications or impacts discussed",
+    )
+    footnotes: List[Footnote] = Field(
+        default_factory=list, description="Notable quotes or citations"
+    )
+    topics: List[str] = Field(
+        default_factory=list, description="Main topics/themes covered"
+    )
+    slide_content: Optional[SlideContent] = Field(
+        default=None,
+        description="Slide-ready content optimized for presentations"
+    )
+
+
+class ContentMetadata(BaseModel):
+    """Metadata about the extracted content."""
+
+    title: Optional[str] = Field(default=None, description="Content title")
+    author: Optional[str] = Field(default=None, description="Author name")
+    published_date: Optional[datetime] = Field(
+        default=None, description="Publication date"
+    )
+    word_count: int = Field(default=0, description="Word count of content")
+    language: str = Field(default="en", description="Content language code")
+    site_name: Optional[str] = Field(default=None, description="Source site name")
+
+
+class ExtractedContent(BaseModel):
+    """Content extracted from a URL."""
+
+    url: str = Field(description="Original URL")
+    url_type: URLType = Field(description="Detected URL type")
+    raw_text: str = Field(description="Extracted text content")
+    metadata: ContentMetadata = Field(
+        default_factory=ContentMetadata, description="Content metadata"
+    )
+    extracted_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), description="Extraction timestamp"
+    )
+    extraction_method: str = Field(
+        default="unknown", description="Method used for extraction"
+    )
+    fallback_used: bool = Field(
+        default=False, description="Whether Wayback fallback was used"
+    )
+
+
+class ProcessingStatus(str, Enum):
+    """Status of URL processing."""
+
+    PENDING = "pending"
+    EXTRACTING = "extracting"
+    FACT_CHECKING = "fact_checking"
+    SUMMARIZING = "summarizing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class ProcessedResult(BaseModel):
+    """Complete result of processing a URL."""
+
+    url: str = Field(description="Original URL")
+    source_type: URLType = Field(description="Detected source type")
+    status: ProcessingStatus = Field(
+        default=ProcessingStatus.PENDING, description="Processing status"
+    )
+    extracted_at: Optional[datetime] = Field(
+        default=None, description="When content was extracted"
+    )
+    content: Optional[ContentMetadata] = Field(
+        default=None, description="Content metadata"
+    )
+    raw_text: Optional[str] = Field(
+        default=None, description="Raw extracted text (optional, for debugging)"
+    )
+    summary: Optional[ContentSummary] = Field(
+        default=None, description="Generated summary"
+    )
+    fact_check: Optional[FactCheckReport] = Field(
+        default=None, description="Fact-check results"
+    )
+    error: Optional[str] = Field(
+        default=None, description="Error message if processing failed"
+    )
+    processing_time_ms: Optional[int] = Field(
+        default=None, description="Total processing time in milliseconds"
+    )
+
+
+class SourceReference(BaseModel):
+    """Reference to an original source article in an aggregated result."""
+
+    url: str = Field(description="Original article URL")
+    title: Optional[str] = Field(default=None, description="Original article title")
+    site_name: Optional[str] = Field(default=None, description="Source site name")
+    author: Optional[str] = Field(default=None, description="Article author")
+    published_date: Optional[datetime] = Field(
+        default=None, description="Publication date"
+    )
+    source_type: URLType = Field(
+        default=URLType.UNKNOWN, description="Type of source"
+    )
+
+
+class AggregatedResult(BaseModel):
+    """Aggregated result combining multiple similar articles into one entry."""
+
+    title: str = Field(description="Unified title for the aggregated story")
+    sources: List[SourceReference] = Field(
+        min_length=1, description="All source articles that were merged"
+    )
+    summary: ContentSummary = Field(
+        description="Combined summary with concatenated content from all sources"
+    )
+    source_type: URLType = Field(
+        default=URLType.NEWS_ARTICLE, description="Primary source type"
+    )
+    status: ProcessingStatus = Field(
+        default=ProcessingStatus.COMPLETED, description="Processing status"
+    )
+    fact_check: Optional[FactCheckReport] = Field(
+        default=None, description="Combined fact-check results"
+    )
+    is_aggregated: bool = Field(
+        default=True, description="Flag indicating this is an aggregated result"
+    )
+    original_count: int = Field(
+        default=1, description="Number of original articles merged"
+    )
+
+
+class AggregatedResultSet(BaseModel):
+    """Complete set of aggregated results after deduplication."""
+
+    results: List[AggregatedResult] = Field(
+        default_factory=list, description="List of aggregated results"
+    )
+    total_original: int = Field(
+        default=0, description="Total number of original articles before aggregation"
+    )
+    total_aggregated: int = Field(
+        default=0, description="Total number of entries after aggregation"
+    )
+    duplicates_merged: int = Field(
+        default=0, description="Number of duplicate groups that were merged"
+    )
+    aggregated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="When aggregation was performed",
+    )
+
+
+# Request/Response models for API
+class URLSubmitRequest(BaseModel):
+    """Request to submit URLs for processing."""
+
+    urls: List[str] = Field(
+        min_length=1, max_length=100, description="List of URLs to process"
+    )
+    include_raw_text: bool = Field(
+        default=False, description="Include raw extracted text in response"
+    )
+    skip_fact_check: bool = Field(
+        default=False, description="Skip fact-checking step"
+    )
+
+
+class JobStatus(BaseModel):
+    """Status of a processing job."""
+
+    job_id: str = Field(description="Unique job identifier")
+    status: ProcessingStatus = Field(description="Overall job status")
+    total_urls: int = Field(description="Total URLs in the job")
+    completed: int = Field(default=0, description="Number of completed URLs")
+    failed: int = Field(default=0, description="Number of failed URLs")
+    results: List[ProcessedResult] = Field(
+        default_factory=list, description="Processing results"
+    )
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), description="Job creation time"
+    )
+    completed_at: Optional[datetime] = Field(
+        default=None, description="Job completion time"
+    )
+
+
+```
+
+**Key changes:**
+- Expanded [SlideType](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/models/schemas.py#41-61) enum with 7 values (was 3)
+- Added new [SlideContent](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/models/schemas.py#81-130) fields: `chart_caption`, `comparison_left`, `comparison_right`, `image_suggestion`
+
+---
+
+### 3. LLM Prompt Updates
+**File:** [prompts.py](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/summarizer/prompts.py)
+
+```diff:prompts.py
+"""Prompts for LLM summarization."""
+
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from src.narrative.engine import NarrativeFramingEngine
+
+
+# Base system prompt without narrative injection
+BASE_SYSTEM_PROMPT = """You are an expert content analyst and summarizer. Your task is to analyze content and produce structured summaries that are:
+
+1. **Accurate**: Only include information present in the source material
+2. **Comprehensive**: Capture all key points and important details
+3. **Objective**: Present information neutrally without editorial bias
+4. **Well-structured**: Organize information logically
+
+When analyzing content:
+- Identify the main thesis or key message
+- Extract 3-7 key points that support or explain the main message
+- Identify important entities (people, organizations, locations, products)
+- Assess the overall sentiment (positive, negative, neutral, or mixed)
+- Note any implications or potential impacts discussed
+- Pull notable quotes or citations as footnotes
+
+**SLIDE CONTENT GENERATION:**
+You must also generate slide-ready content optimized for presentations:
+
+1. **Determine slide type** based on content:
+   - "quote": If there's a powerful, quotable statement from a named person (executive, researcher, etc.)
+   - "video": If the content references or embeds a video (YouTube, Vimeo, etc.)
+   - "bullets": Default for most content - key facts and takeaways
+
+2. **Generate short, punchy copy:**
+   - Headline: Max 8 words, captures the core news
+   - Bullets: Max 10 words each, 3-5 bullets with key facts/numbers
+   - Quote (if applicable): Max 25 words, the most impactful quote
+   - Video caption (if applicable): Max 12 words
+
+3. **Copy style for slides:**
+   - Lead with numbers and specific data points
+   - Use active voice
+   - Remove filler words
+   - Front-load the most important information"""
+
+# Narrative injection placeholder - inserted between base prompt and JSON instruction
+NARRATIVE_INJECTION_MARKER = "{{NARRATIVE_GUIDANCE}}"
+
+# Final instruction that always comes at the end
+JSON_INSTRUCTION = "\n\nAlways respond with valid JSON matching the requested schema."
+
+
+def build_system_prompt(narrative_engine: Optional["NarrativeFramingEngine"] = None) -> str:
+    """Build the complete system prompt with optional narrative injection.
+    
+    Args:
+        narrative_engine: Optional narrative framing engine. If provided and
+            enabled, its guidance will be injected into the prompt.
+            
+    Returns:
+        Complete system prompt string.
+    """
+    parts = [BASE_SYSTEM_PROMPT]
+    
+    # Inject narrative guidance if engine is provided and enabled
+    if narrative_engine is not None:
+        injection = narrative_engine.get_system_prompt_injection()
+        if injection:
+            parts.append("\n\n**FRAMING GUIDANCE:**")
+            parts.append(injection)
+    
+    parts.append(JSON_INSTRUCTION)
+    
+    return "".join(parts)
+
+
+# Legacy constant for backward compatibility
+SUMMARIZATION_SYSTEM_PROMPT = build_system_prompt()
+
+SUMMARIZATION_USER_PROMPT = """Analyze the following content and provide a structured summary.
+
+**Source URL**: {url}
+**Source Type**: {source_type}
+**Title**: {title}
+**Author**: {author}
+**Published**: {published_date}
+
+---
+
+**CONTENT**:
+
+{content}
+
+---
+
+Provide a comprehensive structured summary including:
+1. An executive summary (1-2 paragraphs)
+2. Key points (3-7 bullet points)
+3. Overall sentiment
+4. Named entities (people, organizations, locations)
+5. Implications or impacts discussed
+6. Notable quotes or citations (as footnotes)
+7. Main topics/themes covered
+
+**SLIDE CONTENT (Required):**
+Generate slide-ready content with:
+- slide_type: "bullets", "quote", or "video" (auto-detect based on content)
+- headline: Short headline (max 8 words)
+- bullets: 3-5 short bullet points (max 10 words each) with key facts/numbers
+- quote_text + quote_attribution: If slide_type is "quote", include the best quote and who said it
+- video_url + video_caption: If slide_type is "video", include URL and short caption
+
+Examples of good slide bullets:
+- "90.4% accuracy on GPQA benchmark"
+- "$20B deal, largest in company history"
+- "3x faster than previous model"
+- "API pricing: $0.50/1M input tokens"
+
+Ensure your analysis is accurate and grounded in the source material."""
+
+CLAIM_EXTRACTION_PROMPT = """Analyze the following content and extract specific, checkable factual claims.
+
+Focus on claims that:
+- Contain specific numbers, statistics, or percentages
+- Reference scientific studies or research
+- Quote official sources or spokespersons
+- Make predictions or assertions about future events
+- Reference historical events or past statements
+
+**CONTENT**:
+
+{content}
+
+---
+
+Extract up to {max_claims} specific, verifiable claims from this content. Each claim should be:
+- Self-contained (understandable without additional context)
+- Specific (not vague or opinion-based)
+- Checkable (could be verified against external sources)
+
+Return the claims as a JSON array of strings."""
+
+
+===
+"""Prompts for LLM summarization."""
+
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from src.narrative.engine import NarrativeFramingEngine
+
+
+# Base system prompt without narrative injection
+BASE_SYSTEM_PROMPT = """You are an expert content analyst and summarizer. Your task is to analyze content and produce structured summaries that are:
+
+1. **Accurate**: Only include information present in the source material
+2. **Comprehensive**: Capture all key points and important details
+3. **Objective**: Present information neutrally without editorial bias
+4. **Well-structured**: Organize information logically
+
+When analyzing content:
+- Identify the main thesis or key message
+- Extract 3-7 key points that support or explain the main message
+- Identify important entities (people, organizations, locations, products)
+- Assess the overall sentiment (positive, negative, neutral, or mixed)
+- Note any implications or potential impacts discussed
+- Pull notable quotes or citations as footnotes
+
+**SLIDE CONTENT GENERATION (Critical):**
+
+You MUST generate slide-ready content using "net-less copy" style:
+- NO filler words (just, very, really, basically, actually)
+- NO complete sentences - use punchy fragments
+- Lead with NUMBERS and specific data points
+- Use active voice only
+- Front-load the most important information
+
+**SLIDE TYPE DETECTION:**
+Choose the slide type based on content:
+- "bullets" or "bullets_image": Default for most content with key facts (use bullets_image if content has visual element)
+- "quote": ONLY if there's a powerful statement from a NAMED executive/researcher/official
+- "video": ONLY if content references or embeds a video (YouTube, Vimeo, demo)
+- "chart": If content contains percentage data, growth numbers, or market comparisons
+- "comparison": If content compares two products/companies/models side-by-side
+
+**STRICT WORD LIMITS:**
+- Headline: MAX 8 words (Example: "Nvidia Acquires Groq for $20B")
+- Bullets: MAX 12 words each, 3-4 bullets only
+- Quote: MAX 25 words
+- Captions: MAX 12 words
+
+**BULLET WRITING RULES:**
+✓ GOOD: "$20B deal, largest in company history"
+✓ GOOD: "90.4% accuracy on GPQA benchmark"
+✓ GOOD: "API pricing: $0.50/1M input tokens"
+✗ BAD: "The company announced that they have completed a deal"
+✗ BAD: "According to the announcement, this represents"
+
+Always suggest an image type that would complement the slide (e.g., "product screenshot", "CEO headshot", "data chart")."""
+
+# Narrative injection placeholder - inserted between base prompt and JSON instruction
+NARRATIVE_INJECTION_MARKER = "{{NARRATIVE_GUIDANCE}}"
+
+# Final instruction that always comes at the end
+JSON_INSTRUCTION = "\n\nAlways respond with valid JSON matching the requested schema."
+
+
+def build_system_prompt(narrative_engine: Optional["NarrativeFramingEngine"] = None) -> str:
+    """Build the complete system prompt with optional narrative injection.
+    
+    Args:
+        narrative_engine: Optional narrative framing engine. If provided and
+            enabled, its guidance will be injected into the prompt.
+            
+    Returns:
+        Complete system prompt string.
+    """
+    parts = [BASE_SYSTEM_PROMPT]
+    
+    # Inject narrative guidance if engine is provided and enabled
+    if narrative_engine is not None:
+        injection = narrative_engine.get_system_prompt_injection()
+        if injection:
+            parts.append("\n\n**FRAMING GUIDANCE:**")
+            parts.append(injection)
+    
+    parts.append(JSON_INSTRUCTION)
+    
+    return "".join(parts)
+
+
+# Legacy constant for backward compatibility
+SUMMARIZATION_SYSTEM_PROMPT = build_system_prompt()
+
+SUMMARIZATION_USER_PROMPT = """Analyze the following content and provide a structured summary.
+
+**Source URL**: {url}
+**Source Type**: {source_type}
+**Title**: {title}
+**Author**: {author}
+**Published**: {published_date}
+
+---
+
+**CONTENT**:
+
+{content}
+
+---
+
+Provide a comprehensive structured summary including:
+1. An executive summary (1-2 paragraphs)
+2. Key points (3-7 bullet points)
+3. Overall sentiment
+4. Named entities (people, organizations, locations)
+5. Implications or impacts discussed
+6. Notable quotes or citations (as footnotes)
+7. Main topics/themes covered
+
+**SLIDE CONTENT (REQUIRED - USE NET-LESS COPY):**
+
+Generate slide-ready content. THIS IS CRITICAL - follow these rules exactly:
+
+1. **slide_type** - Choose ONE:
+   - "bullets" or "bullets_image": For key facts (most common)
+   - "quote": ONLY for powerful executive/researcher quotes
+   - "video": ONLY if article contains video embed
+   - "chart": For percentage/growth data
+   - "comparison": For product/model comparisons
+
+2. **headline**: MAX 8 WORDS. Example: "Nvidia Acquires Groq for $20B"
+
+3. **bullets**: EXACTLY 3-4 bullets, MAX 12 words each
+   ✓ "$20B deal, largest in company history"
+   ✓ "90.4% accuracy on GPQA benchmark"
+   ✓ "Hallucination rate drops to 5.8%"
+   ✗ "The company announced that they completed a deal" (TOO WORDY)
+
+4. **quote_text** + **quote_attribution**: Only if slide_type is "quote"
+
+5. **video_url** + **video_caption**: Only if slide_type is "video"
+
+6. **chart_caption**: Only if slide_type is "chart" (max 15 words)
+
+7. **comparison_left** + **comparison_right**: Only if slide_type is "comparison"
+
+8. **image_suggestion**: Always include (e.g., "product screenshot", "CEO headshot", "data chart")
+
+Ensure your analysis is accurate and grounded in the source material."""
+
+CLAIM_EXTRACTION_PROMPT = """Analyze the following content and extract specific, checkable factual claims.
+
+Focus on claims that:
+- Contain specific numbers, statistics, or percentages
+- Reference scientific studies or research
+- Quote official sources or spokespersons
+- Make predictions or assertions about future events
+- Reference historical events or past statements
+
+**CONTENT**:
+
+{content}
+
+---
+
+Extract up to {max_claims} specific, verifiable claims from this content. Each claim should be:
+- Self-contained (understandable without additional context)
+- Specific (not vague or opinion-based)
+- Checkable (could be verified against external sources)
+
+Return the claims as a JSON array of strings."""
+
+
+```
+
+**Key changes:**
+- Added "net-less copy" guidelines (no filler words, punchy fragments)
+- Explicit word limits per field
+- Good/bad bullet examples
+- Slide type detection criteria
+
+---
+
+### 4. Generator Refactor
+**File:** [slides_deck.py](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py)
+
+```diff:slides_deck.py
+"""Slides Deck Generator - Creates Markdown slides from ProcessedResult objects.
+
+Generates structured markdown that can be imported into Google Slides, PowerPoint,
+or rendered with tools like Marp, reveal.js, or Slidev.
+"""
+
+from collections import defaultdict
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+from urllib.parse import urlparse
+
+from src.export.utils import detect_theme
+from src.models.schemas import (
+    AggregatedResult,
+    AggregatedResultSet,
+    ProcessedResult,
+    ProcessingStatus,
+)
+
+
+class SlidesDeckGenerator:
+    """
+    Generate Markdown slides deck from ProcessedResult objects.
+    
+    Output format uses Marp-compatible markdown with --- slide separators.
+    """
+
+    def __init__(self):
+        """Initialize the slides deck generator."""
+        pass
+
+    def generate(self, results: List[ProcessedResult]) -> str:
+        """
+        Generate a Markdown slides deck from processed results.
+
+        Args:
+            results: List of processed results to include.
+
+        Returns:
+            Markdown string with slide structure.
+        """
+        # Filter successful results
+        successful = [r for r in results if r.status == ProcessingStatus.COMPLETED and r.summary]
+        failed = [r for r in results if r.status == ProcessingStatus.FAILED]
+
+        # Group by theme
+        grouped = self._group_by_theme(successful)
+
+        slides = []
+        
+        # Title slide
+        slides.append(self._title_slide(len(successful), len(failed)))
+        
+        # Agenda slide
+        slides.append(self._agenda_slide(grouped))
+        
+        # Theme sections
+        for theme, articles in grouped.items():
+            slides.append(self._theme_divider_slide(theme, len(articles)))
+            for article in articles:
+                slides.append(self._article_slide(article))
+        
+        # Summary slide
+        slides.append(self._summary_slide(successful))
+        
+        # Failed URLs slide (if any)
+        if failed:
+            slides.append(self._failed_urls_slide(failed))
+
+        return "\n\n---\n\n".join(slides)
+
+    def _group_by_theme(self, results: List[ProcessedResult]) -> Dict[str, List[ProcessedResult]]:
+        """Group articles by detected theme."""
+        grouped = defaultdict(list)
+        
+        for result in results:
+            theme = self._detect_theme(result)
+            grouped[theme].append(result)
+        
+        # Sort themes by number of articles (descending)
+        return dict(sorted(grouped.items(), key=lambda x: -len(x[1])))
+
+    def _detect_theme(self, result: ProcessedResult) -> str:
+        """Detect the theme of an article based on content."""
+        # Use word boundaries for slides to avoid false positives
+        # Preserve backward compatibility with "Other AI News" default theme
+        return detect_theme(result, use_word_boundaries=True, default_theme="Other AI News")
+
+    def _title_slide(self, success_count: int, fail_count: int) -> str:
+        """Generate title slide."""
+        date = datetime.now(timezone.utc).strftime("%B %d, %Y")
+        return f"""# AI News Briefing
+
+## Weekly Intelligence Report
+
+**{date}**
+
+{success_count} articles analyzed | {fail_count} sources unavailable
+
+<!--
+Speaker Notes:
+- Welcome to the AI news briefing
+- {success_count} articles successfully processed
+- Cover major themes: model releases, infrastructure, acquisitions
+-->"""
+
+    def _agenda_slide(self, grouped: Dict[str, List[ProcessedResult]]) -> str:
+        """Generate agenda slide."""
+        agenda_items = []
+        for i, (theme, articles) in enumerate(grouped.items(), 1):
+            agenda_items.append(f"{i}. **{theme}** ({len(articles)} articles)")
+        
+        agenda_list = "\n".join(agenda_items)
+        
+        return f"""# Agenda
+
+{agenda_list}
+
+<!--
+Speaker Notes:
+- Overview of today's coverage
+- Will highlight key developments in each area
+- Q&A at the end
+-->"""
+
+    def _theme_divider_slide(self, theme: str, count: int) -> str:
+        """Generate theme divider slide."""
+        return f"""# {theme}
+
+## {count} Key Developments
+
+<!--
+Speaker Notes:
+- Moving into {theme} section
+- {count} articles to cover
+-->"""
+
+    def _article_slide(self, result: ProcessedResult) -> str:
+        """Generate slide for a single article."""
+        # Slides require visible headings for markdown structure - use "Untitled" as fallback
+        title = result.content.title if result.content and result.content.title else "Untitled"
+        
+        # Get key points (limit to 4 for slide readability)
+        key_points = []
+        if result.summary and result.summary.key_points:
+            key_points = result.summary.key_points[:4]
+        
+        # Format as bullet points with fallback for empty
+        bullets = "\n".join([f"- {point}" for point in key_points]) if key_points else "- No key points available"
+        
+        # Get source info
+        source = ""
+        if result.content and result.content.site_name:
+            source = result.content.site_name
+        else:
+            # Extract domain from URL safely
+            parsed = urlparse(result.url or "")
+            source = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
+        
+        # Get sentiment
+        sentiment = ""
+        if result.summary and result.summary.sentiment:
+            sentiment_map = {
+                "positive": "Positive outlook",
+                "negative": "Concerns raised", 
+                "neutral": "Neutral coverage",
+                "mixed": "Mixed perspectives"
+            }
+            sentiment = sentiment_map.get(result.summary.sentiment.value, "")
+        
+        # Executive summary for speaker notes
+        exec_summary = ""
+        if result.summary and result.summary.executive_summary:
+            exec_summary = result.summary.executive_summary
+        
+        return f"""## {title}
+
+{bullets}
+
+**Source:** [{source}]({result.url}) | **Sentiment:** {sentiment}
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {result.url}
+-->"""
+
+    def _summary_slide(self, results: List[ProcessedResult]) -> str:
+        """Generate summary slide with key takeaways."""
+        # Collect all topics
+        all_topics = []
+        for r in results:
+            if r.summary and r.summary.topics:
+                all_topics.extend(r.summary.topics)
+        
+        # Get unique topics (top 6)
+        unique_topics = list(dict.fromkeys(all_topics))[:6]
+        topics_str = ", ".join(unique_topics) if unique_topics else "Various AI topics"
+        
+        # Count by sentiment
+        sentiments = defaultdict(int)
+        for r in results:
+            if r.summary and r.summary.sentiment:
+                sentiments[r.summary.sentiment.value] += 1
+        
+        sentiment_summary = []
+        if sentiments.get("positive", 0) > 0:
+            sentiment_summary.append(f"{sentiments['positive']} positive")
+        if sentiments.get("negative", 0) > 0:
+            sentiment_summary.append(f"{sentiments['negative']} negative")
+        if sentiments.get("neutral", 0) > 0:
+            sentiment_summary.append(f"{sentiments['neutral']} neutral")
+        if sentiments.get("mixed", 0) > 0:
+            sentiment_summary.append(f"{sentiments['mixed']} mixed")
+        
+        sentiment_str = ", ".join(sentiment_summary) if sentiment_summary else "Mixed coverage"
+        
+        return f"""# Key Takeaways
+
+## Summary
+
+- **{len(results)} articles** analyzed across AI industry
+- **Top Topics:** {topics_str}
+- **Sentiment Mix:** {sentiment_str}
+
+## Questions?
+
+<!--
+Speaker Notes:
+- Recap of major themes
+- Open floor for questions
+- Follow-up resources available
+-->"""
+
+    def _failed_urls_slide(self, failed: List[ProcessedResult]) -> str:
+        """Generate slide listing failed URLs."""
+        failed_list = []
+        for r in failed:
+            parsed = urlparse(r.url or "")
+            domain = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
+            error = r.error[:50] if r.error else "Unknown error"
+            failed_list.append(f"- {domain}: {error}")
+        
+        failed_str = "\n".join(failed_list[:10])  # Limit to 10
+        
+        return f"""# Sources Unavailable
+
+The following sources could not be accessed:
+
+{failed_str}
+
+<!--
+Speaker Notes:
+- These sources had access restrictions (paywalls, bot protection)
+- May need manual review or alternative sources
+-->"""
+
+    def get_filename(self) -> str:
+        """Generate filename for the slides deck."""
+        timestamp = datetime.now(timezone.utc).strftime("%m_%d_%y")
+        return f"slides_deck_{timestamp}.md"
+
+    def generate_aggregated(self, result_set: AggregatedResultSet) -> str:
+        """
+        Generate a Markdown slides deck from aggregated results.
+
+        Args:
+            result_set: AggregatedResultSet with merged/deduplicated results.
+
+        Returns:
+            Markdown string with slide structure.
+        """
+        # Filter successful results
+        successful = [r for r in result_set.results if r.status == ProcessingStatus.COMPLETED and r.summary]
+
+        # Group by theme
+        grouped = self._group_aggregated_by_theme(successful)
+
+        slides = []
+        
+        # Title slide with aggregation stats
+        slides.append(self._aggregated_title_slide(result_set))
+        
+        # Agenda slide
+        slides.append(self._aggregated_agenda_slide(grouped))
+        
+        # Theme sections
+        for theme, articles in grouped.items():
+            slides.append(self._theme_divider_slide(theme, len(articles)))
+            for article in articles:
+                slides.append(self._aggregated_article_slide(article))
+        
+        # Summary slide
+        slides.append(self._aggregated_summary_slide(successful, result_set))
+
+        return "\n\n---\n\n".join(slides)
+
+    def _group_aggregated_by_theme(self, results: List[AggregatedResult]) -> Dict[str, List[AggregatedResult]]:
+        """Group aggregated articles by detected theme."""
+        grouped = defaultdict(list)
+        
+        for result in results:
+            theme = self._detect_aggregated_theme(result)
+            grouped[theme].append(result)
+        
+        return dict(sorted(grouped.items(), key=lambda x: -len(x[1])))
+
+    def _detect_aggregated_theme(self, result: AggregatedResult) -> str:
+        """Detect the theme of an aggregated article based on content."""
+        from src.export.utils import THEME_KEYWORDS
+        
+        if result.summary and result.summary.topics:
+            topics_lower = " ".join(result.summary.topics).lower()
+            title_lower = result.title.lower() if result.title else ""
+            combined = topics_lower + " " + title_lower
+            
+            for theme, keywords in THEME_KEYWORDS.items():
+                for kw in keywords:
+                    if kw.lower() in combined:
+                        return theme
+        
+        return "Other AI News"
+
+    def _aggregated_title_slide(self, result_set: AggregatedResultSet) -> str:
+        """Generate title slide for aggregated results."""
+        date = datetime.now(timezone.utc).strftime("%B %d, %Y")
+        return f"""# AI News Briefing
+
+## Weekly Intelligence Report
+
+**{date}**
+
+{result_set.total_original} articles analyzed | {result_set.total_aggregated} unique stories | {result_set.duplicates_merged} duplicates merged
+
+<!--
+Speaker Notes:
+- Welcome to the AI news briefing
+- {result_set.total_original} articles processed, consolidated into {result_set.total_aggregated} unique stories
+- {result_set.duplicates_merged} duplicate articles were merged for comprehensive coverage
+-->"""
+
+    def _aggregated_agenda_slide(self, grouped: Dict[str, List[AggregatedResult]]) -> str:
+        """Generate agenda slide for aggregated results."""
+        agenda_items = []
+        for i, (theme, articles) in enumerate(grouped.items(), 1):
+            total_sources = sum(a.original_count for a in articles)
+            agenda_items.append(f"{i}. **{theme}** ({len(articles)} stories from {total_sources} sources)")
+        
+        agenda_list = "\n".join(agenda_items)
+        
+        return f"""# Agenda
+
+{agenda_list}
+
+<!--
+Speaker Notes:
+- Overview of today's coverage
+- Stories have been deduplicated and consolidated
+- Will highlight key developments in each area
+- Q&A at the end
+-->"""
+
+    def _aggregated_article_slide(self, result: AggregatedResult) -> str:
+        """Generate slide for a single aggregated article."""
+        # Slides require visible headings for markdown structure - use "Untitled" as fallback
+        title = result.title or "Untitled"
+        
+        # Get key points (limit to 4-5 for slide readability)
+        key_points = []
+        if result.summary and result.summary.key_points:
+            max_points = 5 if result.original_count > 1 else 4
+            key_points = result.summary.key_points[:max_points]
+        
+        bullets = "\n".join([f"- {point}" for point in key_points]) if key_points else "- No key points available"
+        
+        # Build sources section
+        sources_markdown = self._format_sources_markdown(result)
+        
+        # Get sentiment
+        sentiment = ""
+        if result.summary and result.summary.sentiment:
+            sentiment_map = {
+                "positive": "Positive outlook",
+                "negative": "Concerns raised", 
+                "neutral": "Neutral coverage",
+                "mixed": "Mixed perspectives"
+            }
+            sentiment = sentiment_map.get(result.summary.sentiment.value, "")
+        
+        # Executive summary for speaker notes
+        exec_summary = ""
+        if result.summary and result.summary.executive_summary:
+            exec_summary = result.summary.executive_summary
+        
+        # Build speaker notes with all source URLs
+        source_urls = "\n".join([f"- {s.site_name or 'Source'}: {s.url}" for s in result.sources])
+        
+        return f"""## {title}
+
+{bullets}
+
+{sources_markdown} | **Sentiment:** {sentiment}
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+Sources ({result.original_count}):
+{source_urls}
+-->"""
+
+    def _format_sources_markdown(self, result: AggregatedResult) -> str:
+        """Format sources as markdown links."""
+        if not result.sources:
+            return "**Source:** Unknown"
+        
+        if len(result.sources) == 1:
+            source = result.sources[0]
+            site_name = source.site_name or urlparse(source.url).netloc or "Source"
+            return f"**Source:** [{site_name}]({source.url})"
+        
+        # Multiple sources
+        source_links = []
+        for source in result.sources[:3]:  # Limit to 3 in visible slide
+            site_name = source.site_name or urlparse(source.url).netloc or "Source"
+            source_links.append(f"[{site_name}]({source.url})")
+        
+        sources_str = ", ".join(source_links)
+        if len(result.sources) > 3:
+            sources_str += f" +{len(result.sources) - 3} more"
+        
+        return f"**Sources ({result.original_count}):** {sources_str}"
+
+    def _aggregated_summary_slide(self, results: List[AggregatedResult], result_set: AggregatedResultSet) -> str:
+        """Generate summary slide for aggregated results."""
+        # Collect all topics
+        all_topics = []
+        for r in results:
+            if r.summary and r.summary.topics:
+                all_topics.extend(r.summary.topics)
+        
+        # Get unique topics (top 6)
+        unique_topics = list(dict.fromkeys(all_topics))[:6]
+        topics_str = ", ".join(unique_topics) if unique_topics else "Various AI topics"
+        
+        # Count by sentiment
+        sentiments = defaultdict(int)
+        for r in results:
+            if r.summary and r.summary.sentiment:
+                sentiments[r.summary.sentiment.value] += 1
+        
+        sentiment_summary = []
+        if sentiments.get("positive", 0) > 0:
+            sentiment_summary.append(f"{sentiments['positive']} positive")
+        if sentiments.get("negative", 0) > 0:
+            sentiment_summary.append(f"{sentiments['negative']} negative")
+        if sentiments.get("neutral", 0) > 0:
+            sentiment_summary.append(f"{sentiments['neutral']} neutral")
+        if sentiments.get("mixed", 0) > 0:
+            sentiment_summary.append(f"{sentiments['mixed']} mixed")
+        
+        sentiment_str = ", ".join(sentiment_summary) if sentiment_summary else "Mixed coverage"
+        
+        return f"""# Key Takeaways
+
+## Summary
+
+- **{result_set.total_original} articles** analyzed across AI industry
+- **{result_set.total_aggregated} unique stories** after deduplication
+- **{result_set.duplicates_merged} duplicates** merged for comprehensive view
+- **Top Topics:** {topics_str}
+- **Sentiment Mix:** {sentiment_str}
+
+## Questions?
+
+<!--
+Speaker Notes:
+- Recap of major themes
+- Multiple sources consolidated for comprehensive coverage
+- Open floor for questions
+- Follow-up resources available
+-->"""
+
+===
+"""Slides Deck Generator - Creates Markdown slides from ProcessedResult objects.
+
+Generates structured markdown that can be imported into Google Slides, PowerPoint,
+or rendered with tools like Marp, reveal.js, or Slidev.
+
+Uses slide_content from LLM output with template-based rendering per slide type.
+"""
+
+import json
+from collections import defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Dict, List, Optional
+from urllib.parse import urlparse
+
+from src.export.utils import detect_theme
+from src.models.schemas import (
+    AggregatedResult,
+    AggregatedResultSet,
+    ProcessedResult,
+    ProcessingStatus,
+    SlideType,
+)
+
+
+# Word limits from slide templates
+WORD_LIMITS = {
+    "headline": 8,
+    "bullet": 12,
+    "bullet_count": 4,
+    "quote": 25,
+    "caption": 12,
+}
+
+
+class SlidesDeckGenerator:
+    """
+    Generate Markdown slides deck from ProcessedResult objects.
+    
+    Output format uses Marp-compatible markdown with --- slide separators.
+    Uses slide_content from LLM output when available.
+    """
+
+    def __init__(self):
+        """Initialize the slides deck generator."""
+        self._load_templates()
+
+    def _load_templates(self):
+        """Load slide templates configuration."""
+        template_path = Path(__file__).parent / "slide_templates.json"
+        if template_path.exists():
+            with open(template_path) as f:
+                self.templates = json.load(f)
+        else:
+            self.templates = {"slide_types": {}, "copy_guidelines": {}}
+
+    def _truncate_words(self, text: str, max_words: int) -> str:
+        """Truncate text to max words with ellipsis."""
+        if not text:
+            return ""
+        words = text.split()
+        if len(words) <= max_words:
+            return text
+        return " ".join(words[:max_words]) + "..."
+
+    def _clean_bullet(self, text: str) -> str:
+        """Clean bullet text: remove filler, truncate, format."""
+        if not text:
+            return ""
+        # Remove common filler words at start
+        filler_starts = ["The ", "A ", "An ", "This ", "That ", "There "]
+        for filler in filler_starts:
+            if text.startswith(filler):
+                text = text[len(filler):]
+                break
+        # Truncate to word limit
+        text = self._truncate_words(text, WORD_LIMITS["bullet"])
+        # Remove trailing period
+        text = text.rstrip(".")
+        return text
+
+
+    def generate(self, results: List[ProcessedResult]) -> str:
+        """
+        Generate a Markdown slides deck from processed results.
+
+        Args:
+            results: List of processed results to include.
+
+        Returns:
+            Markdown string with slide structure.
+        """
+        # Filter successful results
+        successful = [r for r in results if r.status == ProcessingStatus.COMPLETED and r.summary]
+        failed = [r for r in results if r.status == ProcessingStatus.FAILED]
+
+        # Group by theme
+        grouped = self._group_by_theme(successful)
+
+        slides = []
+        
+        # Title slide
+        slides.append(self._title_slide(len(successful), len(failed)))
+        
+        # Agenda slide
+        slides.append(self._agenda_slide(grouped))
+        
+        # Theme sections
+        for theme, articles in grouped.items():
+            slides.append(self._theme_divider_slide(theme, len(articles)))
+            for article in articles:
+                slides.append(self._article_slide(article))
+        
+        # Summary slide
+        slides.append(self._summary_slide(successful))
+        
+        # Failed URLs slide (if any)
+        if failed:
+            slides.append(self._failed_urls_slide(failed))
+
+        return "\n\n---\n\n".join(slides)
+
+    def _group_by_theme(self, results: List[ProcessedResult]) -> Dict[str, List[ProcessedResult]]:
+        """Group articles by detected theme."""
+        grouped = defaultdict(list)
+        
+        for result in results:
+            theme = self._detect_theme(result)
+            grouped[theme].append(result)
+        
+        # Sort themes by number of articles (descending)
+        return dict(sorted(grouped.items(), key=lambda x: -len(x[1])))
+
+    def _detect_theme(self, result: ProcessedResult) -> str:
+        """Detect the theme of an article based on content."""
+        # Use word boundaries for slides to avoid false positives
+        # Preserve backward compatibility with "Other AI News" default theme
+        return detect_theme(result, use_word_boundaries=True, default_theme="Other AI News")
+
+    def _title_slide(self, success_count: int, fail_count: int) -> str:
+        """Generate title slide."""
+        date = datetime.now(timezone.utc).strftime("%B %d, %Y")
+        return f"""# AI News Briefing
+
+## Weekly Intelligence Report
+
+**{date}**
+
+{success_count} articles analyzed | {fail_count} sources unavailable
+
+<!--
+Speaker Notes:
+- Welcome to the AI news briefing
+- {success_count} articles successfully processed
+- Cover major themes: model releases, infrastructure, acquisitions
+-->"""
+
+    def _agenda_slide(self, grouped: Dict[str, List[ProcessedResult]]) -> str:
+        """Generate agenda slide."""
+        agenda_items = []
+        for i, (theme, articles) in enumerate(grouped.items(), 1):
+            agenda_items.append(f"{i}. **{theme}** ({len(articles)} articles)")
+        
+        agenda_list = "\n".join(agenda_items)
+        
+        return f"""# Agenda
+
+{agenda_list}
+
+<!--
+Speaker Notes:
+- Overview of today's coverage
+- Will highlight key developments in each area
+- Q&A at the end
+-->"""
+
+    def _theme_divider_slide(self, theme: str, count: int) -> str:
+        """Generate theme divider slide."""
+        return f"""# {theme}
+
+## {count} Key Developments
+
+<!--
+Speaker Notes:
+- Moving into {theme} section
+- {count} articles to cover
+-->"""
+
+    def _article_slide(self, result: ProcessedResult) -> str:
+        """Generate slide for a single article using slide_content when available.
+        
+        Uses LLM-generated slide_content for optimized, net-less copy.
+        Falls back to key_points if slide_content not available.
+        """
+        # Check if we have slide_content from LLM
+        slide_content = None
+        if result.summary and result.summary.slide_content:
+            slide_content = result.summary.slide_content
+
+        # Get headline (prefer slide_content headline, then title, then fallback)
+        if slide_content and slide_content.headline:
+            headline = self._truncate_words(slide_content.headline, WORD_LIMITS["headline"])
+        elif result.content and result.content.title:
+            headline = self._truncate_words(result.content.title, WORD_LIMITS["headline"])
+        else:
+            headline = "Untitled"
+
+        # Get source info
+        source = ""
+        if result.content and result.content.site_name:
+            source = result.content.site_name
+        else:
+            parsed = urlparse(result.url or "")
+            source = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
+
+        # Executive summary for speaker notes
+        exec_summary = ""
+        if result.summary and result.summary.executive_summary:
+            exec_summary = result.summary.executive_summary
+
+        # Render based on slide type
+        if slide_content:
+            return self._render_slide_by_type(
+                slide_content, headline, source, result.url, exec_summary
+            )
+        else:
+            # Fallback: use key_points if no slide_content
+            return self._render_fallback_slide(result, headline, source, exec_summary)
+
+    def _render_slide_by_type(self, slide_content, headline: str, source: str, 
+                               url: str, exec_summary: str) -> str:
+        """Render slide based on its type."""
+        slide_type = slide_content.slide_type
+
+        if slide_type == SlideType.QUOTE:
+            return self._render_quote_slide(slide_content, headline, source, url, exec_summary)
+        elif slide_type == SlideType.VIDEO:
+            return self._render_video_slide(slide_content, headline, source, url, exec_summary)
+        elif slide_type == SlideType.CHART:
+            return self._render_chart_slide(slide_content, headline, source, url, exec_summary)
+        elif slide_type == SlideType.COMPARISON:
+            return self._render_comparison_slide(slide_content, headline, source, url, exec_summary)
+        else:
+            # Default: bullets or bullets_image
+            return self._render_bullets_slide(slide_content, headline, source, url, exec_summary)
+
+    def _render_bullets_slide(self, slide_content, headline: str, source: str,
+                               url: str, exec_summary: str) -> str:
+        """Render a bullets slide with short, punchy copy."""
+        # Get and clean bullets (max 4)
+        bullets_raw = slide_content.bullets[:WORD_LIMITS["bullet_count"]] if slide_content.bullets else []
+        bullets_clean = [self._clean_bullet(b) for b in bullets_raw if b]
+        
+        if not bullets_clean:
+            bullets_clean = ["Key details pending"]
+        
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean])
+        
+        # Image suggestion note
+        image_note = ""
+        if slide_content.image_suggestion:
+            image_note = f"\nImage: {slide_content.image_suggestion}"
+
+        return f"""## {headline}
+
+{bullets_md}
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}{image_note}
+
+URL: {url}
+-->"""
+
+    def _render_quote_slide(self, slide_content, headline: str, source: str,
+                             url: str, exec_summary: str) -> str:
+        """Render a quote slide with attribution."""
+        quote = self._truncate_words(slide_content.quote_text or "", WORD_LIMITS["quote"])
+        attribution = slide_content.quote_attribution or ""
+        
+        return f"""## {headline}
+
+> "{quote}"
+
+**— {attribution}**
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {url}
+-->"""
+
+    def _render_video_slide(self, slide_content, headline: str, source: str,
+                             url: str, exec_summary: str) -> str:
+        """Render a video slide with caption."""
+        video_url = slide_content.video_url or url
+        caption = self._truncate_words(slide_content.video_caption or "", WORD_LIMITS["caption"])
+        
+        return f"""## {headline}
+
+🎬 **Video:** [{caption or "Watch Video"}]({video_url})
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+Video: {video_url}
+URL: {url}
+-->"""
+
+    def _render_chart_slide(self, slide_content, headline: str, source: str,
+                             url: str, exec_summary: str) -> str:
+        """Render a chart slide with data points."""
+        # Use bullets as data points for chart
+        bullets_raw = slide_content.bullets[:3] if slide_content.bullets else []
+        bullets_clean = [self._clean_bullet(b) for b in bullets_raw if b]
+        
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean]) if bullets_clean else "- Data visualization"
+        
+        caption = self._truncate_words(slide_content.chart_caption or "", 15)
+        
+        return f"""## {headline}
+
+📊 **Chart:** {caption}
+
+{bullets_md}
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {url}
+-->"""
+
+    def _render_comparison_slide(self, slide_content, headline: str, source: str,
+                                  url: str, exec_summary: str) -> str:
+        """Render a comparison slide."""
+        left = self._truncate_words(slide_content.comparison_left or "Option A", 15)
+        right = self._truncate_words(slide_content.comparison_right or "Option B", 15)
+        
+        return f"""## {headline}
+
+| Left | Right |
+|------|-------|
+| {left} | {right} |
+
+**Source:** [{source}]({url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {url}
+-->"""
+
+    def _render_fallback_slide(self, result: ProcessedResult, headline: str,
+                                source: str, exec_summary: str) -> str:
+        """Fallback rendering when no slide_content available."""
+        # Get key points (limit to 4)
+        key_points = []
+        if result.summary and result.summary.key_points:
+            key_points = result.summary.key_points[:WORD_LIMITS["bullet_count"]]
+        
+        # Clean and format bullets
+        bullets_clean = [self._clean_bullet(p) for p in key_points]
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean]) if bullets_clean else "- No key points available"
+        
+        return f"""## {headline}
+
+{bullets_md}
+
+**Source:** [{source}]({result.url})
+
+<!--
+Speaker Notes:
+{exec_summary}
+
+URL: {result.url}
+-->"""
+
+
+    def _summary_slide(self, results: List[ProcessedResult]) -> str:
+        """Generate summary slide with key takeaways."""
+        # Collect all topics
+        all_topics = []
+        for r in results:
+            if r.summary and r.summary.topics:
+                all_topics.extend(r.summary.topics)
+        
+        # Get unique topics (top 6)
+        unique_topics = list(dict.fromkeys(all_topics))[:6]
+        topics_str = ", ".join(unique_topics) if unique_topics else "Various AI topics"
+        
+        # Count by sentiment
+        sentiments = defaultdict(int)
+        for r in results:
+            if r.summary and r.summary.sentiment:
+                sentiments[r.summary.sentiment.value] += 1
+        
+        sentiment_summary = []
+        if sentiments.get("positive", 0) > 0:
+            sentiment_summary.append(f"{sentiments['positive']} positive")
+        if sentiments.get("negative", 0) > 0:
+            sentiment_summary.append(f"{sentiments['negative']} negative")
+        if sentiments.get("neutral", 0) > 0:
+            sentiment_summary.append(f"{sentiments['neutral']} neutral")
+        if sentiments.get("mixed", 0) > 0:
+            sentiment_summary.append(f"{sentiments['mixed']} mixed")
+        
+        sentiment_str = ", ".join(sentiment_summary) if sentiment_summary else "Mixed coverage"
+        
+        return f"""# Key Takeaways
+
+## Summary
+
+- **{len(results)} articles** analyzed across AI industry
+- **Top Topics:** {topics_str}
+- **Sentiment Mix:** {sentiment_str}
+
+## Questions?
+
+<!--
+Speaker Notes:
+- Recap of major themes
+- Open floor for questions
+- Follow-up resources available
+-->"""
+
+    def _failed_urls_slide(self, failed: List[ProcessedResult]) -> str:
+        """Generate slide listing failed URLs."""
+        failed_list = []
+        for r in failed:
+            parsed = urlparse(r.url or "")
+            domain = parsed.netloc or parsed.path.split("/")[0] or "Unknown"
+            error = r.error[:50] if r.error else "Unknown error"
+            failed_list.append(f"- {domain}: {error}")
+        
+        failed_str = "\n".join(failed_list[:10])  # Limit to 10
+        
+        return f"""# Sources Unavailable
+
+The following sources could not be accessed:
+
+{failed_str}
+
+<!--
+Speaker Notes:
+- These sources had access restrictions (paywalls, bot protection)
+- May need manual review or alternative sources
+-->"""
+
+    def get_filename(self) -> str:
+        """Generate filename for the slides deck."""
+        timestamp = datetime.now(timezone.utc).strftime("%m_%d_%y")
+        return f"slides_deck_{timestamp}.md"
+
+    def generate_aggregated(self, result_set: AggregatedResultSet) -> str:
+        """
+        Generate a Markdown slides deck from aggregated results.
+
+        Args:
+            result_set: AggregatedResultSet with merged/deduplicated results.
+
+        Returns:
+            Markdown string with slide structure.
+        """
+        # Filter successful results
+        successful = [r for r in result_set.results if r.status == ProcessingStatus.COMPLETED and r.summary]
+
+        # Group by theme
+        grouped = self._group_aggregated_by_theme(successful)
+
+        slides = []
+        
+        # Title slide with aggregation stats
+        slides.append(self._aggregated_title_slide(result_set))
+        
+        # Agenda slide
+        slides.append(self._aggregated_agenda_slide(grouped))
+        
+        # Theme sections
+        for theme, articles in grouped.items():
+            slides.append(self._theme_divider_slide(theme, len(articles)))
+            for article in articles:
+                slides.append(self._aggregated_article_slide(article))
+        
+        # Summary slide
+        slides.append(self._aggregated_summary_slide(successful, result_set))
+
+        return "\n\n---\n\n".join(slides)
+
+    def _group_aggregated_by_theme(self, results: List[AggregatedResult]) -> Dict[str, List[AggregatedResult]]:
+        """Group aggregated articles by detected theme."""
+        grouped = defaultdict(list)
+        
+        for result in results:
+            theme = self._detect_aggregated_theme(result)
+            grouped[theme].append(result)
+        
+        return dict(sorted(grouped.items(), key=lambda x: -len(x[1])))
+
+    def _detect_aggregated_theme(self, result: AggregatedResult) -> str:
+        """Detect the theme of an aggregated article based on content."""
+        from src.export.utils import THEME_KEYWORDS
+        
+        if result.summary and result.summary.topics:
+            topics_lower = " ".join(result.summary.topics).lower()
+            title_lower = result.title.lower() if result.title else ""
+            combined = topics_lower + " " + title_lower
+            
+            for theme, keywords in THEME_KEYWORDS.items():
+                for kw in keywords:
+                    if kw.lower() in combined:
+                        return theme
+        
+        return "Other AI News"
+
+    def _aggregated_title_slide(self, result_set: AggregatedResultSet) -> str:
+        """Generate title slide for aggregated results."""
+        date = datetime.now(timezone.utc).strftime("%B %d, %Y")
+        return f"""# AI News Briefing
+
+## Weekly Intelligence Report
+
+**{date}**
+
+{result_set.total_original} articles analyzed | {result_set.total_aggregated} unique stories | {result_set.duplicates_merged} duplicates merged
+
+<!--
+Speaker Notes:
+- Welcome to the AI news briefing
+- {result_set.total_original} articles processed, consolidated into {result_set.total_aggregated} unique stories
+- {result_set.duplicates_merged} duplicate articles were merged for comprehensive coverage
+-->"""
+
+    def _aggregated_agenda_slide(self, grouped: Dict[str, List[AggregatedResult]]) -> str:
+        """Generate agenda slide for aggregated results."""
+        agenda_items = []
+        for i, (theme, articles) in enumerate(grouped.items(), 1):
+            total_sources = sum(a.original_count for a in articles)
+            agenda_items.append(f"{i}. **{theme}** ({len(articles)} stories from {total_sources} sources)")
+        
+        agenda_list = "\n".join(agenda_items)
+        
+        return f"""# Agenda
+
+{agenda_list}
+
+<!--
+Speaker Notes:
+- Overview of today's coverage
+- Stories have been deduplicated and consolidated
+- Will highlight key developments in each area
+- Q&A at the end
+-->"""
+
+    def _aggregated_article_slide(self, result: AggregatedResult) -> str:
+        """Generate slide for a single aggregated article using slide_content when available.
+        
+        Uses LLM-generated slide_content for optimized, net-less copy.
+        Falls back to key_points if slide_content not available.
+        """
+        # Check if we have slide_content from LLM
+        slide_content = None
+        if result.summary and result.summary.slide_content:
+            slide_content = result.summary.slide_content
+
+        # Get headline (prefer slide_content headline, then title, then fallback)
+        if slide_content and slide_content.headline:
+            headline = self._truncate_words(slide_content.headline, WORD_LIMITS["headline"])
+        elif result.title:
+            headline = self._truncate_words(result.title, WORD_LIMITS["headline"])
+        else:
+            headline = "Untitled"
+        
+        # Build sources section
+        sources_markdown = self._format_sources_markdown(result)
+        
+        # Executive summary for speaker notes
+        exec_summary = ""
+        if result.summary and result.summary.executive_summary:
+            exec_summary = result.summary.executive_summary
+        
+        # Build speaker notes with all source URLs
+        source_urls = "\n".join([f"- {s.site_name or 'Source'}: {s.url}" for s in result.sources])
+        
+        # Get bullets - prefer slide_content bullets, fallback to key_points
+        if slide_content and slide_content.bullets:
+            bullets_raw = slide_content.bullets[:WORD_LIMITS["bullet_count"]]
+            bullets_clean = [self._clean_bullet(b) for b in bullets_raw if b]
+        elif result.summary and result.summary.key_points:
+            key_points = result.summary.key_points[:WORD_LIMITS["bullet_count"]]
+            bullets_clean = [self._clean_bullet(p) for p in key_points]
+        else:
+            bullets_clean = []
+        
+        bullets_md = "\n".join([f"- {b}" for b in bullets_clean]) if bullets_clean else "- No key points available"
+        
+        # Image suggestion note for speaker notes
+        image_note = ""
+        if slide_content and slide_content.image_suggestion:
+            image_note = f"\nImage: {slide_content.image_suggestion}"
+        
+        return f"""## {headline}
+
+{bullets_md}
+
+{sources_markdown}
+
+<!--
+Speaker Notes:
+{exec_summary}{image_note}
+
+Sources ({result.original_count}):
+{source_urls}
+-->"""
+
+    def _format_sources_markdown(self, result: AggregatedResult) -> str:
+        """Format sources as markdown links."""
+        if not result.sources:
+            return "**Source:** Unknown"
+        
+        if len(result.sources) == 1:
+            source = result.sources[0]
+            site_name = source.site_name or urlparse(source.url).netloc or "Source"
+            return f"**Source:** [{site_name}]({source.url})"
+        
+        # Multiple sources
+        source_links = []
+        for source in result.sources[:3]:  # Limit to 3 in visible slide
+            site_name = source.site_name or urlparse(source.url).netloc or "Source"
+            source_links.append(f"[{site_name}]({source.url})")
+        
+        sources_str = ", ".join(source_links)
+        if len(result.sources) > 3:
+            sources_str += f" +{len(result.sources) - 3} more"
+        
+        return f"**Sources ({result.original_count}):** {sources_str}"
+
+    def _aggregated_summary_slide(self, results: List[AggregatedResult], result_set: AggregatedResultSet) -> str:
+        """Generate summary slide for aggregated results."""
+        # Collect all topics
+        all_topics = []
+        for r in results:
+            if r.summary and r.summary.topics:
+                all_topics.extend(r.summary.topics)
+        
+        # Get unique topics (top 6)
+        unique_topics = list(dict.fromkeys(all_topics))[:6]
+        topics_str = ", ".join(unique_topics) if unique_topics else "Various AI topics"
+        
+        # Count by sentiment
+        sentiments = defaultdict(int)
+        for r in results:
+            if r.summary and r.summary.sentiment:
+                sentiments[r.summary.sentiment.value] += 1
+        
+        sentiment_summary = []
+        if sentiments.get("positive", 0) > 0:
+            sentiment_summary.append(f"{sentiments['positive']} positive")
+        if sentiments.get("negative", 0) > 0:
+            sentiment_summary.append(f"{sentiments['negative']} negative")
+        if sentiments.get("neutral", 0) > 0:
+            sentiment_summary.append(f"{sentiments['neutral']} neutral")
+        if sentiments.get("mixed", 0) > 0:
+            sentiment_summary.append(f"{sentiments['mixed']} mixed")
+        
+        sentiment_str = ", ".join(sentiment_summary) if sentiment_summary else "Mixed coverage"
+        
+        return f"""# Key Takeaways
+
+## Summary
+
+- **{result_set.total_original} articles** analyzed across AI industry
+- **{result_set.total_aggregated} unique stories** after deduplication
+- **{result_set.duplicates_merged} duplicates** merged for comprehensive view
+- **Top Topics:** {topics_str}
+- **Sentiment Mix:** {sentiment_str}
+
+## Questions?
+
+<!--
+Speaker Notes:
+- Recap of major themes
+- Multiple sources consolidated for comprehensive coverage
+- Open floor for questions
+- Follow-up resources available
+-->"""
+
+```
+
+**Key changes:**
+- Loads template configuration on init
+- Added [_truncate_words()](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#57-65) and [_clean_bullet()](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/src/export/slides_deck.py#66-81) helpers
+- Uses `slide_content` from LLM output when available
+- Type-based rendering with 5 new render methods
+- Enforced word limits on all output
+
+---
+
+## Verification Results
+
+### Tests
+```
+246 tests passed ✓
+```
+
+### Generated Output
+Generated [slides_deck.md](file:///Users/rohan/Documents/unboundedscaling/operatorNewsCuration/slides_deck.md) from 13 articles with improved bullet formatting:
+
+**Before (too wordy):**
+> - Nvidia acquires Groq's AI chip assets for $20 billion, its largest deal ever.
+
+**After (net-less copy):**
+> - $20B cash acquisition triples Nvidia's previous record
+
+## What's Next
+
+For **new content processing**, the LLM will now generate properly formatted slide content with:
+- Slide type detection (bullets, quote, video, chart, comparison)  
+- Short headlines (max 8 words)
+- Punchy bullets (max 12 words each, 3-4 per slide)
+- Image suggestions for visual pairing
+
+For **existing content**, the generator applies word truncation and bullet cleaning to ensure output respects limits.

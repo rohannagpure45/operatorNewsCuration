@@ -39,11 +39,25 @@ class EntityType(str, Enum):
 
 
 class SlideType(str, Enum):
-    """Types of slides for presentation generation."""
+    """Types of slides for presentation generation.
+    
+    Based on WTF Slides template analysis:
+    - bullets: Key facts without image (default)
+    - bullets_image: Key facts with supporting visual (most common)
+    - quote: Impactful statement from named person
+    - video: Video embed or demo visual
+    - section_header: Topic transitions between themes
+    - chart: Data visualization with minimal text
+    - comparison: Side-by-side visual comparison
+    """
 
     BULLETS = "bullets"
+    BULLETS_IMAGE = "bullets_image"
     QUOTE = "quote"
     VIDEO = "video"
+    SECTION_HEADER = "section_header"
+    CHART = "chart"
+    COMPARISON = "comparison"
 
 
 class Entity(BaseModel):
@@ -65,7 +79,10 @@ class Footnote(BaseModel):
 
 
 class SlideContent(BaseModel):
-    """Slide-ready content optimized for presentation use."""
+    """Slide-ready content optimized for presentation use.
+    
+    Based on WTF Slides template format with strict word limits.
+    """
 
     slide_type: SlideType = Field(
         default=SlideType.BULLETS,
@@ -76,7 +93,7 @@ class SlideContent(BaseModel):
     )
     bullets: List[str] = Field(
         default_factory=list,
-        description="Short bullet points (max 10 words each, 3-5 bullets)"
+        description="Short bullet points (max 12 words each, 3-4 bullets)"
     )
     quote_text: Optional[str] = Field(
         default=None,
@@ -93,6 +110,22 @@ class SlideContent(BaseModel):
     video_caption: Optional[str] = Field(
         default=None,
         description="Short caption for video slides (max 12 words)"
+    )
+    chart_caption: Optional[str] = Field(
+        default=None,
+        description="Caption for chart slides (max 15 words)"
+    )
+    comparison_left: Optional[str] = Field(
+        default=None,
+        description="Left side caption for comparison slides (max 15 words)"
+    )
+    comparison_right: Optional[str] = Field(
+        default=None,
+        description="Right side caption for comparison slides (max 15 words)"
+    )
+    image_suggestion: Optional[str] = Field(
+        default=None,
+        description="Suggested image type (e.g., 'product photo', 'CEO headshot', 'chart')"
     )
 
 

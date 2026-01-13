@@ -1,0 +1,152 @@
+{
+    "version": "1.0",
+    "description": "Slide template configuration based on WTF Slides format",
+    "copy_guidelines": {
+        "style": "net-less",
+        "rules": [
+            "Lead with numbers and specific data points",
+            "Use active voice",
+            "Remove filler words (just, very, really, basically)",
+            "Front-load the most important information",
+            "No complete sentences in bullets - fragments are preferred",
+            "Capitalize first letter only, no end punctuation on bullets"
+        ]
+    },
+    "slide_types": {
+        "title": {
+            "name": "Title Slide",
+            "use_case": "Deck opener, major section intro",
+            "limits": {
+                "headline_words": 5,
+                "subtitle_words": 15
+            },
+            "detection_hints": [
+                "first slide",
+                "deck title"
+            ]
+        },
+        "section_header": {
+            "name": "Section Header",
+            "use_case": "Topic transitions between themes",
+            "limits": {
+                "headline_words": 6
+            },
+            "detection_hints": [
+                "new topic",
+                "category label"
+            ]
+        },
+        "bullets": {
+            "name": "Bullets Only",
+            "use_case": "Key facts without supporting image",
+            "limits": {
+                "headline_words": 8,
+                "bullet_count": 4,
+                "bullet_words": 12
+            },
+            "detection_hints": [
+                "multiple facts",
+                "data points",
+                "list of items"
+            ]
+        },
+        "bullets_image": {
+            "name": "Bullets + Image",
+            "use_case": "Key facts with supporting visual (most common)",
+            "limits": {
+                "headline_words": 8,
+                "bullet_count": 4,
+                "bullet_words": 12
+            },
+            "detection_hints": [
+                "product announcement",
+                "company news",
+                "has visual element"
+            ]
+        },
+        "quote": {
+            "name": "Quote / Callout",
+            "use_case": "Impactful statement from named person or key statistic",
+            "limits": {
+                "headline_words": 8,
+                "quote_words": 25,
+                "attribution_words": 8
+            },
+            "detection_hints": [
+                "executive quote",
+                "CEO statement",
+                "researcher quote",
+                "standout statistic"
+            ]
+        },
+        "chart": {
+            "name": "Chart Slide",
+            "use_case": "Data visualization with minimal text",
+            "limits": {
+                "headline_words": 8,
+                "caption_words": 15
+            },
+            "detection_hints": [
+                "percentage data",
+                "growth numbers",
+                "comparison data",
+                "market share"
+            ]
+        },
+        "video": {
+            "name": "Video Slide",
+            "use_case": "Video embed or demo visual",
+            "limits": {
+                "headline_words": 8,
+                "caption_words": 12
+            },
+            "detection_hints": [
+                "video link",
+                "youtube",
+                "vimeo",
+                "demo",
+                "announcement video"
+            ]
+        },
+        "comparison": {
+            "name": "Image Comparison",
+            "use_case": "Side-by-side visual comparison",
+            "limits": {
+                "headline_words": 8,
+                "left_caption_words": 15,
+                "right_caption_words": 15
+            },
+            "detection_hints": [
+                "versus",
+                "vs",
+                "comparison",
+                "before/after",
+                "competing products"
+            ]
+        }
+    },
+    "examples": {
+        "good_bullets": [
+            "$20B deal, largest in company history",
+            "90.4% accuracy on GPQA benchmark",
+            "3x faster than previous model",
+            "API pricing: $0.50/1M input tokens",
+            "75% of global AI compute in US",
+            "Hallucination rate drops to 5.8%"
+        ],
+        "bad_bullets": [
+            "The company announced that they have completed a deal worth $20 billion",
+            "According to the announcement, this represents the largest deal in the company's history",
+            "The new model achieves an accuracy of 90.4% on the GPQA benchmark test"
+        ],
+        "good_headlines": [
+            "Nvidia Acquires Groq for $20B",
+            "GPT-5.2 Launches with Enhanced Safety",
+            "Meta Unveils Mango and Avocado Models"
+        ],
+        "bad_headlines": [
+            "Nvidia Corporation Announces the Acquisition of Groq's AI Chip Assets for $20 Billion",
+            "OpenAI Has Just Released Their New GPT-5.2 Model Series"
+        ]
+    }
+}

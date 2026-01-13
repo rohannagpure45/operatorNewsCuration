@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 from src.agent import NewsAgent
 from src.export.pdf_report import PDFReportGenerator
-from src.models.schemas import ProcessingStatus, Sentiment
+from src.models.schemas import ProcessedResult, ProcessingStatus, Sentiment, URLType
 
 
 # Page configuration
@@ -356,12 +356,14 @@ def main():
 
     with tab2:
         st.markdown("### Batch Process Multiple URLs")
+        st.caption("Supports markdown-wrapped URLs, comments (#), and blank lines.")
 
         # Text area for multiple URLs
         urls_text = st.text_area(
             "Enter URLs (one per line)",
-            placeholder="https://example.com/article1\nhttps://example.com/article2",
+            placeholder="https://example.com/article1\n# Comments are skipped\nhttps://example.com/article2",
             height=150,
+            key="batch_urls_input",
         )
 
         # Or upload a file
@@ -371,33 +373,176 @@ def main():
             urls_text = uploaded_file.getvalue().decode("utf-8")
             st.text_area("URLs from file:", value=urls_text, height=100, disabled=True)
 
-        if st.button("🚀 Process All URLs", type="primary", disabled=not urls_text):
-            urls = [u.strip() for u in urls_text.strip().split("\n") if u.strip()]
+        # Real-time URL parsing feedback
+        if urls_text and urls_text.strip():
+            from src.utils.url_validator import parse_url_input
+            
+            parse_result = parse_url_input(urls_text)
+            
+            # Show parsing summary
+            cols = st.columns(4)
+            with cols[0]:
+                st.metric("Valid URLs", len(parse_result.valid_urls))
+            with cols[1]:
+                st.metric("Invalid", len(parse_result.invalid_lines), 
+                         delta=None if not parse_result.invalid_lines else f"-{len(parse_result.invalid_lines)}")
+            with cols[2]:
+                st.metric("Duplicates", parse_result.duplicates_removed)
+            with cols[3]:
+                st.metric("Skipped", parse_result.skipped_lines)
+            
+            # Show warnings
+            for warning in parse_result.warnings:
+                st.warning(warning)
+            
+            # Show invalid lines
+            if parse_result.invalid_lines:
+                with st.expander(f"⚠️ {len(parse_result.invalid_lines)} Invalid Lines", expanded=False):
+                    for line_num, content, reason in parse_result.invalid_lines:
+                        st.text(f"Line {line_num}: {content[:60]}...")
+                        st.caption(f"   Reason: {reason}")
+            
+            urls_to_process = parse_result.valid_urls
+            can_process = len(urls_to_process) > 0
+        else:
+            urls_to_process = []
+            can_process = False
 
-            if urls:
-                st.info(f"Processing {len(urls)} URLs...")
-
-                progress_bar = st.progress(0)
-                status_text = st.empty()
-
+        if st.button("🚀 Process All URLs", type="primary", disabled=not can_process):
+            if urls_to_process:
+                total_urls = len(urls_to_process)
+                
+                # Container for progress display
+                progress_container = st.container()
+                
                 try:
-                    results = run_async(process_batch_async(urls, skip_fact_check))
+                    with progress_container:
+                        st.markdown(f"### ⏳ Processing {total_urls} URLs")
+                        st.markdown("---")
+                        
+                        # Overall progress
+                        progress_bar = st.progress(0)
+                        
+                        # Stats row
+                        stats_cols = st.columns(4)
+                        completed_metric = stats_cols[0].empty()
+                        failed_metric = stats_cols[1].empty()
+                        elapsed_metric = stats_cols[2].empty()
+                        eta_metric = stats_cols[3].empty()
+                        
+                        # Current status
+                        current_status = st.empty()
+                        
+                        # Per-URL status log
+                        url_status_container = st.container()
 
-                    progress_bar.progress(100)
-                    status_text.success(f"Completed processing {len(results)} URLs!")
+                    # Initialize tracking variables
+                    import time as time_module
+                    start_time = time_module.time()
+                    completed_count = 0
+                    failed_count = 0
+                    processing_times = []
+                    results = []
+                    
+                    # Process URLs one at a time for better progress tracking
+                    agent = NewsAgent()
+                    try:
+                        for i, url in enumerate(urls_to_process):
+                            # Update current status
+                            current_status.info(f"🔄 Processing: {url[:70]}...")
+                            
+                            # Calculate ETA
+                            elapsed = time_module.time() - start_time
+                            if processing_times:
+                                avg_time = sum(processing_times) / len(processing_times)
+                                remaining = (total_urls - i) * avg_time
+                                eta_str = f"{int(remaining // 60)}m {int(remaining % 60)}s"
+                            else:
+                                eta_str = "Calculating..."
+                            
+                            # Update metrics
+                            completed_metric.metric("✅ Completed", completed_count)
+                            failed_metric.metric("❌ Failed", failed_count)
+                            elapsed_metric.metric("⏱️ Elapsed", f"{int(elapsed // 60)}m {int(elapsed % 60)}s")
+                            eta_metric.metric("📊 ETA", eta_str)
+                            
+                            # Update progress bar
+                            progress_bar.progress((i) / total_urls)
+                            
+                            # Process this URL
+                            url_start = time_module.time()
+                            try:
+                                result = run_async(agent.process(url, skip_fact_check=skip_fact_check))
+                                results.append(result)
+                                
+                                url_time = time_module.time() - url_start
+                                processing_times.append(url_time)
+                                
+                                if result.status == ProcessingStatus.COMPLETED:
+                                    completed_count += 1
+                                    with url_status_container:
+                                        st.success(f"✅ {url[:60]}... ({int(url_time)}s)")
+                                else:
+                                    failed_count += 1
+                                    with url_status_container:
+                                        st.error(f"❌ {url[:60]}... - {result.error or 'Failed'}")
+                            
+                            except Exception as url_error:
+                                failed_count += 1
+                                url_time = time_module.time() - url_start
+                                processing_times.append(url_time)
+                                with url_status_container:
+                                    st.error(f"❌ {url[:60]}... - {str(url_error)[:50]}")
+                                # Create a failed result
+                                results.append(ProcessedResult(
+                                    url=url,
+                                    source_type=URLType.UNKNOWN,
+                                    status=ProcessingStatus.FAILED,
+                                    error=str(url_error),
+                                ))
+                    finally:
+                        # Always cleanup agent resources
+                        run_async(agent.close())
+                
+                    # Final update (only runs if processing completed without exception)
+                    progress_bar.progress(1.0)
+                    completed_metric.metric("✅ Completed", completed_count)
+                    failed_metric.metric("❌ Failed", failed_count)
+                    elapsed = time_module.time() - start_time
+                    elapsed_metric.metric("⏱️ Total Time", f"{int(elapsed // 60)}m {int(elapsed % 60)}s")
+                    eta_metric.metric("📊 Status", "Done!")
+                    current_status.success(f"🎉 Completed processing {total_urls} URLs!")
 
-                    # Display results
-                    for i, result in enumerate(results):
-                        with st.expander(f"Result {i+1}: {result.url[:60]}...", expanded=(i == 0)):
-                            display_result(result)
-
-                        # Add to history (keep only last 100 items)
+                    # Add to history
+                    for result in results:
                         st.session_state.history.append({
                             "url": result.url,
                             "status": result.status.value,
                             "timestamp": datetime.now().isoformat(),
                         })
-                        st.session_state.history = st.session_state.history[-100:]
+                    st.session_state.history = st.session_state.history[-100:]
+
+                    # Display results
+                    st.markdown("---")
+                    st.markdown("### Results")
+                    
+                    # Summary stats
+                    summary_cols = st.columns(3)
+                    with summary_cols[0]:
+                        st.metric("Total Processed", len(results))
+                    with summary_cols[1]:
+                        if len(results) > 0:
+                            st.metric("Successful", completed_count, delta=f"{(completed_count/len(results)*100):.0f}%")
+                        else:
+                            st.metric("Successful", 0)
+                    with summary_cols[2]:
+                        st.metric("Failed", failed_count)
+                    
+                    # Results display
+                    for i, result in enumerate(results):
+                        status_icon = "✅" if result.status == ProcessingStatus.COMPLETED else "❌"
+                        with st.expander(f"{status_icon} Result {i+1}: {result.url[:60]}...", expanded=(i == 0)):
+                            display_result(result)
 
                     # Export all results
                     st.markdown("---")
@@ -435,7 +580,7 @@ def main():
                 except Exception as e:
                     logger.exception("Error processing batch URLs")
                     progress_bar.empty()
-                    status_text.error("Error processing URLs. Please check the URLs and try again.")
+                    current_status.error("❌ Error processing URLs. Please check the logs and try again.")
 
 
 if __name__ == "__main__":

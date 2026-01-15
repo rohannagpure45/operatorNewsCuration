@@ -320,7 +320,6 @@ def display_batch_results(results: list, show_clear_button: bool = True):
                 data=pdf_bytes,
                 file_name=f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
                 mime="application/pdf",
-                on_click="ignore",
                 key="batch_pdf_download",
             )
         except Exception as pdf_error:
@@ -337,7 +336,6 @@ def display_batch_results(results: list, show_clear_button: bool = True):
                 data=slides_md,
                 file_name=f"slides_deck_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md",
                 mime="text/markdown",
-                on_click="ignore",
                 key="batch_slides_download",
             )
         except Exception as slides_error:
@@ -356,7 +354,6 @@ def display_batch_results(results: list, show_clear_button: bool = True):
             data=all_results_json,
             file_name=f"batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
             mime="application/json",
-            on_click="ignore",
             key="batch_json_download",
         )
     
@@ -451,7 +448,6 @@ def main():
                                 data=result_json,
                                 file_name=f"result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                                 mime="application/json",
-                                on_click="ignore",
                             )
                         
                         with export_cols[1]:
@@ -465,7 +461,6 @@ def main():
                                     data=pdf_bytes,
                                     file_name=pdf_filename,
                                     mime="application/pdf",
-                                    on_click="ignore",
                                 )
                             except Exception as pdf_error:
                                 logger.exception("Error generating PDF")

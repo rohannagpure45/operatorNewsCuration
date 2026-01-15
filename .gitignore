@@ -45,6 +45,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Accidental pip logs (from commands like "pip install >=1.42.0")
+=*
+
 # Environment variables
 .env
 .env.local

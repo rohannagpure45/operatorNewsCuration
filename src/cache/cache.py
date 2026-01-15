@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Default constants
 DEFAULT_MAX_ENTRIES = 100
 CACHE_FILENAME = "history.json"
-CURRENT_SCHEMA_VERSION = 1
+CURRENT_SCHEMA_VERSION = 2
 
 
 class CacheEntry(BaseModel):
@@ -32,6 +32,11 @@ class CacheEntry(BaseModel):
     status: str = Field(description="Processing status: completed, failed")
     timestamp: datetime = Field(description="When the URL was processed")
     source_type: Optional[str] = Field(default=None, description="URL type")
+    # NEW in v2: Store serialized result for restoration from Recents
+    result_json: Optional[str] = Field(
+        default=None, 
+        description="Serialized ProcessedResult JSON for full result restoration"
+    )
 
 
 class CacheData(BaseModel):
@@ -209,6 +214,14 @@ class LocalCache:
                 if "title" not in entry:
                     entry["title"] = None
             data["version"] = 1
+            from_version = 1
+        
+        # Version 1 -> 2: Add result_json field
+        if from_version == 1:
+            for entry in data.get("entries", []):
+                if "result_json" not in entry:
+                    entry["result_json"] = None
+            data["version"] = 2
         
         return data
 

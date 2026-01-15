@@ -344,7 +344,7 @@ class TestCacheSchemaVersion:
 
     def test_cache_includes_schema_version(self, temp_cache_dir, sample_entry_data):
         """Cache file should include schema version."""
-        from src.cache.cache import CacheEntry, LocalCache
+        from src.cache.cache import CacheEntry, LocalCache, CURRENT_SCHEMA_VERSION
         
         cache = LocalCache(cache_dir=temp_cache_dir)
         cache.add_entry(CacheEntry(**sample_entry_data))
@@ -354,7 +354,7 @@ class TestCacheSchemaVersion:
             data = json.load(f)
         
         assert "version" in data
-        assert data["version"] == 1
+        assert data["version"] == CURRENT_SCHEMA_VERSION
 
     def test_cache_schema_version_migration(self, temp_cache_dir):
         """Old schema versions should trigger migration."""
@@ -382,6 +382,38 @@ class TestCacheSchemaVersion:
         # Should handle migration (exact behavior depends on implementation)
         # For now, just verify it doesn't crash
         assert isinstance(entries, list)
+
+    def test_cache_schema_v1_to_v2_migration(self, temp_cache_dir):
+        """Version 1 schema should migrate to version 2 with result_json field."""
+        from src.cache.cache import LocalCache
+        
+        # Create cache file with v1 schema (no result_json field)
+        temp_cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_file = temp_cache_dir / "history.json"
+        v1_data = {
+            "version": 1,
+            "entries": [
+                {
+                    "url": "https://example.com/v1",
+                    "title": "Test Article",
+                    "status": "completed",
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "source_type": "news_article",
+                }
+            ],
+        }
+        with open(cache_file, "w") as f:
+            json.dump(v1_data, f)
+        
+        cache = LocalCache(cache_dir=temp_cache_dir)
+        entries = cache.load()
+        
+        # Should have migrated successfully
+        assert len(entries) == 1
+        assert entries[0].url == "https://example.com/v1"
+        # result_json should exist and be None (added by migration)
+        assert hasattr(entries[0], 'result_json')
+        assert entries[0].result_json is None
 
 
 # =============================================================================

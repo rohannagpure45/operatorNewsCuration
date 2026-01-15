@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 from src.agent import NewsAgent
 from src.cache.cache import CacheEntry, LocalCache
 from src.export.pdf_report import PDFReportGenerator
+from src.export.slides_deck import SlidesDeckGenerator
 from src.models.schemas import ProcessedResult, ProcessingStatus, Sentiment, URLType
 
 
@@ -67,6 +68,12 @@ st.markdown("""
     .entity-money { background-color: #e0f2f1; color: #00695c; }
 </style>
 """, unsafe_allow_html=True)
+
+# Initialize session state for batch results persistence
+if "batch_results" not in st.session_state:
+    st.session_state.batch_results = None
+if "batch_urls" not in st.session_state:
+    st.session_state.batch_urls = None
 
 
 def get_sentiment_emoji(sentiment: Sentiment) -> str:
@@ -261,6 +268,106 @@ def display_result(result):
                 st.markdown(f"**Processing Time:** {result.processing_time_ms}ms")
 
 
+def display_batch_results(results: list, show_clear_button: bool = True):
+    """Display batch processing results with download buttons.
+    
+    Args:
+        results: List of ProcessedResult objects to display
+        show_clear_button: Whether to show the clear results button
+    """
+    if not results:
+        return
+    
+    # Calculate stats
+    completed_count = sum(1 for r in results if r.status == ProcessingStatus.COMPLETED)
+    failed_count = len(results) - completed_count
+    
+    # Header with clear button
+    header_cols = st.columns([3, 1])
+    with header_cols[0]:
+        st.markdown("### Results")
+    with header_cols[1]:
+        if show_clear_button:
+            if st.button("🗑️ Clear Results", key="clear_batch_results"):
+                st.session_state.batch_results = None
+                st.session_state.batch_urls = None
+                st.rerun()
+    
+    # Summary stats
+    summary_cols = st.columns(3)
+    with summary_cols[0]:
+        st.metric("Total Processed", len(results))
+    with summary_cols[1]:
+        if len(results) > 0:
+            st.metric("Successful", completed_count, delta=f"{(completed_count/len(results)*100):.0f}%")
+        else:
+            st.metric("Successful", 0)
+    with summary_cols[2]:
+        st.metric("Failed", failed_count)
+
+    # Export all results - show above individual results for easy access
+    st.markdown("---")
+    st.markdown("#### 📦 Download All Deliverables")
+    export_cols = st.columns(3)
+    
+    with export_cols[0]:
+        # Generate PDF Report
+        try:
+            pdf_generator = PDFReportGenerator()
+            pdf_bytes = pdf_generator.generate_batch(results)
+            st.download_button(
+                "📄 Download Report (PDF)",
+                data=pdf_bytes,
+                file_name=f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                mime="application/pdf",
+                on_click="ignore",
+                key="batch_pdf_download",
+            )
+        except Exception as pdf_error:
+            logger.exception("Error generating PDF report")
+            st.warning("PDF report unavailable")
+    
+    with export_cols[1]:
+        # Generate Slides Deck
+        try:
+            slides_generator = SlidesDeckGenerator()
+            slides_md = slides_generator.generate(results)
+            st.download_button(
+                "📊 Download Slides (MD)",
+                data=slides_md,
+                file_name=f"slides_deck_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md",
+                mime="text/markdown",
+                on_click="ignore",
+                key="batch_slides_download",
+            )
+        except Exception as slides_error:
+            logger.exception("Error generating slides deck")
+            st.warning("Slides deck unavailable")
+    
+    with export_cols[2]:
+        # JSON export (for debugging/advanced use)
+        all_results_json = json.dumps(
+            [r.model_dump() for r in results],
+            indent=2,
+            default=str,
+        )
+        st.download_button(
+            "📥 Download Raw (JSON)",
+            data=all_results_json,
+            file_name=f"batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json",
+            on_click="ignore",
+            key="batch_json_download",
+        )
+    
+    # Individual results - in collapsible sections below downloads
+    st.markdown("---")
+    st.markdown("#### 📋 Individual Results")
+    for i, result in enumerate(results):
+        status_icon = "✅" if result.status == ProcessingStatus.COMPLETED else "❌"
+        with st.expander(f"{status_icon} Result {i+1}: {result.url[:60]}...", expanded=False):
+            display_result(result)
+
 def main():
     """Main Streamlit application."""
     # Sidebar
@@ -344,6 +451,7 @@ def main():
                                 data=result_json,
                                 file_name=f"result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                                 mime="application/json",
+                                on_click="ignore",
                             )
                         
                         with export_cols[1]:
@@ -357,6 +465,7 @@ def main():
                                     data=pdf_bytes,
                                     file_name=pdf_filename,
                                     mime="application/pdf",
+                                    on_click="ignore",
                                 )
                             except Exception as pdf_error:
                                 logger.exception("Error generating PDF")
@@ -370,6 +479,13 @@ def main():
     with tab2:
         st.markdown("### Batch Process Multiple URLs")
         st.caption("Supports markdown-wrapped URLs, comments (#), and blank lines.")
+
+        # Check for persisted batch results from session state
+        if st.session_state.batch_results is not None:
+            st.success("📋 Showing results from previous batch run. Click 'Clear Results' to start a new batch.")
+            display_batch_results(st.session_state.batch_results)
+            st.markdown("---")
+            st.markdown("### Process New URLs")
 
         # Text area for multiple URLs
         urls_text = st.text_area(
@@ -533,60 +649,13 @@ def main():
                             source_type=result.source_type.value,
                         ))
 
-                    # Display results
-                    st.markdown("---")
-                    st.markdown("### Results")
-                    
-                    # Summary stats
-                    summary_cols = st.columns(3)
-                    with summary_cols[0]:
-                        st.metric("Total Processed", len(results))
-                    with summary_cols[1]:
-                        if len(results) > 0:
-                            st.metric("Successful", completed_count, delta=f"{(completed_count/len(results)*100):.0f}%")
-                        else:
-                            st.metric("Successful", 0)
-                    with summary_cols[2]:
-                        st.metric("Failed", failed_count)
-                    
-                    # Results display
-                    for i, result in enumerate(results):
-                        status_icon = "✅" if result.status == ProcessingStatus.COMPLETED else "❌"
-                        with st.expander(f"{status_icon} Result {i+1}: {result.url[:60]}...", expanded=(i == 0)):
-                            display_result(result)
+                    # Store in session state for persistence across reruns
+                    st.session_state.batch_results = results
+                    st.session_state.batch_urls = urls_to_process
 
-                    # Export all results
+                    # Display results using the reusable function
                     st.markdown("---")
-                    st.markdown("#### Export All Results")
-                    export_cols = st.columns(2)
-                    
-                    with export_cols[0]:
-                        all_results_json = json.dumps(
-                            [r.model_dump() for r in results],
-                            indent=2,
-                            default=str,
-                        )
-                        st.download_button(
-                            "📥 Download All (JSON)",
-                            data=all_results_json,
-                            file_name=f"batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
-                            mime="application/json",
-                        )
-                    
-                    with export_cols[1]:
-                        # Generate batch PDF
-                        try:
-                            pdf_generator = PDFReportGenerator()
-                            pdf_bytes = pdf_generator.generate_batch(results)
-                            st.download_button(
-                                "📄 Download All (PDF)",
-                                data=pdf_bytes,
-                                file_name=f"batch_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                                mime="application/pdf",
-                            )
-                        except Exception as pdf_error:
-                            logger.exception("Error generating batch PDF")
-                            st.warning("PDF generation unavailable")
+                    display_batch_results(results, show_clear_button=True)
 
                 except Exception as e:
                     logger.exception("Error processing batch URLs")

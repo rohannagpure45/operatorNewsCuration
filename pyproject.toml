@@ -51,6 +51,7 @@ dev = [
 
 [project.scripts]
 news-agent = "src.cli:main"
+app = "src.api.main:app"
 
 [project.urls]
 Homepage = "https://github.com/your-org/operatorNewsCuration"

@@ -20,8 +20,9 @@ logger = logging.getLogger(__name__)
 
 # Default constants
 DEFAULT_MAX_ENTRIES = 100
+DEFAULT_MAX_BATCH_RUNS = 20
 CACHE_FILENAME = "history.json"
-CURRENT_SCHEMA_VERSION = 2
+CURRENT_SCHEMA_VERSION = 3
 
 
 class CacheEntry(BaseModel):
@@ -39,11 +40,27 @@ class CacheEntry(BaseModel):
     )
 
 
+class BatchRun(BaseModel):
+    """A cached batch processing run with deliverables."""
+
+    id: str = Field(description="Unique identifier for the batch run")
+    urls: List[str] = Field(description="List of URLs processed in this batch")
+    timestamp: datetime = Field(description="When the batch was processed")
+    url_count: int = Field(description="Number of URLs in the batch")
+    success_count: int = Field(description="Number of successful results")
+    failed_count: int = Field(description="Number of failed results")
+    results_json: Optional[str] = Field(
+        default=None, 
+        description="Serialized list of ProcessedResult JSON for restoration"
+    )
+
+
 class CacheData(BaseModel):
     """Schema for the cache file."""
 
     version: int = Field(default=CURRENT_SCHEMA_VERSION, description="Schema version")
     entries: List[CacheEntry] = Field(default_factory=list, description="Cached entries")
+    batch_runs: List[BatchRun] = Field(default_factory=list, description="Cached batch runs")
 
 
 class LocalCache:
@@ -57,15 +74,18 @@ class LocalCache:
         self,
         cache_dir: Optional[Path] = None,
         max_entries: int = DEFAULT_MAX_ENTRIES,
+        max_batch_runs: int = DEFAULT_MAX_BATCH_RUNS,
     ):
         """Initialize the local cache.
         
         Args:
             cache_dir: Directory to store cache files. Defaults to ~/.newscuration/cache
             max_entries: Maximum number of entries to keep. Oldest are evicted first.
+            max_batch_runs: Maximum number of batch runs to keep. Oldest are evicted first.
         """
         self.cache_dir = cache_dir or self._get_default_cache_dir()
         self.max_entries = max_entries
+        self.max_batch_runs = max_batch_runs
         self._cache_file = self.cache_dir / CACHE_FILENAME
         self._lock_file = self.cache_dir / f"{CACHE_FILENAME}.lock"
         self._writable = True
@@ -95,14 +115,14 @@ class LocalCache:
             logger.warning("filelock not installed, file locking disabled")
             return _DummyLock()
 
-    def _load_unlocked(self) -> List[CacheEntry]:
-        """Load entries without acquiring lock (for internal use).
+    def _load_unlocked(self) -> CacheData:
+        """Load cache data without acquiring lock (for internal use).
         
         Returns:
-            List of cache entries, or empty list if cache is empty/invalid.
+            CacheData object with entries and batch_runs.
         """
         if not self._cache_file.exists():
-            return []
+            return CacheData()
 
         try:
             with open(self._cache_file, "r", encoding="utf-8") as f:
@@ -110,7 +130,7 @@ class LocalCache:
             
             # Validate and migrate schema
             cache_data = self._parse_and_migrate(data)
-            return cache_data.entries
+            return cache_data
                 
         except json.JSONDecodeError as e:
             logger.warning(f"Cache file corrupted: {e}")
@@ -120,11 +140,11 @@ class LocalCache:
             logger.warning(f"Error loading cache: {e}")
             return []
 
-    def _save_unlocked(self, entries: List[CacheEntry]) -> bool:
-        """Save entries without acquiring lock (for internal use).
+    def _save_unlocked(self, cache_data: CacheData) -> bool:
+        """Save cache data without acquiring lock (for internal use).
         
         Args:
-            entries: List of entries to save
+            cache_data: CacheData object to save
             
         Returns:
             True if save succeeded, False otherwise
@@ -133,8 +153,6 @@ class LocalCache:
             return False
 
         try:
-            cache_data = CacheData(entries=entries)
-            
             with open(self._cache_file, "w", encoding="utf-8") as f:
                 json.dump(
                     cache_data.model_dump(mode="json"),
@@ -160,7 +178,8 @@ class LocalCache:
         """
         try:
             with self._get_lock():
-                return self._load_unlocked()
+                cache_data = self._load_unlocked()
+                return cache_data.entries
         except Exception as e:
             logger.warning(f"Error loading cache: {e}")
             return []
@@ -194,7 +213,21 @@ class LocalCache:
                 logger.warning(f"Skipping invalid cache entry: {e}")
                 continue
         
-        return CacheData(version=CURRENT_SCHEMA_VERSION, entries=entries)
+        # Parse batch runs with validation
+        batch_runs = []
+        for batch_data in data.get("batch_runs", []):
+            try:
+                # Handle timestamp parsing
+                if isinstance(batch_data.get("timestamp"), str):
+                    batch_data["timestamp"] = datetime.fromisoformat(
+                        batch_data["timestamp"].replace("Z", "+00:00")
+                    )
+                batch_runs.append(BatchRun(**batch_data))
+            except Exception as e:
+                logger.warning(f"Skipping invalid batch run: {e}")
+                continue
+        
+        return CacheData(version=CURRENT_SCHEMA_VERSION, entries=entries, batch_runs=batch_runs)
 
     def _migrate_schema(self, data: dict, from_version: int) -> dict:
         """Migrate schema from older versions.
@@ -222,6 +255,13 @@ class LocalCache:
                 if "result_json" not in entry:
                     entry["result_json"] = None
             data["version"] = 2
+            from_version = 2
+        
+        # Version 2 -> 3: Add batch_runs list
+        if from_version == 2:
+            if "batch_runs" not in data:
+                data["batch_runs"] = []
+            data["version"] = 3
         
         return data
 
@@ -246,7 +286,9 @@ class LocalCache:
         """
         try:
             with self._get_lock():
-                return self._save_unlocked(entries)
+                cache_data = self._load_unlocked()
+                cache_data.entries = entries
+                return self._save_unlocked(cache_data)
         except OSError as e:
             logger.warning(f"Cannot write to cache file: {e}")
             self._writable = False
@@ -272,7 +314,8 @@ class LocalCache:
 
         try:
             with self._get_lock():
-                entries = self._load_unlocked()
+                cache_data = self._load_unlocked()
+                entries = cache_data.entries
                 
                 # Check for existing entry with same URL
                 existing_idx = None
@@ -290,9 +333,9 @@ class LocalCache:
                 
                 # Sort by timestamp (newest first) and enforce limit
                 entries.sort(key=lambda e: e.timestamp, reverse=True)
-                entries = entries[: self.max_entries]
+                cache_data.entries = entries[: self.max_entries]
                 
-                return self._save_unlocked(entries)
+                return self._save_unlocked(cache_data)
                 
         except Exception as e:
             logger.warning(f"Error adding cache entry: {e}")
@@ -333,6 +376,79 @@ class LocalCache:
             True if clear succeeded, False otherwise
         """
         return self.save([])
+
+    # ===== Batch Run Methods =====
+
+    def add_batch_run(self, batch_run: BatchRun) -> bool:
+        """Add a batch run to the cache.
+        
+        Enforces max_batch_runs limit via FIFO eviction.
+        
+        Args:
+            batch_run: Batch run to add
+            
+        Returns:
+            True if add succeeded, False otherwise
+        """
+        if not self._writable:
+            return False
+
+        try:
+            with self._get_lock():
+                cache_data = self._load_unlocked()
+                batch_runs = cache_data.batch_runs
+                
+                # Add new batch run
+                batch_runs.append(batch_run)
+                
+                # Sort by timestamp (newest first) and enforce limit
+                batch_runs.sort(key=lambda b: b.timestamp, reverse=True)
+                cache_data.batch_runs = batch_runs[: self.max_batch_runs]
+                
+                return self._save_unlocked(cache_data)
+                
+        except Exception as e:
+            logger.warning(f"Error adding batch run: {e}")
+            return False
+
+    def get_recent_batches(self, limit: int = 10) -> List[BatchRun]:
+        """Get the most recent batch runs.
+        
+        Args:
+            limit: Maximum number of batch runs to return
+            
+        Returns:
+            List of most recent batch runs, ordered by timestamp (newest first)
+        """
+        try:
+            with self._get_lock():
+                cache_data = self._load_unlocked()
+                batch_runs = cache_data.batch_runs
+                batch_runs.sort(key=lambda b: b.timestamp, reverse=True)
+                return batch_runs[:limit]
+        except Exception as e:
+            logger.warning(f"Error getting recent batches: {e}")
+            return []
+
+    def get_batch_by_id(self, batch_id: str) -> Optional[BatchRun]:
+        """Get a specific batch run by ID.
+        
+        Args:
+            batch_id: The batch run ID to look up
+            
+        Returns:
+            The batch run if found, None otherwise
+        """
+        try:
+            with self._get_lock():
+                cache_data = self._load_unlocked()
+                for batch in cache_data.batch_runs:
+                    if batch.id == batch_id:
+                        return batch
+                return None
+        except Exception as e:
+            logger.warning(f"Error getting batch by ID: {e}")
+            return None
 
 
 class _DummyLock:

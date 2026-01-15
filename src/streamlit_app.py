@@ -11,7 +11,7 @@ import streamlit as st
 logger = logging.getLogger(__name__)
 
 from src.agent import NewsAgent
-from src.cache.cache import CacheEntry, LocalCache
+from src.cache.cache import BatchRun, CacheEntry, LocalCache
 from src.export.pdf_report import PDFReportGenerator
 from src.export.slides_deck import SlidesDeckGenerator
 from src.models.schemas import ProcessedResult, ProcessingStatus, Sentiment, URLType
@@ -35,10 +35,14 @@ st.set_page_config(
 # Custom CSS for better styling
 st.markdown("""
 <style>
-    .stMetric {
-        background-color: #f0f2f6;
+    .stMetric, [data-testid="stMetric"], [data-testid="metric-container"] {
+        background-color: rgba(255, 255, 255, 0.05) !important;
         padding: 10px;
         border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    [data-testid="stMetric"] > div {
+        background-color: transparent !important;
     }
     .success-box {
         padding: 1rem;
@@ -74,6 +78,10 @@ if "batch_results" not in st.session_state:
     st.session_state.batch_results = None
 if "batch_urls" not in st.session_state:
     st.session_state.batch_urls = None
+if "restore_batch_id" not in st.session_state:
+    st.session_state.restore_batch_id = None
+if "active_tab" not in st.session_state:
+    st.session_state.active_tab = "single"
 
 
 def get_sentiment_emoji(sentiment: Sentiment) -> str:
@@ -378,19 +386,20 @@ def main():
 
         st.markdown("---")
 
-        # Recents section - load from persistent cache
+        # Recents section - load BATCH RUNS from persistent cache
         cache = get_cache()
-        recent_entries = cache.get_recent(limit=10)
+        recent_batches = cache.get_recent_batches(limit=10)
 
-        if recent_entries:
+        if recent_batches:
             st.markdown("### 🕒 Recents")
-            for i, entry in enumerate(recent_entries):
-                status_icon = "✅" if entry.status == "completed" else "❌"
-                # Show title if available, otherwise use URL (with truthy fallback)
-                original_text = entry.title or entry.url or "Unknown"
-                truncated_text = original_text if len(original_text) <= 35 else original_text[:35] + "..."
-                if st.button(f"{status_icon} {truncated_text}", key=f"recent_{i}"):
-                    st.session_state.selected_url = entry.url
+            for i, batch in enumerate(recent_batches):
+                status_icon = "✅" if batch.failed_count == 0 else "⚠️"
+                time_str = batch.timestamp.strftime("%m/%d %H:%M")
+                label = f"{status_icon} {batch.url_count} URLs - {time_str}"
+                if st.button(label, key=f"recent_batch_{i}"):
+                    st.session_state.restore_batch_id = batch.id
+                    st.session_state.active_tab = "batch"
+                    st.rerun()
 
         st.markdown("---")
         st.caption("Built with Trafilatura, Gemini, and Playwright")
@@ -399,10 +408,39 @@ def main():
     st.title("News Curation Agent")
     st.markdown("Extract, fact-check, and summarize content from news articles, Twitter/X, and SEC filings.")
 
-    # Tabs for different input modes
-    tab1, tab2 = st.tabs(["Single URL", "Batch Processing"])
+    # Handle batch restoration from Recents sidebar
+    if st.session_state.restore_batch_id:
+        batch_id = st.session_state.restore_batch_id
+        st.session_state.restore_batch_id = None  # Clear to avoid re-triggering
+        batch = get_cache().get_batch_by_id(batch_id)
+        if batch and batch.results_json:
+            try:
+                results_data = json.loads(batch.results_json)
+                results = [ProcessedResult.model_validate(r) for r in results_data]
+                st.session_state.batch_results = results
+                st.session_state.batch_urls = batch.urls
+                st.success(f"📋 Restored batch from {batch.timestamp.strftime('%m/%d %H:%M')}")
+            except Exception as e:
+                logger.warning(f"Error restoring batch: {e}")
+                st.error("Could not restore batch results.")
 
-    with tab1:
+    # Tab selection using segmented control (allows programmatic switching)
+    tab_options = ["Single URL", "Batch Processing"]
+    desired_tab = "Batch Processing" if st.session_state.active_tab == "batch" else "Single URL"
+    
+    # Clear stale widget state if it doesn't match the desired tab (e.g., after clicking a recent batch)
+    if "tab_selector" in st.session_state and st.session_state["tab_selector"] != desired_tab:
+        del st.session_state["tab_selector"]
+    
+    selected_tab = st.segmented_control("Mode", tab_options, default=desired_tab, key="tab_selector")
+    
+    # Update session state when user manually changes tab
+    if selected_tab == "Batch Processing":
+        st.session_state.active_tab = "batch"
+    else:
+        st.session_state.active_tab = "single"
+
+    if selected_tab == "Single URL":
         st.markdown("### Process a Single URL")
 
         # URL input
@@ -471,7 +509,7 @@ def main():
                         progress.empty()
                         st.error("Error processing URL. Please check the URL and try again.")
 
-    with tab2:
+    elif selected_tab == "Batch Processing":
         st.markdown("### Batch Process Multiple URLs")
         st.caption("Supports markdown-wrapped URLs, comments (#), and blank lines.")
 
@@ -633,16 +671,19 @@ def main():
                     eta_metric.metric("📊 Status", "Done!")
                     current_status.success(f"🎉 Completed processing {total_urls} URLs!")
 
-                    # Save to persistent cache
+                    # Save BATCH RUN to persistent cache (not individual entries)
+                    from uuid import uuid4
                     cache = get_cache()
-                    for result in results:
-                        cache.add_entry(CacheEntry(
-                            url=result.url,
-                            title=result.content.title if result.content else None,
-                            status=result.status.value,
-                            timestamp=datetime.now(),
-                            source_type=result.source_type.value,
-                        ))
+                    batch_run = BatchRun(
+                        id=str(uuid4()),
+                        urls=urls_to_process,
+                        timestamp=datetime.now(),
+                        url_count=len(results),
+                        success_count=completed_count,
+                        failed_count=failed_count,
+                        results_json=json.dumps([r.model_dump(mode='json') for r in results]),
+                    )
+                    cache.add_batch_run(batch_run)
 
                     # Store in session state for persistence across reruns
                     st.session_state.batch_results = results

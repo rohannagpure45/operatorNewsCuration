@@ -1,4 +1,4 @@
-"""Streamlit frontend for the News Curation Agent."""
+"""Streamlit frontend for the News Curation Automation."""
 
 # Path setup for Streamlit Cloud deployment
 # When running on Streamlit Cloud, the app is executed from the repo root
@@ -37,7 +37,7 @@ def get_cache():
 
 # Page configuration
 st.set_page_config(
-    page_title="News Curation Agent",
+    page_title="News Curation Automation",
     page_icon="📰",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -388,7 +388,7 @@ def main():
     """Main Streamlit application."""
     # Sidebar
     with st.sidebar:
-        st.title("📰 News Curation Agent")
+        st.title("📰 News Curation Automation")
         st.markdown("---")
 
         # Configuration
@@ -416,7 +416,7 @@ def main():
         st.caption("Built with Trafilatura, Gemini, and Playwright")
 
     # Main content
-    st.title("News Curation Agent")
+    st.title("News Curation Automation")
     st.markdown("Extract, fact-check, and summarize content from news articles, Twitter/X, and SEC filings.")
 
     # Handle batch restoration from Recents sidebar

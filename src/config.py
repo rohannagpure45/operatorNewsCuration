@@ -1,7 +1,6 @@
 """Configuration management for the News Curation Agent."""
 
 import os
-from functools import lru_cache
 from typing import Optional
 
 from pydantic import Field
@@ -78,9 +77,26 @@ class Settings(BaseSettings):
         return self.has_firebase or self.has_supabase
 
 
-@lru_cache
 def get_settings() -> Settings:
-    """Get cached application settings."""
-    return Settings()
+    """Get application settings.
+    
+    Loads settings from environment variables, .env file, and Streamlit secrets.
+    Streamlit secrets take priority when running in Streamlit.
+    """
+    # First, try to get API key from Streamlit secrets
+    streamlit_api_key = None
+    try:
+        import streamlit as st
+        if hasattr(st, 'secrets') and 'GEMINI_API_KEY' in st.secrets:
+            streamlit_api_key = st.secrets['GEMINI_API_KEY']
+    except Exception:
+        # Not running in Streamlit or secrets not available
+        pass
+    
+    # Create settings - if we have a Streamlit secret, use it
+    if streamlit_api_key:
+        return Settings(gemini_api_key=streamlit_api_key)
+    else:
+        return Settings()
 
 

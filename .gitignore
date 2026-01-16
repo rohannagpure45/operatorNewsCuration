@@ -51,6 +51,7 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+.streamlit/secrets.toml
 
 # Node modules (if any JS/Node is used)
 node_modules/

@@ -41,3 +41,54 @@ def test_settings_validation_no_api_key():
         # Restore .env file
         if has_env and os.path.exists(".env.tmp"):
             os.rename(".env.tmp", ".env")
+
+
+def test_all_settings_have_defaults():
+    """Test that all Settings fields have sensible defaults for Streamlit Cloud deployment."""
+    has_env = False
+    saved_env = {}
+    
+    try:
+        # Backup .env file
+        has_env = os.path.exists(".env")
+        if has_env:
+            os.rename(".env", ".env.tmp")
+        
+        # Save and clear all relevant environment variables
+        env_prefixes = ('GEMINI', 'GOOGLE', 'BROWSER', 'SUPABASE', 'FIREBASE', 
+                        'CLAIMBUSTER', 'NEWSGUARD', 'NEWSAPI', 'API_', 'LOG_', 
+                        'RATE_', 'MAX_', 'EXTRACTION_', 'LLM_', 'NARRATIVE_')
+        for key in list(os.environ.keys()):
+            if any(key.startswith(prefix) for prefix in env_prefixes):
+                saved_env[key] = os.environ.pop(key)
+        
+        # Clear cache and instantiate Settings
+        from src.config import get_settings, Settings
+        get_settings.cache_clear()
+        settings = Settings()
+        
+        # Verify key optional fields are None (not raising errors)
+        assert settings.gemini_api_key is None
+        assert settings.google_fact_check_api_key is None
+        assert settings.browserless_api_key is None
+        assert settings.firebase_credentials_path is None
+        assert settings.supabase_url is None
+        
+        # Verify fields with defaults work
+        assert settings.gemini_model == "gemini-1.5-flash"
+        assert settings.log_level == "INFO"
+        assert settings.api_port == 8000
+        assert settings.narrative_theme == "abundance"
+        
+        print("\nAll Settings fields have proper defaults!")
+        
+    except ValidationError as e:
+        pytest.fail(f"Settings failed to initialize with defaults: {e}")
+    finally:
+        # Restore environment variables
+        os.environ.update(saved_env)
+        
+        # Restore .env file
+        if has_env and os.path.exists(".env.tmp"):
+            os.rename(".env.tmp", ".env")
+

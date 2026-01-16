@@ -75,7 +75,7 @@ def test_all_settings_have_defaults():
         assert settings.supabase_url is None
         
         # Verify fields with defaults work
-        assert settings.gemini_model == "gemini-1.5-flash"
+        assert settings.gemini_model == "gemini-3-flash-preview"
         assert settings.log_level == "INFO"
         assert settings.api_port == 8000
         assert settings.narrative_theme == "abundance"

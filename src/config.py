@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     # LLM Configuration (required for operation, but optional for startup)
     gemini_api_key: Optional[str] = None
-    gemini_model: str = "gemini-1.5-flash"
+    gemini_model: str = "gemini-3-flash-preview"
 
     # Fact-Checking (optional - gracefully degrades if not provided)
     google_fact_check_api_key: Optional[str] = None

@@ -142,9 +142,9 @@ def run_async(coro):
             loop.close()
 
 
-async def process_url_async(url: str, skip_fact_check: bool = False):
+async def process_url_async(url: str, skip_fact_check: bool = False, api_key: str = None):
     """Process a URL asynchronously."""
-    agent = NewsAgent()
+    agent = NewsAgent(gemini_api_key=api_key)
     try:
         result = await agent.process(url, skip_fact_check=skip_fact_check)
         return result
@@ -152,9 +152,9 @@ async def process_url_async(url: str, skip_fact_check: bool = False):
         await agent.close()
 
 
-async def process_batch_async(urls: list, skip_fact_check: bool = False):
+async def process_batch_async(urls: list, skip_fact_check: bool = False, api_key: str = None):
     """Process multiple URLs asynchronously."""
-    agent = NewsAgent()
+    agent = NewsAgent(gemini_api_key=api_key)
     try:
         results = await agent.process_batch(urls, skip_fact_check=skip_fact_check)
         return results
@@ -419,6 +419,37 @@ def main():
     st.title("News Curation Automation")
     st.markdown("Extract, fact-check, and summarize content from news articles, Twitter/X, and SEC filings.")
 
+    # API Key Handling
+    from src.config import get_settings
+    settings = get_settings()
+    api_key = settings.gemini_api_key
+
+    # If no API key in settings, ask for it in the sidebar
+    if not api_key:
+        with st.sidebar:
+            st.markdown("### 🔑 API Key Required")
+            st.info("No Gemini API key found in implementation settings. Please enter it below.")
+            api_key = st.text_input("Gemini API Key", type="password", help="Get one at https://aistudio.google.com/app/apikey")
+            if not api_key:
+                st.warning("Please enter your API Key to proceed.")
+                st.stop()
+    
+    # Update global functions to use the dynamic key
+    async def process_url_async_wrapper(url, skip_fact_check):
+        return await process_url_async(url, skip_fact_check, api_key=api_key)
+        
+    async def process_batch_async_wrapper(urls, skip_fact_check):
+        return await process_batch_async(urls, skip_fact_check, api_key=api_key)
+
+    # Monkey patch or re-define the async functions in this scope for the buttons to use
+    # Actually, simpler to just update the calls later, but let's redefine the wrappers
+    # directly where they are needed or pass api_key to them.
+    # To minimize changes to the rest of the file, we'll redefine the module-level functions
+    # LOCALLY within main(), but Streamlit buttons call lambda or functions.
+    # The existing code calls `process_url_async(url, skip_fact_check)`.
+    # We should update `process_url_async` signature in the file first to accept api_key.
+
+
     # Handle batch restoration from Recents sidebar
     if st.session_state.restore_batch_id:
         batch_id = st.session_state.restore_batch_id
@@ -468,7 +499,7 @@ def main():
 
                     try:
                         progress.progress(20, text="Extracting content...")
-                        result = run_async(process_url_async(url, skip_fact_check))
+                        result = run_async(process_url_async_wrapper(url, skip_fact_check))
 
                         progress.progress(100, text="Complete!")
 
@@ -644,7 +675,7 @@ def main():
                         # Process this URL with a fresh agent (via process_url_async)
                         url_start = time_module.time()
                         try:
-                            result = run_async(process_url_async(url, skip_fact_check))
+                            result = run_async(process_url_async_wrapper(url, skip_fact_check))
                             results.append(result)
                             
                             url_time = time_module.time() - url_start

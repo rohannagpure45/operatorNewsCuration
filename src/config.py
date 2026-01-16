@@ -11,8 +11,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    # LLM Configuration (required)
-    gemini_api_key: str = Field(..., description="Google Gemini API key")
+    # LLM Configuration (required for operation, but optional for startup)
+    gemini_api_key: Optional[str] = Field(
+        default=None, description="Google Gemini API key"
+    )
     gemini_model: str = Field(
         default="gemini-1.5-flash",
         description="Gemini model to use for summarization",

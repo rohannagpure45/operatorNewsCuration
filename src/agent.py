@@ -421,36 +421,46 @@ class NewsAgent:
 
 
 # Convenience function for quick processing
-async def process_url(url: str, **kwargs) -> ProcessedResult:
+async def process_url(
+    url: str, 
+    api_key: Optional[str] = None,
+    **kwargs
+) -> ProcessedResult:
     """
     Convenience function to process a single URL.
 
     Args:
         url: The URL to process.
+        api_key: Optional API key to override settings.
         **kwargs: Additional arguments passed to NewsAgent.process()
 
     Returns:
         ProcessedResult with the processed content.
     """
-    agent = NewsAgent()
+    agent = NewsAgent(gemini_api_key=api_key)
     try:
         return await agent.process(url, **kwargs)
     finally:
         await agent.close()
 
 
-async def process_urls(urls: List[str], **kwargs) -> List[ProcessedResult]:
+async def process_urls(
+    urls: List[str], 
+    api_key: Optional[str] = None,
+    **kwargs
+) -> List[ProcessedResult]:
     """
     Convenience function to process multiple URLs.
 
     Args:
         urls: List of URLs to process.
+        api_key: Optional API key to override settings.
         **kwargs: Additional arguments passed to NewsAgent.process_batch()
 
     Returns:
         List of ProcessedResult objects.
     """
-    agent = NewsAgent()
+    agent = NewsAgent(gemini_api_key=api_key)
     try:
         return await agent.process_batch(urls, **kwargs)
     finally:

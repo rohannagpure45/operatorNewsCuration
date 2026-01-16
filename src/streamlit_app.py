@@ -1,5 +1,16 @@
 """Streamlit frontend for the News Curation Agent."""
 
+# Path setup for Streamlit Cloud deployment
+# When running on Streamlit Cloud, the app is executed from the repo root
+# but the src package may not be in the Python path
+import sys
+from pathlib import Path
+
+# Add the repo root to Python path if not already present
+repo_root = Path(__file__).parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+
 import asyncio
 import json
 import logging

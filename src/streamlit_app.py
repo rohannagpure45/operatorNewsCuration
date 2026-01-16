@@ -439,19 +439,19 @@ def main():
     tab_options = ["Single URL", "Batch Processing"]
     desired_tab = "Batch Processing" if st.session_state.active_tab == "batch" else "Single URL"
     
-    # Clear stale widget state if it doesn't match the desired tab (e.g., after clicking a recent batch)
-    if "tab_selector" in st.session_state and st.session_state["tab_selector"] != desired_tab:
-        del st.session_state["tab_selector"]
-    
     selected_tab = st.segmented_control("Mode", tab_options, default=desired_tab, key="tab_selector")
     
     # Update session state when user manually changes tab
-    if selected_tab == "Batch Processing":
-        st.session_state.active_tab = "batch"
-    else:
-        st.session_state.active_tab = "single"
+    # Note: segmented_control can return None in some edge cases, so only update if we have a value
+    if selected_tab is not None:
+        if selected_tab == "Batch Processing":
+            st.session_state.active_tab = "batch"
+        else:
+            st.session_state.active_tab = "single"
 
-    if selected_tab == "Single URL":
+    # Use session state as source of truth for which content to display
+    # This ensures correct rendering even when selected_tab is None
+    if st.session_state.active_tab == "single":
         st.markdown("### Process a Single URL")
 
         # URL input
@@ -520,7 +520,7 @@ def main():
                         progress.empty()
                         st.error("Error processing URL. Please check the URL and try again.")
 
-    elif selected_tab == "Batch Processing":
+    elif st.session_state.active_tab == "batch":
         st.markdown("### Batch Process Multiple URLs")
         st.caption("Supports markdown-wrapped URLs, comments (#), and blank lines.")
 

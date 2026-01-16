@@ -12,82 +12,46 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # LLM Configuration (required for operation, but optional for startup)
-    gemini_api_key: Optional[str] = Field(
-        default=None, description="Google Gemini API key"
-    )
-    gemini_model: str = Field(
-        default="gemini-1.5-flash",
-        description="Gemini model to use for summarization",
-    )
+    gemini_api_key: Optional[str] = None
+    gemini_model: str = "gemini-1.5-flash"
 
     # Fact-Checking (optional - gracefully degrades if not provided)
-    google_fact_check_api_key: Optional[str] = Field(
-        default=None, description="Google Fact Check Tools API key"
-    )
-    claimbuster_api_key: Optional[str] = Field(
-        default=None, description="ClaimBuster API key (optional)"
-    )
-    newsguard_api_key: Optional[str] = Field(
-        default=None, description="NewsGuard API key (optional)"
-    )
+    google_fact_check_api_key: Optional[str] = None
+    claimbuster_api_key: Optional[str] = None
+    newsguard_api_key: Optional[str] = None
 
     # NewsAPI (optional - for article summary fallback)
-    newsapi_key: Optional[str] = Field(
-        default=None, description="NewsAPI.org API key for article summary fallback"
-    )
+    newsapi_key: Optional[str] = None
 
     # Storage - Firebase
-    firebase_credentials_path: Optional[str] = Field(
-        default=None, description="Path to Firebase service account JSON"
-    )
+    firebase_credentials_path: Optional[str] = None
 
     # Storage - Supabase (alternative)
-    supabase_url: Optional[str] = Field(default=None, description="Supabase project URL")
-    supabase_key: Optional[str] = Field(default=None, description="Supabase anon key")
+    supabase_url: Optional[str] = None
+    supabase_key: Optional[str] = None
 
     # Browser automation (optional - uses local Playwright if not set)
-    browserless_api_key: Optional[str] = Field(
-        default=None, description="Browserless.io API key for cloud browser"
-    )
-    browserless_use_unblock: bool = Field(
-        default=True, description="Enable /unblock API fallback for bot detection bypass"
-    )
-    browserless_use_residential_proxy: bool = Field(
-        default=False, description="Use residential proxy with /unblock API (paid feature)"
-    )
+    browserless_api_key: Optional[str] = None
+    browserless_use_unblock: bool = True
+    browserless_use_residential_proxy: bool = False
 
     # API Settings
-    api_host: str = Field(default="0.0.0.0", description="API server host")
-    api_port: int = Field(default=8000, description="API server port")
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
 
     # Application Settings
-    log_level: str = Field(default="INFO", description="Logging level")
-    rate_limit: int = Field(default=60, description="Rate limit per minute")
-    max_concurrent_requests: int = Field(
-        default=10, description="Maximum concurrent URL processing"
-    )
+    log_level: str = "INFO"
+    rate_limit: int = 60
+    max_concurrent_requests: int = 10
 
     # Timeouts
-    extraction_timeout: int = Field(
-        default=30, description="Timeout for content extraction in seconds"
-    )
-    llm_timeout: int = Field(
-        default=60, description="Timeout for LLM requests in seconds"
-    )
+    extraction_timeout: int = 30
+    llm_timeout: int = 60
 
     # Narrative Theming (optional - enhances output framing)
-    narrative_theme: str = Field(
-        default="abundance",
-        description="Narrative theme for content framing: abundance, hope, opportunity, none",
-    )
-    narrative_enabled: bool = Field(
-        default=True,
-        description="Enable narrative framing in summaries",
-    )
-    narrative_subtlety: str = Field(
-        default="moderate",
-        description="Framing intensity: subtle, moderate, prominent",
-    )
+    narrative_theme: str = "abundance"
+    narrative_enabled: bool = True
+    narrative_subtlety: str = "moderate"
 
     model_config = SettingsConfigDict(
         env_file=".env",

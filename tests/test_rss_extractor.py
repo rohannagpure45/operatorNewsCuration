@@ -7,6 +7,7 @@ from src.extractors.rss import RSSExtractor, extract_from_rss
 from src.extractors.base import ExtractionError
 
 
+
 # Sample RSS feed content for testing
 SAMPLE_RSS_FEED = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">

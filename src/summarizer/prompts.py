@@ -45,14 +45,18 @@ Choose the slide type based on content:
 - Quote: MAX 25 words
 - Captions: MAX 12 words
 
-**BULLET WRITING RULES:**
-✓ GOOD: "$20B deal, largest in company history"
-✓ GOOD: "90.4% accuracy on GPQA benchmark"
-✓ GOOD: "API pricing: $0.50/1M input tokens"
-✗ BAD: "The company announced that they have completed a deal"
-✗ BAD: "According to the announcement, this represents"
+**BULLET WRITING RULES - TRANSFORM ARTICLE TEXT TO SLIDE COPY:**
 
-Always suggest an image type that would complement the slide (e.g., "product screenshot", "CEO headshot", "data chart")."""
+Article says → Write this:
+- "The deal is valued at $20 billion" → "$20B deal, largest in company history"
+- "achieves 90.4% on benchmark" → "90.4% on GPQA benchmark"
+- "pricing is $1.75 per million" → "API: $1.75/1M input tokens"
+- "reduced to 5.8%" → "Hallucination rate drops to 5.8%"
+
+✗ NEVER start bullets with: "The", "A", "According to", "This"
+✗ NEVER use complete sentences
+
+Always suggest an image type (e.g., "product screenshot", "CEO headshot", "data chart")."""
 
 # Narrative injection placeholder - inserted between base prompt and JSON instruction
 NARRATIVE_INJECTION_MARKER = "{{NARRATIVE_GUIDANCE}}"
@@ -124,13 +128,15 @@ Generate slide-ready content. THIS IS CRITICAL - follow these rules exactly:
    - "chart": For percentage/growth data
    - "comparison": For product/model comparisons
 
-2. **headline**: MAX 8 WORDS. Example: "Nvidia Acquires Groq for $20B"
+2. **headline**: MAX 8 WORDS (count them!)
+   Example: "Nvidia Acquires Groq for $20B" (5 words ✓)
 
-3. **bullets**: EXACTLY 3-4 bullets, MAX 12 words each
-   ✓ "$20B deal, largest in company history"
-   ✓ "90.4% accuracy on GPQA benchmark"
-   ✓ "Hallucination rate drops to 5.8%"
-   ✗ "The company announced that they completed a deal" (TOO WORDY)
+3. **bullets**: EXACTLY 3-4 bullets, MAX 12 words each (count them!)
+   Transform verbose text → punchy fragments:
+   - "valued at $20 billion" → "$20B deal, largest in company history"
+   - "achieves 90.4%" → "90.4% on GPQA benchmark"
+   - "rate reduced to 5.8%" → "Hallucination rate drops to 5.8%"
+   ✗ NEVER: "The company announced..." or "According to..."
 
 4. **quote_text** + **quote_attribution**: Only if slide_type is "quote"
 

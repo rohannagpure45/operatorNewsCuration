@@ -8,16 +8,14 @@ services:
     env_file:
       - .env
     environment:
-      # Playwright browser configuration
-      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-      # Disable GPU for headless browser (container environment)
-      - PLAYWRIGHT_CHROMIUM_SANDBOX=false
+      # Agent-browser configuration (daemon auto-managed)
+      - AGENT_BROWSER_SESSION=default
     volumes:
       # Mount for development hot-reload
       - ./src:/app/src:ro
       # Mount Firebase credentials if using Firebase
       - ./firebase-service-account.json:/app/firebase-service-account.json:ro
-    # Required for Playwright to work properly in containers
+    # Shared memory for browser (agent-browser uses Playwright internally)
     shm_size: '2gb'
     restart: unless-stopped
     healthcheck:

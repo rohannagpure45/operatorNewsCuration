@@ -29,7 +29,8 @@ class Settings(BaseSettings):
     supabase_url: Optional[str] = None
     supabase_key: Optional[str] = None
 
-    # Browser automation (optional - uses local Playwright if not set)
+    # Browser automation (optional - uses local agent-browser CLI if not set)
+    # Note: browserless_api_key is only used for the /unblock API fallback
     browserless_api_key: Optional[str] = None
     browserless_use_unblock: bool = True
     browserless_use_residential_proxy: bool = False

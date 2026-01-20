@@ -249,7 +249,7 @@ class NewsAgent:
         Fallback order:
         1. Primary extraction (httpx + trafilatura)
         2. RSS feed extraction (if available for site)
-        3. Browser fallback (Playwright)
+        3. Browser fallback (agent-browser)
         4. Unblock API fallback (Browserless /unblock)
         5. archive.today (for paywalled sites)
         6. Google Cache (for paywalled sites)
@@ -276,10 +276,10 @@ class NewsAgent:
                 
                 if prefer_browser:
                     # For Cloudflare sites, try browser FIRST (before RSS/archives)
-                    logger.info(f"Site prefers browser extraction, trying Playwright first for: {url}")
+                    logger.info(f"Site prefers browser extraction, trying agent-browser first for: {url}")
                     try:
                         content = await self.browser_extractor.extract(url)
-                        content.extraction_method = "playwright_browser"
+                        content.extraction_method = "agent_browser"
                         return content
                     except ExtractionError as browser_error:
                         logger.warning(
@@ -316,10 +316,10 @@ class NewsAgent:
                             logger.warning(f"RSS fallback failed for {url}: {rss_error}")
 
                     # Fallback 2: Try browser (may bypass bot detection or render JS)
-                    logger.info(f"Trying Playwright browser fallback for: {url}")
+                    logger.info(f"Trying agent-browser fallback for: {url}")
                     try:
                         content = await self.browser_extractor.extract(url)
-                        content.extraction_method = "playwright_browser"
+                        content.extraction_method = "agent_browser"
                         return content
                     except ExtractionError as browser_error:
                         logger.warning(

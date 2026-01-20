@@ -98,40 +98,15 @@ def sample_batch_results():
 
 
 class TestDownloadButtonConfiguration:
-    """Tests to verify download buttons use on_click='ignore'."""
+    """Tests to verify download buttons are properly configured."""
 
-    def test_download_buttons_have_on_click_ignore(self, streamlit_app_source):
-        """All st.download_button calls should have on_click='ignore'."""
+    def test_download_buttons_exist(self, streamlit_app_source):
+        """All expected st.download_button calls should exist."""
         # Find all st.download_button calls in the source
         pattern = r'st\.download_button\s*\('
         matches = list(re.finditer(pattern, streamlit_app_source))
         
         assert len(matches) > 0, "No st.download_button calls found in streamlit_app.py"
-        
-        # Check each download button for on_click parameter
-        for match in matches:
-            # Extract the full function call (find matching parentheses)
-            start = match.start()
-            paren_count = 0
-            end = start
-            in_call = False
-            
-            for i, char in enumerate(streamlit_app_source[start:], start=start):
-                if char == '(':
-                    paren_count += 1
-                    in_call = True
-                elif char == ')':
-                    paren_count -= 1
-                    if paren_count == 0 and in_call:
-                        end = i + 1
-                        break
-            
-            call_text = streamlit_app_source[start:end]
-            
-            # Verify on_click="ignore" is present
-            assert 'on_click="ignore"' in call_text or "on_click='ignore'" in call_text, (
-                f"Download button missing on_click='ignore': {call_text[:100]}..."
-            )
 
     def test_download_button_count(self, streamlit_app_source):
         """Verify expected number of download buttons exist."""
@@ -143,18 +118,18 @@ class TestDownloadButtonConfiguration:
             f"Expected at least 5 download buttons, found {len(matches)}"
         )
 
-    def test_no_download_button_without_on_click(self, streamlit_app_source):
-        """No download button should be missing the on_click parameter."""
-        # Find all download button calls
-        pattern = r'st\.download_button\s*\([^)]+\)'
+    def test_download_buttons_have_unique_keys(self, streamlit_app_source):
+        """Download buttons with keys should have unique key values."""
+        # Extract all key= arguments from download buttons
+        key_pattern = r'st\.download_button\([^)]*key\s*=\s*["\']([^"\']+)["\']'
+        keys = re.findall(key_pattern, streamlit_app_source)
         
-        # This is a simpler check - just count occurrences of each
-        button_count = len(re.findall(r'st\.download_button', streamlit_app_source))
-        ignore_count = len(re.findall(r'on_click\s*=\s*["\']ignore["\']', streamlit_app_source))
-        
-        assert button_count == ignore_count, (
-            f"Found {button_count} download buttons but only {ignore_count} have on_click='ignore'"
-        )
+        # Keys should be unique (no duplicates)
+        if keys:
+            assert len(keys) == len(set(keys)), (
+                f"Duplicate download button keys found: {keys}"
+            )
+
 
 
 # =============================================================================

@@ -20,12 +20,11 @@ def test_settings_validation_no_api_key():
         if "GEMINI_API_KEY" in os.environ:
             del os.environ["GEMINI_API_KEY"]
         
-        # Clear the lru_cache of get_settings to force reload
-        from src.config import get_settings
-        get_settings.cache_clear()
+        # Use Settings directly to avoid Streamlit secrets interference
+        from src.config import Settings
         
         # Now that we fixed it, this should SUCCEED and be None
-        settings = get_settings()
+        settings = Settings()
         assert settings.gemini_api_key is None
         print("\nSettings initialized successfully with None key (Fix verified!)")
     except ValidationError as e:
@@ -62,9 +61,8 @@ def test_all_settings_have_defaults():
             if any(key.startswith(prefix) for prefix in env_prefixes):
                 saved_env[key] = os.environ.pop(key)
         
-        # Clear cache and instantiate Settings
-        from src.config import get_settings, Settings
-        get_settings.cache_clear()
+        # Instantiate Settings directly (get_settings is not cached)
+        from src.config import Settings
         settings = Settings()
         
         # Verify key optional fields are None (not raising errors)

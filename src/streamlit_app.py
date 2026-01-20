@@ -413,7 +413,7 @@ def main():
                     st.rerun()
 
         st.markdown("---")
-        st.caption("Built with Trafilatura, Gemini, and Playwright")
+        st.caption("Built with Trafilatura, Gemini, and agent-browser")
 
     # Main content
     st.title("News Curation Automation")

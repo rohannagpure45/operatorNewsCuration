@@ -185,10 +185,12 @@ For better success with sites that block scrapers, you can use [Browserless.io](
 2. Copy your API key from the dashboard
 3. Add `BROWSERLESS_API_KEY=your_key` to your `.env` file
 
-When the API key is set, the agent will automatically use Browserless instead of local Playwright. This provides:
+When the API key is set, the agent will automatically use Browserless for the /unblock API. This provides:
 - Better anti-detection with rotating proxies
-- No need to install Chromium locally
+- No need to configure browser locally
 - More reliable extraction from protected sites
+
+> **Note:** Local browser automation uses [agent-browser](https://agent-browser.dev/) CLI. Install with `npm install -g agent-browser`.
 
 **Additional Browserless Options:**
 
@@ -204,6 +206,38 @@ The `/unblock` API is automatically used as a fallback when standard browser ext
 - Built-in stealth and anti-detection
 - Automatic retry with exponential backoff on transient failures
 - Support for `waitForTimeout` and `waitForSelector` options
+
+#### Browser Extraction Backend Selection
+
+The `BrowserExtractor` class automatically selects the best available backend based on your environment:
+
+| Environment | Backend | When Used |
+|-------------|---------|-----------|
+| **Local / Docker** | `agent-browser` CLI | When CLI is installed in PATH |
+| **Cloud (with key)** | Browserless.io API | When CLI unavailable and `BROWSERLESS_API_KEY` is set |
+| **Cloud (no key)** | Skipped | Falls back to other extractors (Trafilatura, archives, etc.) |
+
+**Fallback Chain:**
+
+```
+1. agent-browser CLI (if installed)
+   ↓ (if not available)
+2. Browserless.io /content API (if BROWSERLESS_API_KEY is set)
+   ↓ (if Cloudflare detected)
+3. Browserless.io /unblock API
+   ↓ (if no Browserless key or extraction fails)
+4. Other extractors (Trafilatura, Wayback Machine, etc.)
+```
+
+> [!NOTE]
+> **Browserless.io is optional on Streamlit Cloud.** If `BROWSERLESS_API_KEY` is not configured, `BrowserExtractor` will simply be skipped and the agent will use non-browser extraction methods like Trafilatura. Browser extraction is only needed for sites with aggressive anti-bot protection (Cloudflare, etc.). Most news sites work fine without it.
+
+**Requirements:**
+- For local/Docker: `npm install -g agent-browser`
+- For Streamlit Cloud: Optionally set `BROWSERLESS_API_KEY` in secrets for enhanced extraction
+
+This approach ensures the agent works on all deployment environments—browser extraction is enhanced capability, not a requirement.
+
 
 ### Usage
 

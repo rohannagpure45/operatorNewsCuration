@@ -24,6 +24,14 @@ class URLRouter:
         r"^https?://(www\.)?secfilings\.nasdaq\.com/",
     ]
 
+    # YouTube patterns
+    YOUTUBE_PATTERNS = [
+        r"^https?://(www\.)?youtube\.com/watch.*",
+        r"^https?://(www\.)?youtu\.be/.*",
+        r"^https?://(www\.)?youtube\.com/embed/.*",
+        r"^https?://(www\.)?youtube\.com/v/.*",
+    ]
+
     # Known blog platforms/patterns
     BLOG_PATTERNS = [
         r"^https?://[^/]*\.substack\.com/",
@@ -85,6 +93,11 @@ class URLRouter:
         for pattern in cls.SEC_PATTERNS:
             if re.match(pattern, url_lower):
                 return URLType.SEC_FILING
+
+        # Check YouTube
+        for pattern in cls.YOUTUBE_PATTERNS:
+            if re.match(pattern, url_lower):
+                return URLType.YOUTUBE_VIDEO
 
         # Check blogs
         for pattern in cls.BLOG_PATTERNS:

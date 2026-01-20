@@ -14,6 +14,7 @@ class URLType(str, Enum):
     NEWS_ARTICLE = "news_article"
     BLOG = "blog"
     SEC_FILING = "sec_filing"
+    YOUTUBE_VIDEO = "youtube_video"
     UNKNOWN = "unknown"
 
 

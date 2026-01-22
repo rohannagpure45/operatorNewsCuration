@@ -25,6 +25,7 @@ from src.extractors.site_hints import (
 )
 from src.extractors.twitter import TwitterExtractor
 from src.extractors.unblock import UnblockExtractor
+from src.extractors.youtube import YouTubeExtractor
 from src.models.schemas import (
     ExtractedContent,
     FactCheckReport,
@@ -64,6 +65,7 @@ class NewsAgent:
         self.unblock_extractor = UnblockExtractor(timeout=settings.extraction_timeout)
         self.rss_extractor = RSSExtractor(timeout=settings.extraction_timeout)
         self.archive_extractor = ArchiveExtractor(timeout=settings.extraction_timeout)
+        self.youtube_extractor = YouTubeExtractor(timeout=settings.extraction_timeout)
         
         # Check if unblock fallback is enabled
         self._use_unblock = getattr(settings, 'browserless_use_unblock', True)
@@ -91,6 +93,7 @@ class NewsAgent:
             self.unblock_extractor.close(),
             self.rss_extractor.close(),
             self.archive_extractor.close(),
+            self.youtube_extractor.close(),
             self.wayback.close(),
             self.fact_checker.close(),
             self.summarizer.close(),
@@ -260,6 +263,8 @@ class NewsAgent:
             extractor = self.twitter_extractor
         elif url_type == URLType.SEC_FILING:
             extractor = self.sec_extractor
+        elif url_type == URLType.YOUTUBE_VIDEO:
+            extractor = self.youtube_extractor
         else:
             extractor = self.article_extractor
 
@@ -269,7 +274,8 @@ class NewsAgent:
 
         except ExtractionError as primary_error:
             # For articles, try fallback chain
-            if url_type not in (URLType.TWITTER, URLType.SEC_FILING):
+            # For articles, try fallback chain
+            if url_type not in (URLType.TWITTER, URLType.SEC_FILING, URLType.YOUTUBE_VIDEO):
                 
                 # Check if this is a Cloudflare-protected site that prefers browser
                 prefer_browser = should_prefer_browser(url)

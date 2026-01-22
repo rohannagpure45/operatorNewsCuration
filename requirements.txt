@@ -6,6 +6,8 @@ beautifulsoup4>=4.12.0
 lxml>=5.0.0
 # agent-browser: Install via npm (npm install -g agent-browser)
 feedparser>=6.0.0
+youtube-transcript-api>=0.6.0
+
 
 # LLM and structured output
 instructor>=1.7.0

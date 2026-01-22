@@ -4,6 +4,7 @@ import asyncio
 from unittest.mock import MagicMock, patch
 from src.extractors.youtube import YouTubeExtractor
 
+
 class TestYouTubeIssues:
     """Tests for specific CodeRabbit issues in YouTubeExtractor."""
 
